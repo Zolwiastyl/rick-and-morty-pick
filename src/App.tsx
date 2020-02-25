@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Store, StoreProvider } from "./Store";
+import { Fragment, useContext } from "react";
 
-function App() {
+export default function App(): JSX.Element {
+  const { state, dispatch } = React.useContext(Store);
+
+  const fetchDataAction = async () => {
+    const URL =
+      "http://api.tvmaze.com/singlesearch/shows?q=rick-&-&morty&embeded=episodes";
+    const data = await fetch(URL);
+    const dataJSON = await data.json();
+    return dispatch({
+      type: "FETCH_DATA",
+      payloads: dataJSON._embedded.episodes
+    });
+  };
+  React.useEffect(() => {
+    state.episodes.length === 0 && fetchDataAction();
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <h1>Rick and Morty</h1>
+      <p>Pick your favourite episode!</p>
+    </React.Fragment>
   );
 }
-
-export default App;
