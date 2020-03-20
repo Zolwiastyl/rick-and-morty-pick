@@ -27,6 +27,20 @@
 .App-link {
   color: #61dafb;
 }
+.taskElement {
+  border: solid;
+  border-color: red;
+  font-size: large;
+  font-style: italic;
+  border-radius: 5px;
+  padding: 20px;
+}
+.taskElement :hover {
+  color: papayawhip;
+}
+.taskElement:hover {
+  border-color: papayawhip;
+}
 
 @keyframes App-logo-spin {
   from {
@@ -35,4 +49,67 @@
   to {
     transform: rotate(360deg);
   }
+}
+h2 {
+  text-align: center;
+}
+
+body {
+  padding: 20px;
+  height: 100%;
+  margin: 10;
+  display: flex;
+  flex-direction: column;
+  background-color: papayawhip;
+  font-family: "Droid";
+  align-items: center;
+}
+.task-element {
+  padding: 20px;
+  width: inherit;
+  margin-top: 1em;
+  text-align: center;
+  box-shadow: 1px 1px 0px 0px black;
+}
+.task-element:active {
+  position: relative;
+  top: 1px;
+  background-color: pink;
+}
+.tasks-element {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: solid, black;
+  padding: 30px;
+  align-items: center;
+}
+.move-to-done-button {
+  height: inherit;
+}
+.add-task-form {
+  border: 1px dashed black;
+  border-radius: 3px;
+  margin-top: 2em;
+  display: flex;
+  padding: 1em;
+}
+.submit-button {
+  margin-left: 10px;
+  padding: 7px;
+  display: inline-flex;
+  border-radius: 5px;
+  border-color: darkcyan;
+}
+/*position: relative;
+
+  -webkit-box-pack: justify;
+  justify-content: space-between;*/
+
+.remove-data-button {
+  background-color: palevioletred;
+  height: 70px;
+  width: 100%;
+  align-content: center;
 }

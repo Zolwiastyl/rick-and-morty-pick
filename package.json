@@ -1,5 +1,5 @@
 {
-  "name": "typescript-react-example",
+  "name": "wire-m",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,15 +10,25 @@
     "@types/node": "^12.12.28",
     "@types/react": "^16.9.22",
     "@types/react-dom": "^16.9.5",
+    "axios": "^0.19.2",
+    "bootstrap": "^4.4.1",
+    "classnames": "^2.2.6",
+    "lodash": "^4.17.15",
+    "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.4.0",
     "redux": "^4.0.5",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "yarn": "^1.22.0"
   },
   "scripts": {
+    "get-dark-cli": "curl https://dark-cli.storage.googleapis.com/latest/dark-cli-linux --output dark-cli-linux && chmod +x dark-cli-linux",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build-dark-assets": "PUBLIC_URL=DARK_STATIC_ASSETS_BASE_URL || react-scripts build",
+    "choose-canvas": "scripts/choose-canvas.js",
+    "build-for": "run-s \"choose-canvas {1}\" build-dark-assets -- $*",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
