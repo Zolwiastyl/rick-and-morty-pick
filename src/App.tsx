@@ -39,11 +39,8 @@ export function App() {
         const newData = newArray.data;
 
         const newArrayOfTasks: Array<Task> = tasksToDo.slice();
-        newArrayOfTasks
-          .concat(newData)
-          .map(element =>
-            console.log({ key: element.name, value: element.status })
-          );
+        newArrayOfTasks.concat(newData);
+        //.map(element => console.log({ key: element.name, value: element.status }));
         const newArrayOfTasksDone: Array<Task> = tasksDone.slice();
         const anyArray = newArrayOfTasks
           .concat(newData)
@@ -118,14 +115,15 @@ export function App() {
     tasks: tasksToDo,
     setTasks: setTasksToDo
   };
+
   return (
     <Fragment>
       <ToDoList tasks={tasksToDo} />
       <DoneList tasks={tasksDone} />
       <RemoveAllData />
       <TasksLists
-        tasks={wraperForTasksList.tasks}
         setTasks={wraperForTasksList.setTasks}
+        tasks={wraperForTasksList.tasks}
       />
     </Fragment>
   );
