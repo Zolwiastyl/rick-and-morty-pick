@@ -7,12 +7,14 @@ import React, {
   useEffect
 } from "react";
 import { Fragment, useContext } from "react";
-import "./App.css";
+import { ThemeProvider, jsx } from "theme-ui";
+import "./App.scss";
 import { StateProps } from "./interfaces";
 import { Task, TaskProps } from "./types";
 import { TasksLists } from "./TasksLists";
+import theme from "./theme";
 
-const tasksArray: Array<Task> = [{ name: "that's the app", status: "todo" }];
+const tasksArray: Array<Task> = [];
 
 const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 
@@ -21,11 +23,7 @@ const newTaskPostURL = new Request(HOST + "/tasks");
 const updateTaskPostURL = new Request(HOST + "/update-tasks");
 
 export function App() {
-  const [tasksToDo, setTasksToDo] = useState<Task[]>(tasksArray);
-  const [tasksDone, setTasksDone] = useState<Task[]>([
-    { name: "this task is done", status: "done" }
-  ]);
-
+  const [tasks, setTasks] = useState<Task[]>(tasksArray);
   let newTaskToAdd: Task;
 
   useEffect(() => {
@@ -38,54 +36,19 @@ export function App() {
 
         const newData = newArray.data;
 
-        const newArrayOfTasks: Array<Task> = tasksToDo.slice();
-        newArrayOfTasks.concat(newData);
-        //.map(element => console.log({ key: element.name, value: element.status }));
-        const newArrayOfTasksDone: Array<Task> = tasksDone.slice();
-        const anyArray = newArrayOfTasks
-          .concat(newData)
-          .concat(newArrayOfTasksDone);
-        arraysOfTasksHandler(anyArray);
+        setTasks(newData);
       })
       .catch(error => console.log("We had en error" + error));
   }, []);
-  function arraysOfTasksHandler(arrayOfTask: Array<Task>) {
-    const arrayToDo = arrayOfTask.filter(task => task.status == "todo");
-    const arrayDone = arrayOfTask.filter(task => task.status == "done");
-
-    setTasksToDo(arrayToDo);
-    setTasksDone(arrayDone);
-  }
-
-  const moveToDone: (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => void = event => {
-    event.preventDefault();
-    const doneTasksArrayToSave = tasksDone.slice();
-
-    const toDoTasksArrayToSave = tasksToDo.slice();
-    const task = event.currentTarget.id;
-
-    const found = toDoTasksArrayToSave.find(
-      (element: Task) => element.name == task
-    );
-
-    toDoTasksArrayToSave.splice(toDoTasksArrayToSave.indexOf(found as Task), 1);
-    console.log({ toDoTasksArrayToSave });
-    sendNewTask({ name: task, status: "done" });
-    doneTasksArrayToSave.unshift({ name: task, status: "done" });
-    setTasksDone(doneTasksArrayToSave);
-    setTasksToDo(toDoTasksArrayToSave);
-  };
 
   const onSubmit: (event: React.FormEvent<HTMLFormElement>) => void = event => {
     event.preventDefault();
     const { name } = readFormValues(event.currentTarget);
-    const ArrayWithTasksToSave = tasksToDo.slice();
+    const ArrayWithTasksToSave = tasks.slice();
     const newTask = { name: name, status: "todo" };
     ArrayWithTasksToSave.unshift(newTask);
     sendNewTask(newTask);
-    setTasksToDo(ArrayWithTasksToSave);
+    setTasks(ArrayWithTasksToSave);
   };
 
   interface TasksListsProps {
@@ -93,33 +56,16 @@ export function App() {
     setState: React.Dispatch<React.SetStateAction<Task[]>>;
   }
 
-  function DoneList(props: StateProps) {
-    return (
-      <div>
-        <DoneListHeading />
-        <div className="tasks-element">{TasksElement(props, () => {})}</div>
-      </div>
-    );
-  }
-  function ToDoList(props: StateProps) {
-    return (
-      <div className="list">
-        <ToDoListHeading />
-        <TaskForm onSubmit={onSubmit} />
-        <div className="tasks-element">{TasksElement(props, moveToDone)}</div>
-      </div>
-    );
-  }
-
   const wraperForTasksList: TaskProps = {
-    tasks: tasksToDo,
-    setTasks: setTasksToDo
+    tasks: tasks,
+    setTasks: setTasks
   };
 
   return (
     <Fragment>
-      <ToDoList tasks={tasksToDo} />
-      <DoneList tasks={tasksDone} />
+      <ThemeProvider theme={theme}></ThemeProvider>
+      <TaskForm onSubmit={onSubmit} />
+
       <RemoveAllData />
       <TasksLists
         setTasks={wraperForTasksList.setTasks}
@@ -150,7 +96,14 @@ function TaskForm({
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) {
   return (
-    <div className="add-task-form">
+    <div
+      className="add-task-form"
+      sx={{
+        fontWeight: "bold",
+        fontSize: 4, // picks up value from `theme.fontSizes[4]`
+        color: "primary" // picks up value from `theme.colors.primary`
+      }}
+    >
       <form onSubmit={onSubmit}>
         <label>
           add task: <br />
@@ -167,40 +120,6 @@ function TaskForm({
       </form>
     </div>
   );
-}
-
-function ToDoListHeading() {
-  return <h2>// tasks to do: //</h2>;
-}
-
-function TasksElement(
-  { tasks }: StateProps,
-  clickHandler: (event: React.MouseEvent<HTMLButtonElement>) => void
-) {
-  return tasks.map(task => {
-    return (
-      <div className="task-element">
-        {task.name}
-        <button
-          className="move-to-done-button"
-          onClick={clickHandler}
-          id={task.name}
-        >
-          move to Done
-        </button>
-      </div>
-    );
-  });
-}
-
-function DoneListHeading() {
-  return <h2>// tasks done: //</h2>;
-}
-
-function MoveToDone(task: Task, state: TaskProps) {
-  const arrayToSave = state.tasks.slice();
-  arrayToSave.unshift(task);
-  state.setTasks(arrayToSave);
 }
 
 function sendNewTask(task: Task) {

@@ -2,10 +2,15 @@ import React from "react";
 import { StateProps } from "./interfaces";
 import { Task, TaskProps } from "./types";
 
+const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
+
+const tasksRequest = new Request(HOST + "/tasks");
+const newTaskPostURL = new Request(HOST + "/tasks");
+
 export function TasksLists(props: TaskProps) {
   const listOfStatus: Array<Status> = [
-    { statusName: "to do" },
-    { statusName: "working on it" },
+    { statusName: "todo" },
+    { statusName: "working-on-it" },
     { statusName: "waiting" },
     { statusName: "stuck" },
     { statusName: "done" }
@@ -13,55 +18,89 @@ export function TasksLists(props: TaskProps) {
   type Status = {
     statusName: string;
   };
-  console.log("TASKSLISTS");
-  props.tasks.map(element =>
-    console.log({ key: element.name, value: element.status })
-  );
 
   function TaskElement() {
-    console.log("TaskElement ran");
     const TaskElement = listOfStatus.map(status => (
-      <TaskList statusName={status.statusName} />
+      <div className={status.statusName.split("").join("") + "-group"}>
+        <TaskList statusName={status.statusName} />
+      </div>
     ));
+
     function TaskList(taskProps: Status) {
+      console.log(taskProps.statusName.split("").join(""));
       console.log("TaskList ran");
       console.log(taskProps.statusName);
-      props.tasks.map(element =>
-        console.log({ key: element.name, value: element.status })
-      );
-
-      props.tasks.map(element =>
-        console.log({ key: element.name, value: element.status })
-      );
+      //props.tasks.map(element =>console.log({ key: element.name, value: element.status }));
       return (
         <div>
-          {props.tasks.map(task => (
-            <GroupOfButtons name={task.name} status={task.status} />
-          ))}
+          <p> // {taskProps.statusName} //</p>
+          {props.tasks
+            .filter(task => task.status == taskProps.statusName)
+            .map(task => (
+              <GroupOfButtons name={task.name} status={task.status} />
+            ))}
         </div>
       );
     }
     function GroupOfButtons(task: Task) {
-      console.log("groupOfButtons ran");
       return (
-        <div>
-          {listOfStatus.map(status => (
-            <ButtonElement name={task.name} status={task.status} />
-          ))}
+        <div className="task-element">
+          <p className="task-name">{task.name}</p>
+          <div className="buttons-group">
+            Move to:
+            {listOfStatus
+              .filter(currentStatus => currentStatus.statusName != task.status)
+              .map(status => (
+                <ButtonElement name={task.name} status={status.statusName} />
+              ))}
+          </div>
         </div>
       );
     }
     function ButtonElement(props: Task) {
-      console.log("ButtonElement ran");
-      return <button id={props.name}>{props.name}</button>;
+      return (
+        <button
+          id={props.name}
+          className="move-to-button"
+          onClick={event => moveTo(props.status, event.currentTarget.id)}
+        >
+          {props.status}
+        </button>
+      );
     }
-    return <div>{TaskElement}</div>;
+    return <div className="tasks-element">{TaskElement}</div>;
   }
-  return (
-    <div>
-      <TaskElement />
-    </div>
-  );
+  function moveTo(status: string, buttonId: string) {
+    const tasksArrayToSave = props.tasks.slice();
+    const task = buttonId;
+
+    const found = tasksArrayToSave.find(
+      (element: Task) => element.name == task
+    );
+
+    tasksArrayToSave.splice(tasksArrayToSave.indexOf(found as Task), 1);
+    sendNewTask({ name: task, status: status });
+    tasksArrayToSave.unshift({ name: task, status: status });
+    props.setTasks(tasksArrayToSave);
+  }
+  function sendNewTask(task: Task) {
+    fetch(newTaskPostURL, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: task.name,
+        status: task.status
+      })
+    });
+  }
+  return <TaskElement />;
+}
+
+function makeStatusNameValidCSSClassName(statusName: string) {
+  return statusName.split("").join("");
 }
 
 type TaskListProps = {

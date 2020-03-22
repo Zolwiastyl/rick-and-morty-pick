@@ -39,9 +39,11 @@ inspect what onClickTask exactly does.
 - 17 GET (Backend)
 - 18 POST (make POST) **with** GET - to update tasks
 - 19 POST (handle it in darklang)
-  > > 20 GROUPS (move it) **NEWTASK**
-  > > 21 GROUPS (expand it)
-  > > 22 GROUPS (make it render)
+- 20 GROUPS (move it) **NEWTASK**
+- 21 GROUPS (expand it)
+- 22 GROUPS (make it render)
+  Tasks above done. Now I need to make it look good.
+
   > > 23 READY
 
 Now Task has only name and status
