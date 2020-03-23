@@ -1,6 +1,7 @@
 import React from "react";
 import { StateProps } from "./interfaces";
 import { Task, TaskProps } from "./types";
+import styled, { createGlobalStyle, css } from "styled-components";
 
 const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 
@@ -19,9 +20,9 @@ export function TasksLists(props: TaskProps) {
     statusName: string;
   };
 
-  function TaskElement() {
-    const TaskElement = listOfStatus.map(status => (
-      <div className={status.statusName.split("").join("") + "-group"}>
+  function TaskItem() {
+    const TaskItem = listOfStatus.map(status => (
+      <div className="tasks-group">
         <TaskList statusName={status.statusName} />
       </div>
     ));
@@ -33,7 +34,7 @@ export function TasksLists(props: TaskProps) {
       //props.tasks.map(element =>console.log({ key: element.name, value: element.status }));
       return (
         <div>
-          <p> // {taskProps.statusName} //</p>
+          <p className="group-heading"> // {taskProps.statusName} //</p>
           {props.tasks
             .filter(task => task.status == taskProps.statusName)
             .map(task => (
@@ -44,10 +45,10 @@ export function TasksLists(props: TaskProps) {
     }
     function GroupOfButtons(task: Task) {
       return (
-        <div className="task-element">
+        <div className="task-item">
           <p className="task-name">{task.name}</p>
           <div className="buttons-group">
-            Move to:
+            move to:
             {listOfStatus
               .filter(currentStatus => currentStatus.statusName != task.status)
               .map(status => (
@@ -61,14 +62,14 @@ export function TasksLists(props: TaskProps) {
       return (
         <button
           id={props.name}
-          className="move-to-button"
+          className={`move-to-button`}
           onClick={event => moveTo(props.status, event.currentTarget.id)}
         >
           {props.status}
         </button>
       );
     }
-    return <div className="tasks-element">{TaskElement}</div>;
+    return <div className="tasks-list-item">{TaskItem}</div>;
   }
   function moveTo(status: string, buttonId: string) {
     const tasksArrayToSave = props.tasks.slice();
@@ -96,7 +97,7 @@ export function TasksLists(props: TaskProps) {
       })
     });
   }
-  return <TaskElement />;
+  return <TaskItem />;
 }
 
 function makeStatusNameValidCSSClassName(statusName: string) {

@@ -61,20 +61,7 @@ body {
   flex-direction: column;
   width: [ "10%", "20%" ];
 }
-.tasks-element {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: row;
 
-  border: solid, black;
-  border-radius: 4px;
-  padding: 30px;
-  background-color: inherit;
-  margin: 10px;
-}
-.move-to-done-button {
-  height: inherit;
-}
 .add-task-form {
   border: 1px dashed black;
   border-radius: 3px;

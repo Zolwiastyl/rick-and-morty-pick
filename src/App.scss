@@ -1,22 +1,5 @@
-$primay-color: papayawhip;
-$todo-color: green;
 .App {
   text-align: center;
-}
-
-.taskElement {
-  border: solid;
-  border-color: red;
-  font-size: large;
-  font-style: italic;
-  border-radius: 5px;
-  padding: 2em;
-}
-.taskElement :hover {
-  color: papayawhip;
-}
-.taskElement:hover {
-  border-color: papayawhip;
 }
 
 h2 {
@@ -25,117 +8,145 @@ h2 {
 
 @media (min-width: 800px) {
   body {
-    background-color: black;
+    background-color: papayawhip;
   }
   .task-element {
-    background-color: blue;
+    background-color: papayawhip;
   }
 }
 
 body {
-  padding: 10em;
-  height: 100%;
-  margin: 10em;
-  display: flex;
-  flex-direction: column;
   background-color: papayawhip;
   font-family: "Droid";
-  align-items: center;
 }
-.task-element {
-  padding: 1em;
-  width: inherit;
-  margin-top: 1em;
-  text-align: left;
-  display: flex;
-  flex-direction: row;
-  box-shadow: 0.1em 0.1em 0px 0px black;
-}
-.task-element:active {
-  position: relative;
-  top: 0.2em;
-  background-color: pink;
-}
-.buttons-group {
-  display: flex;
-  flex-direction: column;
-  width: [ "10%", "20%" ];
-}
-.tasks-element {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: row;
 
-  border: solid, black;
-  border-radius: 4px;
-  padding: 30px;
-  background-color: inherit;
-  margin: 10px;
-}
-.move-to-done-button {
-  height: inherit;
-}
 .add-task-form {
   border: 1px dashed black;
-  border-radius: 3px;
+  background-color: papayawhip;
+  border-radius: 1em;
   margin-top: 2em;
-  display: flex;
   padding: 1em;
-}
-.task-name {
-  width: 100%, 50%, 25%;
+  width: 100%;
+  height: 40%;
+  position: relative;
+  margin: 1em;
   display: flex;
-  margin-right: 15px;
-  box-shadow: 1px 0px 0px 1px black;
+  flex-direction: row;
+}
+.add-task-form-item {
+  align-content: center;
+  align-items: center;
+
+  text-align: center;
+  width: 100%;
+  background-color: tomato;
+  display: flex;
+  flex-direction: row;
+}
+.add-task-input-field {
+  background-color: tomato;
+  border-radius: 1em;
+  margin-left: 1em;
   padding: 1em;
 }
 .submit-button {
-  margin-left: 10px;
-  padding: 7px;
-  display: inline-flex;
-  border-radius: 5px;
-  border-color: darkcyan;
+  background-color: papayawhip;
+  padding: 1em;
+  margin-left: 1em;
+  margin-bottom: 1em;
+  border-radius: 1em;
+  border: 1px dashed black;
 }
-/*position: relative;
+.add-task-label {
+  padding: 0.5em;
+  width: 100%;
+  background-color: papayawhip;
+  border: 1px dashed black;
+  border-radius: 1em;
+}
 
-  -webkit-box-pack: justify;
-  justify-content: space-between;*/
+.buttons-group {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+}
+.group-heading {
+  text-align: center;
+  font-size: 1.75em;
+}
+
+.task-name {
+  display: flex;
+  flex-direction: row;
+  padding: 1em;
+  width: 15em;
+}
+
+.tasks-group {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  background-color: papayawhip;
+  margin: 0.5em;
+  border-radius: 1em;
+  width: 20%;
+  border: dashed;
+}
+
+.tasks-list-item {
+  display: flex;
+  flex-direction: row;
+  flex-flow: nowrap;
+  width: 100%;
+  flex-grow: 1;
+  padding: 1em;
+  background-color: tomato;
+}
+.task-item {
+  background-color: papayawhip;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin: 1%;
+  padding: 1em;
+  border-radius: 1em;
+  border: dotted;
+  opacity: 1;
+}
+.task-item:hover {
+  background: tomato;
+}
+.task-item:active {
+  position: relative;
+  top: 0.2em;
+
+  background: papayawhip;
+}
+
+.move-to-button {
+  background-color: papayawhip;
+  border: 1px dashed black;
+  border-radius: 1em;
+  padding: 0.3em;
+  margin: 0.2em;
+  width: 8em;
+}
+.move-to-button:hover {
+  border: 1px dashed black;
+}
+.move-to-button:active {
+  background-color: tomato;
+  position: relative;
+  top: 0.2;
+}
 
 .remove-data-button {
-  background-color: palevioletred;
-  height: 70px;
+  background-color: papayawhip;
+  height: 5em;
   width: 100%;
   align-content: center;
 }
-
-.done-group {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  margin: 10px;
-  background-color: mediumseagreen;
-}
-.todo-group {
-  margin: 10px;
-  padding: 20px;
-  background-color: mistyrose;
-}
-.working-on-it-group {
-  padding: 20px;
-  margin: 10px;
-  background-color: palevioletred;
-}
-.stuck-group {
-  margin: 10px;
-  padding: 20px;
-  background-color: tomato;
-}
-.waiting-group {
-  margin: 10px;
-  padding: 20px;
-  background-color: dodgerblue;
-}
-
 /*
 App
   ThemeProvider

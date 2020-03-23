@@ -66,11 +66,11 @@ export function App() {
       <ThemeProvider theme={theme}></ThemeProvider>
       <TaskForm onSubmit={onSubmit} />
 
-      <RemoveAllData />
       <TasksLists
         setTasks={wraperForTasksList.setTasks}
         tasks={wraperForTasksList.tasks}
       />
+      <RemoveAllData />
     </Fragment>
   );
 }
@@ -97,24 +97,25 @@ function TaskForm({
 }) {
   return (
     <div
-      className="add-task-form"
+      className="add-task-form-item"
       sx={{
         fontWeight: "bold",
         fontSize: 4, // picks up value from `theme.fontSizes[4]`
         color: "primary" // picks up value from `theme.colors.primary`
       }}
     >
-      <form onSubmit={onSubmit}>
-        <label>
+      <form className="add-task-form" onSubmit={onSubmit}>
+        <label className="add-task-label">
           add task: <br />
           <input
             name="taskName"
+            className="add-task-input-field"
             type="text"
             placeholder="task name"
             minLength={1}
           />
           <button type="submit" className="submit-button">
-            Add task
+            add task
           </button>
         </label>
       </form>
