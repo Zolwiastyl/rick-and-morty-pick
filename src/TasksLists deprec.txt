@@ -1,13 +1,13 @@
 import React from "react";
 import { StateProps } from "./interfaces";
-import { Task, TaskProps } from "./types";
+import { Task, TasksStateProps } from "./types";
 
-export function TasksLists(taskState: TaskProps) {
+export function TasksLists(taskState: TasksStateProps) {
   //
   function moveToGroup(
     groupName: string,
     eventTarget: React.MouseEvent<HTMLButtonElement>,
-    taskState: TaskProps
+    taskState: TasksStateProps
   ) {
     eventTarget.preventDefault();
     const newArray = taskState.tasks.slice();
@@ -20,7 +20,10 @@ export function TasksLists(taskState: TaskProps) {
     taskState.setTasks(arrayToSave);
   }
 
-  function ListOfTasksInCategory(taskState: TaskProps, Heading: React.FC) {
+  function ListOfTasksInCategory(
+    taskState: TasksStateProps,
+    Heading: React.FC
+  ) {
     return (
       <div>
         <Heading />
@@ -112,7 +115,7 @@ interface TaskGroupListProps {
 }
 
 interface ButtonProps {
-  state: TaskProps;
+  state: TasksStateProps;
   whereToMove: string;
 }
 

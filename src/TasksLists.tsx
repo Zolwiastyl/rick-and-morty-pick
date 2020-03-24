@@ -1,6 +1,6 @@
 import React from "react";
 import { StateProps } from "./interfaces";
-import { Task, TaskProps } from "./types";
+import { Task, TasksStateProps } from "./types";
 import styled, { createGlobalStyle, css } from "styled-components";
 
 const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
@@ -8,7 +8,7 @@ const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");
 const newTaskPostURL = new Request(HOST + "/tasks");
 
-export function TasksLists(props: TaskProps) {
+export function TasksLists(props: TasksStateProps) {
   const listOfStatus: Array<Status> = [
     { statusName: "todo" },
     { statusName: "working-on-it" },
@@ -106,5 +106,5 @@ function makeStatusNameValidCSSClassName(statusName: string) {
 
 type TaskListProps = {
   status: string;
-  taskState: TaskProps;
+  taskState: TasksStateProps;
 };

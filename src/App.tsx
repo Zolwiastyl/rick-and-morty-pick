@@ -10,7 +10,7 @@ import { Fragment, useContext } from "react";
 import { ThemeProvider, jsx } from "theme-ui";
 import "./App.scss";
 import { StateProps } from "./interfaces";
-import { Task, TaskProps } from "./types";
+import { Task, TasksStateProps } from "./types";
 import { TasksLists } from "./TasksLists";
 import theme from "./theme";
 
@@ -27,18 +27,7 @@ export function App() {
   let newTaskToAdd: Task;
 
   useEffect(() => {
-    fetch(tasksRequest)
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        const newArray = { data };
-
-        const newData = newArray.data;
-
-        setTasks(newData);
-      })
-      .catch(error => console.log("We had en error" + error));
+    fetchDataFromServer(setTasks);
   }, []);
 
   const onSubmit: (event: React.FormEvent<HTMLFormElement>) => void = event => {
@@ -56,7 +45,7 @@ export function App() {
     setState: React.Dispatch<React.SetStateAction<Task[]>>;
   }
 
-  const wraperForTasksList: TaskProps = {
+  const wraperForTasksList: TasksStateProps = {
     tasks: tasks,
     setTasks: setTasks
   };
@@ -135,6 +124,22 @@ function sendNewTask(task: Task) {
       status: task.status
     })
   });
+}
+function fetchDataFromServer(
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+) {
+  fetch(tasksRequest)
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      const newArray = { data };
+
+      const newData = newArray.data;
+
+      setTasks(newData);
+    })
+    .catch(error => console.log("We had en error" + error));
 }
 
 function RemoveAllData() {

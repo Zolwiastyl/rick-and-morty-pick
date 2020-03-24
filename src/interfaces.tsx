@@ -1,4 +1,4 @@
-import { Task, TaskProps } from "./types";
+import { Task, TasksStateProps } from "./types";
 
 export interface StateProps {
   tasks: Task[];
