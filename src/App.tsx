@@ -59,7 +59,7 @@ export function App() {
         setTasks={wraperForTasksList.setTasks}
         tasks={wraperForTasksList.tasks}
       />
-      <RemoveAllData />
+      <RemoveAllData setTasks={setTasks} />
     </Fragment>
   );
 }
@@ -142,7 +142,7 @@ function fetchDataFromServer(
     .catch(error => console.log("We had en error" + error));
 }
 
-function RemoveAllData() {
+function RemoveAllData(props: Partial<TasksStateProps>) {
   return (
     <button
       className="remove-data-button"
@@ -150,6 +150,9 @@ function RemoveAllData() {
         fetch(HOST + "/remove-data", {
           method: "POST"
         });
+        fetchDataFromServer(
+          props.setTasks as React.Dispatch<React.SetStateAction<Task[]>>
+        );
       }}
     >
       // REMOVE ALL DATA //
