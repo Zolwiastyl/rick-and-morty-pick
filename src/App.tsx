@@ -33,6 +33,7 @@ export function App() {
   const onSubmit: (event: React.FormEvent<HTMLFormElement>) => void = event => {
     event.preventDefault();
     const { name } = readFormValues(event.currentTarget);
+    event.currentTarget.reset();
     const ArrayWithTasksToSave = tasks.slice();
     const newTask = { name: name, status: "todo" };
     ArrayWithTasksToSave.unshift(newTask);
@@ -103,7 +104,7 @@ function TaskForm({
             placeholder="task name"
             minLength={1}
           />
-          <button type="submit" className="submit-button">
+          <button type="submit" className="submit-button" value="add task">
             add task
           </button>
         </label>
