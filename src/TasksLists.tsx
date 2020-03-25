@@ -89,15 +89,7 @@ function TaskList({ statusName, tasks, statuses }: TaskListProps) {
             moveToAnotherGroup={moveToAnotherGroup}
           />
         ))}
-    </div>  }
-  }
-  }
-  }
-
-  return <TaskItem />;
-  return <TaskItem />;
-}
-
+    </div>
   );
 }
 
