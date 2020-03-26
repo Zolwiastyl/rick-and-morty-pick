@@ -13,6 +13,7 @@ import { StateProps } from "./interfaces";
 import { Task, TasksStateProps } from "./types";
 import { TasksLists } from "./TasksLists";
 import theme from "./theme";
+import { number } from "prop-types";
 
 const tasksArray: Array<Task> = [];
 
@@ -24,7 +25,6 @@ const updateTaskPostURL = new Request(HOST + "/update-tasks");
 
 export function App() {
   const [tasks, setTasks] = useState<Task[]>(tasksArray);
-  let newTaskToAdd: Task;
 
   useEffect(() => {
     fetchDataFromServer(setTasks);
@@ -41,25 +41,12 @@ export function App() {
     setTasks(ArrayWithTasksToSave);
   };
 
-  interface TasksListsProps {
-    state: Array<Task>;
-    setState: React.Dispatch<React.SetStateAction<Task[]>>;
-  }
-
-  const wraperForTasksList: TasksStateProps = {
-    tasks: tasks,
-    setTasks: setTasks
-  };
-
   return (
     <Fragment>
       <ThemeProvider theme={theme}></ThemeProvider>
       <TaskForm onSubmit={onSubmit} />
 
-      <TasksLists
-        setTasks={wraperForTasksList.setTasks}
-        tasks={wraperForTasksList.tasks}
-      />
+      <TasksLists setTasks={setTasks} tasks={tasks} />
       <RemoveAllData setTasks={setTasks} />
     </Fragment>
   );
@@ -85,6 +72,7 @@ function TaskForm({
 }: {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) {
+  makeIdForTask();
   return (
     <div
       className="add-task-form-item"
@@ -96,7 +84,6 @@ function TaskForm({
     >
       <form className="add-task-form" onSubmit={onSubmit}>
         <label className="add-task-label">
-          add task: <br />
           <input
             name="taskName"
             className="add-task-input-field"
@@ -141,6 +128,13 @@ function fetchDataFromServer(
       setTasks(newData);
     })
     .catch(error => console.log("We had en error" + error));
+}
+
+function generateIdForTask() {
+  return Date()
+    .split("")
+    .filter(element => /\d/.test(element))
+    .join("");
 }
 
 function RemoveAllData(props: Partial<TasksStateProps>) {

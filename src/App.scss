@@ -1,3 +1,15 @@
+html {
+  // kiepskie cssy wywal mnie potem
+  background-color: #010011;
+  color: white;
+
+  * {
+    background-color: rgba(95, 97, 219, 0.144) !important;
+    color: papayawhip !important;
+    border-radius: 3em !important;
+  }
+}
+
 .App {
   text-align: center;
 }
@@ -9,19 +21,20 @@ h2 {
 @media (min-width: 800px) {
   body {
     background-color: papayawhip;
+    color: white;
   }
   .task-element {
     background-color: papayawhip;
+    color: white;
   }
 }
 
 body {
   background-color: papayawhip;
-  font-family: "Droid";
+  font-family: "Droid", "monospace";
 }
 
 .add-task-form {
-  border: 1px dashed black;
   background-color: papayawhip;
   border-radius: 1em;
   margin-top: 2em;
@@ -55,17 +68,17 @@ body {
   margin-left: 1em;
   margin-bottom: 1em;
   border-radius: 1em;
-  border: 1px dashed black;
 }
 .add-task-label {
   padding: 0.5em;
   width: 100%;
   background-color: papayawhip;
-  border: 1px dashed black;
+
   border-radius: 1em;
 }
 
 .buttons-group {
+  border-radius: 3em;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -77,6 +90,7 @@ body {
 }
 
 .task-name {
+  border-radius: 3em;
   display: flex;
   flex-direction: row;
   padding: 1em;
@@ -91,7 +105,6 @@ body {
   margin: 0.5em;
   border-radius: 1em;
   width: 20%;
-  border: dashed;
 }
 
 .tasks-list-item {
@@ -110,8 +123,8 @@ body {
   width: 100%;
   margin: 1%;
   padding: 1em;
-  border-radius: 1em;
-  border: dotted;
+  border-radius: 2em;
+
   opacity: 1;
 }
 .task-item:hover {
@@ -125,9 +138,9 @@ body {
 }
 
 .move-to-button {
+  border: 1px papayawhip solid;
   background-color: papayawhip;
-  border: 1px dashed black;
-  border-radius: 1em;
+  border-radius: 2em;
   padding: 0.3em;
   margin: 0.2em;
   width: 8em;

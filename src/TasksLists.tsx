@@ -39,77 +39,33 @@ function TaskButton({ children, onClick }: TaskButtonProps) {
   );
 }
 
-interface GroupOfButtonsProps {
-  task: Task;
-  statuses: Status[];
-  moveToAnotherGroup: (status: string, task: Task) => void;
+interface TaskListProps extends React.ComponentProps<"div"> {
+  status: Status;
 }
-function GroupOfButtons({ task, statuses }: GroupOfButtonsProps) {
+const TaskList: React.FC<TaskListProps> = ({
+  status: { statusName },
+  children,
+  ...rest
+}) => {
   return (
-    <motion.div
-      className="task-item"
-      drag={true}
-      onDragEnd={(event, info) => {}}
-    >
-      <p className="task-name">{task.name}</p>
-      <div className="buttons-group">
-        move to:
-        {statuses
-          .filter(currentStatus => currentStatus.statusName != task.status)
-          .map(status => (
-            <TaskButton onClick={() => moveToAnotherGroup(status, task)}>
-              {status.statusName}
-            </TaskButton>
-          ))}
-      </div>
-    </motion.div>
-  );
-}
-
-interface TaskListProps {
-  statusName: string;
-  tasks: Task[];
-  statuses: Status[];
-  moveToAnotherGroup: (status: string, task: Task) => void;
-}
-function TaskList({ statusName, tasks, statuses }: TaskListProps) {
-  console.log(statusName.split("").join(""));
-  console.log("TaskList ran");
-  console.log(statusName);
-  //props.tasks.map(element =>console.log({ key: element.name, value: element.status }));
-  return (
-    <div className={statusName}>
+    <div className="tasks-group" {...rest}>
       <p className="group-heading"> // {statusName} //</p>
-      {tasks
-        .filter(task => task.status == statusName)
-        .map(task => (
-          <GroupOfButtons
-            task={task}
-            statuses={statuses}
-            moveToAnotherGroup={moveToAnotherGroup}
-          />
-        ))}
+      {children}
     </div>
   );
-}
+};
 
-function TaskItem() {
-  // list of status może być tutaj podawany w propie
-  const TaskItem = listOfStatus.map(status => (
-    <div className="tasks-group">
-      <TaskList statusName={status.statusName} tasks={tasks} />
-    </div>
-  ));
-
-  return <div className="TaskButtontasks-list-item">{TaskItem}</div>;
-}
+const ButtonsGroup: React.FC = ({ children }) => {
+  return <div className="buttons-group">move to: {children}</div>;
+};
 
 type Status = {
   statusName: string;
 };
 
 export function TasksLists({ tasks, setTasks }: TasksStateProps) {
-  const listOfStatus: Array<Status> = [
+  const statuses: Array<Status> = [
+    // YAGNI
     { statusName: "todo" },
     { statusName: "working-on-it" },
     { statusName: "waiting" },
@@ -117,7 +73,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
     { statusName: "done" }
   ];
 
-  function moveToAnotherGroup(status: string, task: Task) {
+  function moveToAnotherGroup(status: string, task: Pick<Task, "name">) {
     // WHAT IF SERVER UPDATE FAILS?
 
     // 1.
@@ -142,5 +98,53 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
     );
   }
 
-  return null;
+  return (
+    <div className="tasks-list-item">
+      {/* TODO: ^ Kipeska nazwa klasy, to chyba jest tasks-lists */}
+      {statuses.map(status => (
+        <TaskList
+          // useDrop.ref
+          status={status}
+          onDragOver={event => event.preventDefault()}
+          onDragEnter={event => event.preventDefault()}
+          onDrop={event => {
+            event.preventDefault(); // TUTAJ
+            const name = event.dataTransfer.getData("text/plain");
+            console.log("dragged");
+            // JESTEŚMY TU
+            moveToAnotherGroup(status.statusName, { name });
+          }}
+        >
+          {tasks
+            .filter(task => task.status == status.statusName)
+            .map(task => (
+              <article
+                className="task-item"
+                draggable
+                onDragStart={event => {
+                  event.dataTransfer.setData("text/plain", task.name);
+                }}
+              >
+                <p className="task-name">{task.name}</p>
+                <ButtonsGroup>
+                  {statuses
+                    .filter(
+                      currentStatus => currentStatus.statusName != task.status
+                    )
+                    .map(status => (
+                      <TaskButton
+                        onClick={() =>
+                          moveToAnotherGroup(status.statusName, task)
+                        }
+                      >
+                        {status.statusName}
+                      </TaskButton>
+                    ))}
+                </ButtonsGroup>
+              </article>
+            ))}
+        </TaskList>
+      ))}
+    </div>
+  );
 }
