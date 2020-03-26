@@ -72,7 +72,7 @@ function TaskForm({
 }: {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) {
-  makeIdForTask();
+  generateIdForTask();
   return (
     <div
       className="add-task-form-item"
