@@ -1,29 +1,14 @@
-import React from "react";
+import React, { SyntheticEvent, ChangeEvent } from "react";
 import { StateProps } from "./interfaces";
 import { Task, TasksStateProps } from "./types";
 import styled, { createGlobalStyle, css } from "styled-components";
 import { motion } from "framer-motion";
+import { generateIdForTask, sendNewTask } from "./api";
+import { Autocomplete } from "@material-ui/lab";
+import { TextField, ClickAwayListener } from "@material-ui/core";
+import { createEvent } from "@testing-library/react";
 
 // api
-
-const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
-
-const tasksRequest = new Request(HOST + "/tasks");
-const newTaskPostURL = new Request(HOST + "/tasks");
-
-function sendNewTask(task: Task) {
-  fetch(newTaskPostURL, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      name: task.name,
-      status: task.status
-    })
-  });
-}
 
 // end api
 
@@ -73,7 +58,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
     { statusName: "done" }
   ];
 
-  function moveToAnotherGroup(status: string, task: Pick<Task, "name">) {
+  function moveToAnotherGroup(status: string, task: Task) {
     // WHAT IF SERVER UPDATE FAILS?
 
     // 1.
@@ -86,14 +71,22 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
     // IF SERVER UPDATE FAILS,
     // ROLLBACK YOUR LOCAL UPDATE
     // AND DISPLAY ERROR
-
+    const idForNewTask = generateIdForTask();
     // UPDATE ON SERVER
-    sendNewTask({ name: task.name, status: status }); // TODO: To się może nie powieść.
+    sendNewTask({
+      name: task.name,
+      status: status,
+      frontEndId: task.frontEndId,
+      dependencyId: task.dependencyId
+    }); // TODO: To się może nie powieść.
 
     // UPDATE LOCAL COPY
+    console.log("submitted");
     setTasks(
       tasks.map(t =>
-        t.name !== task.name ? t : { name: task.name, status: status }
+        t.name !== task.name
+          ? t
+          : { name: task.name, status: status, frontEndId: idForNewTask }
       )
     );
   }
@@ -109,10 +102,13 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
           onDragEnter={event => event.preventDefault()}
           onDrop={event => {
             event.preventDefault(); // TUTAJ
-            const name = event.dataTransfer.getData("text/plain");
+            const taskId = event.dataTransfer.getData("text/plain");
             console.log("dragged");
             // JESTEŚMY TU
-            moveToAnotherGroup(status.statusName, { name });
+            moveToAnotherGroup(
+              status.statusName,
+              tasks.filter(element => element.frontEndId == taskId)[0]
+            );
           }}
         >
           {tasks
@@ -122,7 +118,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                 className="task-item"
                 draggable
                 onDragStart={event => {
-                  event.dataTransfer.setData("text/plain", task.name);
+                  event.dataTransfer.setData("text/plain", task.frontEndId);
                 }}
               >
                 <p className="task-name">{task.name}</p>
@@ -140,7 +136,45 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                         {status.statusName}
                       </TaskButton>
                     ))}
+                  <button
+                    onClick={() => {
+                      console.log(task);
+                    }}
+                  >
+                    show data
+                  </button>
                 </ButtonsGroup>
+                <Autocomplete
+                  className="add-dependency-box"
+                  id={task.frontEndId}
+                  options={tasks}
+                  getOptionLabel={(option: Task) => option.name}
+                  style={{ width: 300 }}
+                  onChange={(event: ChangeEvent<{}>, value: Task | null) => {
+                    const dependencyTask = tasks.filter(
+                      element => element.name == value?.name
+                    )[0];
+                    console.log(dependencyTask);
+                    console.log(task.frontEndId, task.dependencyId);
+                    const newTask = {
+                      ...task
+                    };
+                    newTask?.dependencyId?.push(dependencyTask.frontEndId);
+                    console.log(newTask);
+                    sendNewTask(newTask);
+                    tasks.push(newTask);
+                    setTasks(tasks.filter(element => element != task));
+                    console.log(task.dependencyId);
+                    console.log(value?.frontEndId);
+                  }}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label="add dependency"
+                      variant="outlined"
+                    />
+                  )}
+                />
               </article>
             ))}
         </TaskList>

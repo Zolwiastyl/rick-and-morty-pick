@@ -3,7 +3,8 @@ import { Dispatch, SetStateAction } from "react";
 export type Task = {
   name: string;
   status: string;
-  //id: number;
+  frontEndId: string;
+  dependencyId?: string[];
 };
 
 export type TasksStateProps = {

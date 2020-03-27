@@ -14,14 +14,16 @@ import { Task, TasksStateProps } from "./types";
 import { TasksLists } from "./TasksLists";
 import theme from "./theme";
 import { number } from "prop-types";
+import {
+  sendNewTask,
+  generateIdForTask,
+  fetchDataFromServer,
+  RemoveAllData
+} from "./api";
 
 const tasksArray: Array<Task> = [];
 
 const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
-
-const tasksRequest = new Request(HOST + "/tasks");
-const newTaskPostURL = new Request(HOST + "/tasks");
-const updateTaskPostURL = new Request(HOST + "/update-tasks");
 
 export function App() {
   const [tasks, setTasks] = useState<Task[]>(tasksArray);
@@ -35,7 +37,12 @@ export function App() {
     const { name } = readFormValues(event.currentTarget);
     event.currentTarget.reset();
     const ArrayWithTasksToSave = tasks.slice();
-    const newTask = { name: name, status: "todo" };
+    const newTask: Task = {
+      name: name,
+      status: "todo",
+      frontEndId: generateIdForTask(),
+      dependencyId: []
+    };
     ArrayWithTasksToSave.unshift(newTask);
     sendNewTask(newTask);
     setTasks(ArrayWithTasksToSave);
@@ -97,60 +104,5 @@ function TaskForm({
         </label>
       </form>
     </div>
-  );
-}
-
-function sendNewTask(task: Task) {
-  fetch(newTaskPostURL, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      name: task.name,
-      status: task.status
-    })
-  });
-}
-function fetchDataFromServer(
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>
-) {
-  fetch(tasksRequest)
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      const newArray = { data };
-
-      const newData = newArray.data;
-
-      setTasks(newData);
-    })
-    .catch(error => console.log("We had en error" + error));
-}
-
-function generateIdForTask() {
-  return Date()
-    .split("")
-    .filter(element => /\d/.test(element))
-    .join("");
-}
-
-function RemoveAllData(props: Partial<TasksStateProps>) {
-  return (
-    <button
-      className="remove-data-button"
-      onClick={() => {
-        fetch(HOST + "/remove-data", {
-          method: "POST"
-        });
-        fetchDataFromServer(
-          props.setTasks as React.Dispatch<React.SetStateAction<Task[]>>
-        );
-      }}
-    >
-      // REMOVE ALL DATA //
-    </button>
   );
 }
