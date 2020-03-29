@@ -51,7 +51,7 @@ const TaskList: React.FC<TaskListProps> = ({
   return (
     <div className="tasks-group" {...rest}>
       <p className="group-heading">
-        {renderIcon(StatusIcon)} // {statusName} //
+        <span>{renderIcon(StatusIcon)}</span> <span>// {statusName} //</span>
       </p>
       {console.log(StatusIcon)}
 
