@@ -1,4 +1,9 @@
-import React, { SyntheticEvent, ChangeEvent } from "react";
+import React, {
+  SyntheticEvent,
+  ChangeEvent,
+  Props,
+  ComponentType
+} from "react";
 import { StateProps } from "./interfaces";
 import { Task, TasksStateProps } from "./types";
 import styled, { createGlobalStyle, css } from "styled-components";
@@ -7,10 +12,21 @@ import { generateIdForTask, sendNewTask } from "./api";
 import { Autocomplete } from "@material-ui/lab";
 import { TextField, ClickAwayListener } from "@material-ui/core";
 import { createEvent } from "@testing-library/react";
+import {
+  Layers,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Activity
+} from "react-feather";
 
-// api
-
-// end api
+function renderIcon(
+  Icon: React.ComponentClass<{}, any> | React.FunctionComponent<{}> | undefined
+) {
+  if (Icon) {
+    return <Icon />;
+  }
+}
 
 interface TaskButtonProps {
   onClick: () => void;
@@ -28,13 +44,17 @@ interface TaskListProps extends React.ComponentProps<"div"> {
   status: Status;
 }
 const TaskList: React.FC<TaskListProps> = ({
-  status: { statusName },
+  status: { statusName, StatusIcon },
   children,
   ...rest
 }) => {
   return (
     <div className="tasks-group" {...rest}>
-      <p className="group-heading"> // {statusName} //</p>
+      <p className="group-heading">
+        // {statusName} // {renderIcon(StatusIcon)}
+      </p>
+      {console.log(StatusIcon)}
+
       {children}
     </div>
   );
@@ -46,16 +66,17 @@ const ButtonsGroup: React.FC = ({ children }) => {
 
 type Status = {
   statusName: string;
+  StatusIcon?: React.ComponentClass<{}, any> | React.FunctionComponent<{}>;
 };
 
 export function TasksLists({ tasks, setTasks }: TasksStateProps) {
   const statuses: Array<Status> = [
     // YAGNI
-    { statusName: "todo" },
-    { statusName: "working-on-it" },
-    { statusName: "waiting" },
-    { statusName: "stuck" },
-    { statusName: "done" }
+    { statusName: "todo", StatusIcon: Layers },
+    { statusName: "working-on-it", StatusIcon: Activity },
+    { statusName: "waiting", StatusIcon: Clock },
+    { statusName: "stuck", StatusIcon: AlertTriangle },
+    { statusName: "done", StatusIcon: CheckCircle }
   ];
 
   function moveToAnotherGroup(status: string, task: Task) {
@@ -77,7 +98,8 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
       name: task.name,
       status: status,
       frontEndId: task.frontEndId,
-      dependencyId: task.dependencyId
+      dependencyId: task.dependencyId,
+      isReady: task.isReady
     }); // TODO: To się może nie powieść.
 
     // UPDATE LOCAL COPY
@@ -86,13 +108,19 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
       tasks.map(t =>
         t.name !== task.name
           ? t
-          : { name: task.name, status: status, frontEndId: idForNewTask }
+          : {
+              name: task.name,
+              status: status,
+              frontEndId: idForNewTask,
+              isReady: task.isReady
+            }
       )
     );
   }
 
+  const widthOfColumns = 100 / statuses.length;
   return (
-    <div className="tasks-list-item">
+    <div className="tasks-lists-item">
       {/* TODO: ^ Kipeska nazwa klasy, to chyba jest tasks-lists */}
       {statuses.map(status => (
         <TaskList
@@ -101,10 +129,10 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
           onDragOver={event => event.preventDefault()}
           onDragEnter={event => event.preventDefault()}
           onDrop={event => {
-            event.preventDefault(); // TUTAJ
+            event.preventDefault();
             const taskId = event.dataTransfer.getData("text/plain");
             console.log("dragged");
-            // JESTEŚMY TU
+
             moveToAnotherGroup(
               status.statusName,
               tasks.filter(element => element.frontEndId == taskId)[0]
@@ -121,29 +149,24 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                   event.dataTransfer.setData("text/plain", task.frontEndId);
                 }}
               >
-                <p className="task-name">{task.name}</p>
-                <ButtonsGroup>
-                  {statuses
-                    .filter(
-                      currentStatus => currentStatus.statusName != task.status
-                    )
-                    .map(status => (
-                      <TaskButton
-                        onClick={() =>
-                          moveToAnotherGroup(status.statusName, task)
-                        }
-                      >
-                        {status.statusName}
-                      </TaskButton>
-                    ))}
-                  <button
-                    onClick={() => {
-                      console.log(task);
-                    }}
-                  >
-                    show data
-                  </button>
-                </ButtonsGroup>
+                <div className="upper-part-of-task-element">
+                  <p className="task-name">{task.name}</p>
+                  <ButtonsGroup>
+                    {statuses
+                      .filter(
+                        currentStatus => currentStatus.statusName != task.status
+                      )
+                      .map(status => (
+                        <TaskButton
+                          onClick={() =>
+                            moveToAnotherGroup(status.statusName, task)
+                          }
+                        >
+                          {status.statusName}
+                        </TaskButton>
+                      ))}
+                  </ButtonsGroup>
+                </div>
                 <Autocomplete
                   className="add-dependency-box"
                   id={task.frontEndId}

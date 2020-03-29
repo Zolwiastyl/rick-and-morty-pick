@@ -2,7 +2,7 @@ import react from "react";
 import { Task, TasksStateProps } from "./types";
 import React from "react";
 
-const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
+export const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");
 const newTaskPostURL = new Request(HOST + "/tasks");
 const updateTaskPostURL = new Request(HOST + "/update-tasks");

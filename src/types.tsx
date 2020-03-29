@@ -5,6 +5,7 @@ export type Task = {
   status: string;
   frontEndId: string;
   dependencyId?: string[];
+  isReady: boolean;
 };
 
 export type TasksStateProps = {
