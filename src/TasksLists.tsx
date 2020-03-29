@@ -51,7 +51,7 @@ const TaskList: React.FC<TaskListProps> = ({
   return (
     <div className="tasks-group" {...rest}>
       <p className="group-heading">
-        // {statusName} // {renderIcon(StatusIcon)}
+        {renderIcon(StatusIcon)} // {statusName} //
       </p>
       {console.log(StatusIcon)}
 
@@ -162,7 +162,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                             moveToAnotherGroup(status.statusName, task)
                           }
                         >
-                          {status.statusName}
+                          {renderIcon(status.StatusIcon)}
                         </TaskButton>
                       ))}
                   </ButtonsGroup>
