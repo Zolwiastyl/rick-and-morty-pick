@@ -37,6 +37,7 @@ export const Auth0Provider = ({
 
   useEffect(() => {
     const initAuth0 = async () => {
+      setLoading(true);
       const auth0FromHook = await createAuth0Client(initOptions);
       setAuth0(auth0FromHook);
       if (
@@ -88,19 +89,6 @@ export const Auth0Provider = ({
     setUser(user);
   };
 
-  const dupa1 = {
-    isAuthenticated,
-    user,
-    loading,
-    popupOpen,
-    loginWithPopup,
-    handleRedirectCallback,
-    getIdTokenClaims: auth0Client?.getIdTokenClaims,
-    loginWithRedirect: auth0Client?.loginWithRedirect,
-    getTokenSilently: auth0Client?.getTokenSilently,
-    getTokenWithPopup: auth0Client?.getTokenWithPopup,
-    logout: auth0Client?.logout
-  };
   return (
     <Auth0Context.Provider
       value={{

@@ -19,6 +19,7 @@ import {
   Clock,
   Activity
 } from "react-feather";
+import { userInfo } from "os";
 
 function renderIcon(
   Icon: React.ComponentClass<{}, any> | React.FunctionComponent<{}> | undefined
@@ -92,14 +93,15 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
     // IF SERVER UPDATE FAILS,
     // ROLLBACK YOUR LOCAL UPDATE
     // AND DISPLAY ERROR
-    const idForNewTask = generateIdForTask();
+
     // UPDATE ON SERVER
     sendNewTask({
       name: task.name,
       status: status,
-      frontEndId: task.frontEndId,
       dependencyId: task.dependencyId,
-      isReady: task.isReady
+      frontEndId: task.frontEndId,
+      isReady: task.isReady,
+      userId: task.userId
     }); // TODO: To się może nie powieść.
 
     // UPDATE LOCAL COPY
@@ -111,8 +113,9 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
           : {
               name: task.name,
               status: status,
-              frontEndId: idForNewTask,
-              isReady: task.isReady
+              frontEndId: task.frontEndId,
+              isReady: task.isReady,
+              userId: task.userId
             }
       )
     );

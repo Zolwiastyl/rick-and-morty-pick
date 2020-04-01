@@ -14,7 +14,7 @@ export function generateIdForTask() {
     .join("");
 }
 
-export function sendNewTask(task: Task) {
+export function sendNewTask(task: Partial<Task>) {
   fetch(newTaskPostURL, {
     method: "POST",
     headers: {
@@ -24,9 +24,13 @@ export function sendNewTask(task: Task) {
     body: JSON.stringify({
       name: task.name,
       status: task.status,
-      frontEndId: task.frontEndId
+      frontEndId: task.frontEndId,
+      dependencyId: task.dependencyId,
+      isReady: task.isReady,
+      userId: "task.userId"
     })
   });
+  console.log("task sent");
 }
 
 export function fetchDataFromServer(
