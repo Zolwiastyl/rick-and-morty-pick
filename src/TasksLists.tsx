@@ -51,7 +51,7 @@ const TaskList: React.FC<TaskListProps> = ({
   return (
     <div className="tasks-group" {...rest}>
       <p className="group-heading">
-        <span>{renderIcon(StatusIcon)}</span> <span>// {statusName} //</span>
+        {renderIcon(StatusIcon)} // {statusName} //
       </p>
       {console.log(StatusIcon)}
 
@@ -118,7 +118,6 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
     );
   }
 
-  const widthOfColumns = 100 / statuses.length;
   return (
     <div className="tasks-lists-item">
       {/* TODO: ^ Kipeska nazwa klasy, to chyba jest tasks-lists */}
