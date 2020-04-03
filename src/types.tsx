@@ -7,6 +7,7 @@ export type Task = {
   dependencyId?: string[];
   isReady: boolean;
   userId: string;
+  ordinalNumber?: number;
 };
 
 export type TasksStateProps = {

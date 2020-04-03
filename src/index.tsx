@@ -8,7 +8,6 @@ import history from "./utils/history";
 //import App from "./App";
 
 import { App } from "./App";
-import { any } from "prop-types";
 
 const onRedirectCallback = (appState: any) => {
   history.push(
@@ -29,5 +28,12 @@ ReactDOM.render(
   </Auth0Provider>,
   document.getElementById("root")
 );
-
+/*<Auth0Provider
+    domain={config.domain}
+    client_id={config.clientId}
+    redirect_uri={window.location.origin}
+    onRedirectCallback={onRedirectCallback}
+  >
+    <App />
+  </Auth0Provider>, */
 serviceWorker.unregister();

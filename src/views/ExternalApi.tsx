@@ -14,6 +14,7 @@ const ExternalApi = () => {
       const token = await client?.getTokenSilently();
 
       const response = await fetch(HOST + "/external-api", {
+        method: "post",
         headers: {
           Authorization: `Bearer ${token}`
         }

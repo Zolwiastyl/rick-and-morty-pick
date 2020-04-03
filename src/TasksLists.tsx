@@ -8,18 +8,18 @@ import { StateProps } from "./interfaces";
 import { Task, TasksStateProps } from "./types";
 import styled, { createGlobalStyle, css } from "styled-components";
 import { motion } from "framer-motion";
-import { generateIdForTask, sendNewTask } from "./api";
+import { sendNewTask, removeTask, moveToAnotherGroup } from "./api";
 import { Autocomplete } from "@material-ui/lab";
 import { TextField, ClickAwayListener } from "@material-ui/core";
-import { createEvent } from "@testing-library/react";
+
 import {
   Layers,
   AlertTriangle,
   CheckCircle,
   Clock,
-  Activity
+  Activity,
+  Trash2
 } from "react-feather";
-import { userInfo } from "os";
 
 function renderIcon(
   Icon: React.ComponentClass<{}, any> | React.FunctionComponent<{}> | undefined
@@ -79,47 +79,18 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
     { statusName: "stuck", StatusIcon: AlertTriangle },
     { statusName: "done", StatusIcon: CheckCircle }
   ];
-
-  function moveToAnotherGroup(status: string, task: Task) {
-    // WHAT IF SERVER UPDATE FAILS?
-
-    // 1.
-    // UPDATE ON SERVER
-    // THEN IF IT SUCCEEDS UPDATE LOCAL COPY
-    // OTHERWISE DISPLAY ERROR
-    // 2. (OPTIMISTIC UPDATE)
-    // UPDATE ON SERVER,
-    // UPDATE LOCAL COPY WHILE YOU WAIT,
-    // IF SERVER UPDATE FAILS,
-    // ROLLBACK YOUR LOCAL UPDATE
-    // AND DISPLAY ERROR
-
-    // UPDATE ON SERVER
-    sendNewTask({
-      name: task.name,
-      status: status,
-      dependencyId: task.dependencyId,
-      frontEndId: task.frontEndId,
-      isReady: task.isReady,
-      userId: task.userId
-    }); // TODO: To się może nie powieść.
-
-    // UPDATE LOCAL COPY
-    console.log("submitted");
-    setTasks(
-      tasks.map(t =>
-        t.name !== task.name
-          ? t
-          : {
-              name: task.name,
-              status: status,
-              frontEndId: task.frontEndId,
-              isReady: task.isReady,
-              userId: task.userId
-            }
-      )
+  const DeleteButton = (task: Task) => {
+    return (
+      <button
+        onClick={() => {
+          setTasks(tasks.filter(t => t.frontEndId != task.frontEndId));
+          removeTask(task);
+        }}
+      >
+        {renderIcon(Trash2)}
+      </button>
     );
-  }
+  };
 
   return (
     <div className="tasks-lists-item">
@@ -128,27 +99,90 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
         <TaskList
           // useDrop.ref
           status={status}
-          onDragOver={event => event.preventDefault()}
-          onDragEnter={event => event.preventDefault()}
           onDrop={event => {
-            event.preventDefault();
-            const taskId = event.dataTransfer.getData("text/plain");
-            console.log("dragged");
-
-            moveToAnotherGroup(
-              status.statusName,
-              tasks.filter(element => element.frontEndId == taskId)[0]
-            );
+            if (event.currentTarget.childElementCount) {
+              event.preventDefault();
+              const taskId = event.dataTransfer.getData("text/plain");
+              const taskOverId = event.dataTransfer.getData("text/taskOverId");
+              console.log(taskOverId);
+              if (
+                tasks.filter(t => t.frontEndId == taskId)[0].status !=
+                status.statusName
+              ) {
+                moveToAnotherGroup(
+                  status.statusName,
+                  tasks.filter(task => task.frontEndId == taskId)[0],
+                  { tasks, setTasks }
+                );
+              }
+              console.log("dragged");
+            }
           }}
+          onDragOver={event => {
+            event.preventDefault();
+            const positionY = event.clientY;
+            const positionX = event.clientX;
+            const draggedTaskId = event.currentTarget.id;
+          }}
+          onDragEnter={event => event.preventDefault()}
         >
           {tasks
             .filter(task => task.status == status.statusName)
             .map(task => (
               <article
+                id={task.frontEndId}
                 className="task-item"
                 draggable
                 onDragStart={event => {
                   event.dataTransfer.setData("text/plain", task.frontEndId);
+                  event.dataTransfer.effectAllowed = "move";
+                }}
+                onDragOver={event => {
+                  event.preventDefault();
+
+                  const draggedTaskId = event.currentTarget.id;
+
+                  event.currentTarget.parentNode?.insertBefore(
+                    event.currentTarget,
+                    event.currentTarget
+                  );
+                }}
+                onDrop={event => {
+                  event.preventDefault();
+                  const taskId = event.dataTransfer.getData("text/plain");
+
+                  const positionX = event.clientX;
+
+                  const parent = event.currentTarget.parentNode;
+                  if (
+                    event.clientY - event.currentTarget.offsetTop >
+                    event.currentTarget.offsetHeight / 2
+                  ) {
+                    console.log(
+                      "it's in the bottom of " +
+                        tasks.filter(
+                          t => t.frontEndId == event.currentTarget.id
+                        )[0].name
+                    );
+                  } else {
+                    console.log(
+                      "it's in the top of " +
+                        tasks.filter(
+                          t => t.frontEndId == event.currentTarget.id
+                        )[0].name
+                    );
+                  }
+                  if (
+                    tasks.filter(t => t.frontEndId == taskId)[0].status !=
+                    status.statusName
+                  ) {
+                    moveToAnotherGroup(
+                      status.statusName,
+                      tasks.filter(task => task.frontEndId == taskId)[0],
+                      { tasks, setTasks }
+                    );
+                  }
+                  console.log("dragged");
                 }}
               >
                 <div className="upper-part-of-task-element">
@@ -161,12 +195,16 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                       .map(status => (
                         <TaskButton
                           onClick={() =>
-                            moveToAnotherGroup(status.statusName, task)
+                            moveToAnotherGroup(status.statusName, task, {
+                              tasks,
+                              setTasks
+                            })
                           }
                         >
                           {renderIcon(status.StatusIcon)}
                         </TaskButton>
                       ))}
+                    {DeleteButton(task)}
                   </ButtonsGroup>
                 </div>
                 <Autocomplete

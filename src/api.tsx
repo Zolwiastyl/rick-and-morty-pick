@@ -6,6 +6,7 @@ export const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");
 const newTaskPostURL = new Request(HOST + "/tasks");
 const updateTaskPostURL = new Request(HOST + "/update-tasks");
+const removeTaskUrl = new Request(HOST + "/remove-task");
 
 export function generateIdForTask() {
   return Date()
@@ -15,7 +16,7 @@ export function generateIdForTask() {
 }
 
 export function sendNewTask(task: Partial<Task>) {
-  fetch(newTaskPostURL, {
+  const fetchAction = fetch(newTaskPostURL, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -29,8 +30,11 @@ export function sendNewTask(task: Partial<Task>) {
       isReady: task.isReady,
       userId: "task.userId"
     })
+  }).catch(error => {
+    console.log("problem with fetching data:", error);
+    return false;
   });
-  console.log("task sent");
+  return fetchAction;
 }
 
 export function fetchDataFromServer(
@@ -68,21 +72,63 @@ export function RemoveAllData(props: Partial<TasksStateProps>) {
   );
 }
 
-/*const tasksRequest = new Request(HOST + "/tasks");
-const newTaskPostURL = new Request(HOST + "/tasks");
-
-function sendNewTask(task: Task) {
-  fetch(newTaskPostURL, {
+export function removeTask(task: Task) {
+  fetch(removeTaskUrl, {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-type": "application/json"
     },
     body: JSON.stringify({
-      name: task.name,
-      status: task.status,
-      frontEntId: task.frontEndId,
-      dependencyId: task.dependencyId
+      frontEndId: task.frontEndId
     })
   });
-} */
+}
+export function moveToAnotherGroup(
+  status: string,
+  task: Task,
+  state: TasksStateProps
+) {
+  // WHAT IF SERVER UPDATE FAILS?
+
+  // 1.
+  // UPDATE ON SERVER
+  // THEN IF IT SUCCEEDS UPDATE LOCAL COPY
+  // OTHERWISE DISPLAY ERROR
+  // 2. (OPTIMISTIC UPDATE)
+  // UPDATE ON SERVER,
+  // UPDATE LOCAL COPY WHILE YOU WAIT,
+  // IF SERVER UPDATE FAILS,
+  // ROLLBACK YOUR LOCAL UPDATE
+  // AND DISPLAY ERROR
+
+  // UPDATE ON SERVER
+  if (
+    sendNewTask({
+      name: task.name,
+      status: status,
+      dependencyId: task.dependencyId,
+      frontEndId: task.frontEndId,
+      isReady: task.isReady,
+      userId: task.userId
+    })
+  ) {
+    // UPDATE LOCAL COPY
+    console.log("submitted");
+    state.setTasks(
+      state.tasks.map(t =>
+        t.frontEndId !== task.frontEndId
+          ? t
+          : {
+              name: task.name,
+              status: status,
+              frontEndId: task.frontEndId,
+              isReady: task.isReady,
+              userId: task.userId
+            }
+      )
+    );
+  } else {
+    return console.log("couldn't sent the task to server");
+  }
+}

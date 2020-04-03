@@ -1,19 +1,11 @@
-import React, {
-  useState,
-  Dispatch,
-  SetStateAction,
-  FormEvent,
-  ButtonHTMLAttributes,
-  useEffect
-} from "react";
-import { Fragment, useContext } from "react";
-import { ThemeProvider, jsx } from "theme-ui";
+import React, { useState, useEffect } from "react";
+import { Fragment } from "react";
+
 import "./App.scss";
-import { StateProps } from "./interfaces";
-import { Task, TasksStateProps } from "./types";
+
+import { Task } from "./types";
 import { TasksLists } from "./TasksLists";
-import theme from "./theme";
-import { number } from "prop-types";
+
 import {
   sendNewTask,
   generateIdForTask,
@@ -72,6 +64,7 @@ export function App() {
         <header>
           <NavBar />
         </header>
+
         <Switch>
           <Route path="/" exact />
           <PrivateRoute path="/external-api" component={ExternalApi} />
