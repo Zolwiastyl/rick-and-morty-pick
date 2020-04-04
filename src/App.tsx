@@ -13,24 +13,27 @@ import {
   RemoveAllData
 } from "./api";
 import { Plus } from "react-feather";
-//import { NavBar } from "./components/NavBar";
-//import { useAuth0 } from "./react-auth0-spa";
-//import { Profile } from "./components/Profile";
-//import { Router, Route, Switch, Link } from "react-router-dom";
-//import history from "./utils/history";
-//import { PrivateRoute } from "./components/PrivateRoute";
-//import ExternalApi from "./views/ExternalApi";
+import { NavBar } from "./components/NavBar";
+import { useAuth0 } from "./react-auth0-spa";
+import { Profile } from "./components/Profile";
+import { Router, Route, Switch, Link } from "react-router-dom";
+import history from "./utils/history";
+import { PrivateRoute } from "./components/PrivateRoute";
+import ExternalApi from "./views/ExternalApi";
+import { userInfo } from "os";
 
 const tasksArray: Array<Task> = [];
 
+const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
+
 export function App() {
-  //const { loading } = useAuth0();
+  const { loading } = useAuth0();
   const [tasks, setTasks] = useState<Task[]>(tasksArray);
 
   useEffect(() => {
     fetchDataFromServer(setTasks);
   }, []);
-  //const { user } = useAuth0();
+  const { user } = useAuth0();
 
   const onSubmit: (event: React.FormEvent<HTMLFormElement>) => void = event => {
     event.preventDefault();
@@ -43,23 +46,34 @@ export function App() {
       frontEndId: generateIdForTask(),
       dependencyId: [],
       isReady: true,
-      userId: "placeholder"
+      userId: user.toString()
     };
     ArrayWithTasksToSave.unshift(newTask);
     sendNewTask(newTask);
     setTasks(ArrayWithTasksToSave);
   };
-
+  console.log();
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <Fragment>
       <button onClick={() => fetchDataFromServer}>fetch data</button>
+      <Router history={history}>
+        <PrivateRoute path="/profile" component={Profile} />
+        <header>
+          <NavBar />
+        </header>
 
-      <header></header>
-
-      <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-      <TaskForm onSubmit={onSubmit} />
-      <TasksLists setTasks={setTasks} tasks={tasks} />
-      <RemoveAllData setTasks={setTasks} />
+        <Switch>
+          <Route path="/" exact />
+          <PrivateRoute path="/external-api" component={ExternalApi} />
+        </Switch>
+        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+        <TaskForm onSubmit={onSubmit} />
+        <TasksLists setTasks={setTasks} tasks={tasks} />
+        <RemoveAllData setTasks={setTasks} />
+      </Router>
     </Fragment>
   );
 }
