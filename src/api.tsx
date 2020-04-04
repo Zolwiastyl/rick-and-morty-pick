@@ -124,7 +124,8 @@ export function moveToAnotherGroup(
               status: status,
               frontEndId: task.frontEndId,
               isReady: task.isReady,
-              userId: task.userId
+              userId: task.userId,
+              ordinalNumber: task.ordinalNumber
             }
       )
     );

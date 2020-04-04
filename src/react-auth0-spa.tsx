@@ -45,6 +45,8 @@ export const Auth0Provider = ({
         window.location.search.includes("state=")
       ) {
         const { appState } = await auth0FromHook.handleRedirectCallback();
+        console.log(appState);
+
         onRedirectCallback(appState);
       }
 

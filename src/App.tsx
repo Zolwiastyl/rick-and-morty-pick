@@ -46,7 +46,8 @@ export function App() {
       frontEndId: generateIdForTask(),
       dependencyId: [],
       isReady: true,
-      userId: user.toString()
+      userId: user.toString(),
+      ordinalNumber: 1
     };
     ArrayWithTasksToSave.unshift(newTask);
     sendNewTask(newTask);
@@ -58,7 +59,7 @@ export function App() {
   }
   return (
     <Fragment>
-      <button onClick={() => fetchDataFromServer}>fetch data</button>
+      <button onClick={() => fetchDataFromServer(setTasks)}>fetch data</button>
       <Router history={history}>
         <PrivateRoute path="/profile" component={Profile} />
         <header>

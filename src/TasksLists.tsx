@@ -99,12 +99,19 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
         <TaskList
           // useDrop.ref
           status={status}
+          onDragOver={event => {
+            event.preventDefault();
+          }}
           onDrop={event => {
-            if (event.currentTarget.childElementCount) {
+            event.preventDefault();
+            console.log(
+              "has child nodes ",
+              event.currentTarget.hasChildNodes()
+            );
+            if (event.currentTarget.hasChildNodes()) {
+              console.log("first con passed");
               event.preventDefault();
               const taskId = event.dataTransfer.getData("text/plain");
-              const taskOverId = event.dataTransfer.getData("text/taskOverId");
-              console.log(taskOverId);
               if (
                 tasks.filter(t => t.frontEndId == taskId)[0].status !=
                 status.statusName
@@ -118,16 +125,11 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
               console.log("dragged");
             }
           }}
-          onDragOver={event => {
-            event.preventDefault();
-            const positionY = event.clientY;
-            const positionX = event.clientX;
-            const draggedTaskId = event.currentTarget.id;
-          }}
           onDragEnter={event => event.preventDefault()}
         >
           {tasks
             .filter(task => task.status == status.statusName)
+            .sort((x, y) => x.ordinalNumber - y.ordinalNumber)
             .map(task => (
               <article
                 id={task.frontEndId}
@@ -158,11 +160,16 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                     event.clientY - event.currentTarget.offsetTop >
                     event.currentTarget.offsetHeight / 2
                   ) {
-                    console.log(
-                      "it's in the bottom of " +
-                        tasks.filter(
-                          t => t.frontEndId == event.currentTarget.id
-                        )[0].name
+                    moveToAnotherGroup(
+                      status.statusName,
+                      {
+                        ...tasks.filter(task => task.frontEndId == taskId)[0],
+                        ordinalNumber:
+                          tasks.filter(
+                            t => t.frontEndId == event.currentTarget.id
+                          )[0].ordinalNumber! + 1
+                      },
+                      { tasks, setTasks }
                     );
                   } else {
                     console.log(
