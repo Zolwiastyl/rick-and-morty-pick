@@ -1,6 +1,7 @@
+import React, { useState } from "react";
+/*
 // src/views/ExternalApi.js
 
-import React, { useState } from "react";
 import { useAuth0 } from "../react-auth0-spa";
 import { HOST } from "../api";
 
@@ -16,8 +17,8 @@ const ExternalApi = () => {
       const response = await fetch(HOST + "/external-api", {
         method: "post",
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       const responseData = await response.json();
@@ -39,3 +40,4 @@ const ExternalApi = () => {
 };
 
 export default ExternalApi;
+*/

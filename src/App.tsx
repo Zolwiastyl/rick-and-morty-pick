@@ -10,7 +10,7 @@ import {
   sendNewTask,
   generateIdForTask,
   fetchDataFromServer,
-  RemoveAllData
+  RemoveAllData,
 } from "./api";
 import { Plus } from "react-feather";
 import { NavBar } from "./components/NavBar";
@@ -19,23 +19,27 @@ import { Profile } from "./components/Profile";
 import { Router, Route, Switch, Link } from "react-router-dom";
 import history from "./utils/history";
 import { PrivateRoute } from "./components/PrivateRoute";
-import ExternalApi from "./views/ExternalApi";
-import { userInfo } from "os";
 
 const tasksArray: Array<Task> = [];
 
 const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 
 export function App() {
-  const { loading } = useAuth0();
+  const { loading, client } = useAuth0();
   const [tasks, setTasks] = useState<Task[]>(tasksArray);
-
+  async function getToken() {
+    const token = await client?.getTokenSilently();
+    return token;
+  }
+  const token = getToken();
   useEffect(() => {
     fetchDataFromServer(setTasks);
   }, []);
   const { user } = useAuth0();
 
-  const onSubmit: (event: React.FormEvent<HTMLFormElement>) => void = event => {
+  const onSubmit: (event: React.FormEvent<HTMLFormElement>) => void = (
+    event
+  ) => {
     event.preventDefault();
     const { name } = readFormValues(event.currentTarget);
     event.currentTarget.reset();
@@ -47,10 +51,10 @@ export function App() {
       dependencyId: [],
       isReady: true,
       userId: user.toString(),
-      ordinalNumber: 1
+      ordinalNumber: 1,
     };
     ArrayWithTasksToSave.unshift(newTask);
-    sendNewTask(newTask);
+    sendNewTask(newTask, token);
     setTasks(ArrayWithTasksToSave);
   };
   console.log();
@@ -68,7 +72,6 @@ export function App() {
 
         <Switch>
           <Route path="/" exact />
-          <PrivateRoute path="/external-api" component={ExternalApi} />
         </Switch>
         <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
         <TaskForm onSubmit={onSubmit} />
@@ -95,7 +98,7 @@ function readFormValues(form: HTMLFormElement) {
 }
 
 function TaskForm({
-  onSubmit
+  onSubmit,
 }: {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) {
@@ -106,7 +109,7 @@ function TaskForm({
       sx={{
         fontWeight: "bold",
         fontSize: 4, // picks up value from `theme.fontSizes[4]`
-        color: "primary" // picks up value from `theme.colors.primary`
+        color: "primary", // picks up value from `theme.colors.primary`
       }}
     >
       <form className="add-task-form" onSubmit={onSubmit}>

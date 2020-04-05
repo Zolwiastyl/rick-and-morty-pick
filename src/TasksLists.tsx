@@ -2,7 +2,7 @@ import React, {
   SyntheticEvent,
   ChangeEvent,
   Props,
-  ComponentType
+  ComponentType,
 } from "react";
 import { StateProps } from "./interfaces";
 import { Task, TasksStateProps } from "./types";
@@ -18,8 +18,9 @@ import {
   CheckCircle,
   Clock,
   Activity,
-  Trash2
+  Trash2,
 } from "react-feather";
+import { useAuth0 } from "./react-auth0-spa";
 
 function renderIcon(
   Icon: React.ComponentClass<{}, any> | React.FunctionComponent<{}> | undefined
@@ -77,13 +78,19 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
     { statusName: "working-on-it", StatusIcon: Activity },
     { statusName: "waiting", StatusIcon: Clock },
     { statusName: "stuck", StatusIcon: AlertTriangle },
-    { statusName: "done", StatusIcon: CheckCircle }
+    { statusName: "done", StatusIcon: CheckCircle },
   ];
+  const { client } = useAuth0();
+  async function getToken() {
+    const token = await client?.getTokenSilently();
+    return token;
+  }
+  const token = getToken();
   const DeleteButton = (task: Task) => {
     return (
       <button
         onClick={() => {
-          setTasks(tasks.filter(t => t.frontEndId != task.frontEndId));
+          setTasks(tasks.filter((t) => t.frontEndId != task.frontEndId));
           removeTask(task);
         }}
       >
@@ -95,14 +102,14 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
   return (
     <div className="tasks-lists-item">
       {/* TODO: ^ Kipeska nazwa klasy, to chyba jest tasks-lists */}
-      {statuses.map(status => (
+      {statuses.map((status) => (
         <TaskList
           // useDrop.ref
           status={status}
-          onDragOver={event => {
+          onDragOver={(event) => {
             event.preventDefault();
           }}
-          onDrop={event => {
+          onDrop={(event) => {
             event.preventDefault();
             console.log(
               "has child nodes ",
@@ -113,33 +120,34 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
               event.preventDefault();
               const taskId = event.dataTransfer.getData("text/plain");
               if (
-                tasks.filter(t => t.frontEndId == taskId)[0].status !=
+                tasks.filter((t) => t.frontEndId == taskId)[0].status !=
                 status.statusName
               ) {
                 moveToAnotherGroup(
                   status.statusName,
-                  tasks.filter(task => task.frontEndId == taskId)[0],
-                  { tasks, setTasks }
+                  tasks.filter((task) => task.frontEndId == taskId)[0],
+                  { tasks, setTasks },
+                  token
                 );
               }
               console.log("dragged");
             }
           }}
-          onDragEnter={event => event.preventDefault()}
+          onDragEnter={(event) => event.preventDefault()}
         >
           {tasks
-            .filter(task => task.status == status.statusName)
+            .filter((task) => task.status == status.statusName)
             .sort((x, y) => x.ordinalNumber - y.ordinalNumber)
-            .map(task => (
+            .map((task) => (
               <article
                 id={task.frontEndId}
                 className="task-item"
                 draggable
-                onDragStart={event => {
+                onDragStart={(event) => {
                   event.dataTransfer.setData("text/plain", task.frontEndId);
                   event.dataTransfer.effectAllowed = "move";
                 }}
-                onDragOver={event => {
+                onDragOver={(event) => {
                   event.preventDefault();
 
                   const draggedTaskId = event.currentTarget.id;
@@ -149,7 +157,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                     event.currentTarget
                   );
                 }}
-                onDrop={event => {
+                onDrop={(event) => {
                   event.preventDefault();
                   const taskId = event.dataTransfer.getData("text/plain");
 
@@ -163,30 +171,32 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                     moveToAnotherGroup(
                       status.statusName,
                       {
-                        ...tasks.filter(task => task.frontEndId == taskId)[0],
+                        ...tasks.filter((task) => task.frontEndId == taskId)[0],
                         ordinalNumber:
                           tasks.filter(
-                            t => t.frontEndId == event.currentTarget.id
-                          )[0].ordinalNumber! + 1
+                            (t) => t.frontEndId == event.currentTarget.id
+                          )[0].ordinalNumber! + 1,
                       },
-                      { tasks, setTasks }
+                      { tasks, setTasks },
+                      token
                     );
                   } else {
                     console.log(
                       "it's in the top of " +
                         tasks.filter(
-                          t => t.frontEndId == event.currentTarget.id
+                          (t) => t.frontEndId == event.currentTarget.id
                         )[0].name
                     );
                   }
                   if (
-                    tasks.filter(t => t.frontEndId == taskId)[0].status !=
+                    tasks.filter((t) => t.frontEndId == taskId)[0].status !=
                     status.statusName
                   ) {
                     moveToAnotherGroup(
                       status.statusName,
-                      tasks.filter(task => task.frontEndId == taskId)[0],
-                      { tasks, setTasks }
+                      tasks.filter((task) => task.frontEndId == taskId)[0],
+                      { tasks, setTasks },
+                      token
                     );
                   }
                   console.log("dragged");
@@ -197,15 +207,21 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                   <ButtonsGroup>
                     {statuses
                       .filter(
-                        currentStatus => currentStatus.statusName != task.status
+                        (currentStatus) =>
+                          currentStatus.statusName != task.status
                       )
-                      .map(status => (
+                      .map((status) => (
                         <TaskButton
                           onClick={() =>
-                            moveToAnotherGroup(status.statusName, task, {
-                              tasks,
-                              setTasks
-                            })
+                            moveToAnotherGroup(
+                              status.statusName,
+                              task,
+                              {
+                                tasks,
+                                setTasks,
+                              },
+                              token
+                            )
                           }
                         >
                           {renderIcon(status.StatusIcon)}
@@ -222,22 +238,22 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                   style={{ width: 300 }}
                   onChange={(event: ChangeEvent<{}>, value: Task | null) => {
                     const dependencyTask = tasks.filter(
-                      element => element.name == value?.name
+                      (element) => element.name == value?.name
                     )[0];
                     console.log(dependencyTask);
                     console.log(task.frontEndId, task.dependencyId);
                     const newTask = {
-                      ...task
+                      ...task,
                     };
                     newTask?.dependencyId?.push(dependencyTask.frontEndId);
                     console.log(newTask);
-                    sendNewTask(newTask);
+                    sendNewTask(newTask, token);
                     tasks.push(newTask);
-                    setTasks(tasks.filter(element => element != task));
+                    setTasks(tasks.filter((element) => element != task));
                     console.log(task.dependencyId);
                     console.log(value?.frontEndId);
                   }}
-                  renderInput={params => (
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       label="add dependency"
