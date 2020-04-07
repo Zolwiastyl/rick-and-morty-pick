@@ -2,6 +2,7 @@ import react from "react";
 import { Task, TasksStateProps } from "./types";
 import React from "react";
 import { useAuth0 } from "./react-auth0-spa";
+import { any } from "prop-types";
 
 export const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");
@@ -40,17 +41,21 @@ export function sendNewTask(task: Partial<Task>, token: any) {
 }
 
 export function fetchDataFromServer(
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
+  token: any
 ) {
-  fetch(tasksRequest)
+  fetch(tasksRequest, {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  })
     .then((response) => {
       return response.json();
     })
     .then((data) => {
       const newArray = { data };
-
       const newData = newArray.data;
-
       setTasks(newData);
     })
     .catch((error) => console.log("We had en error" + error));
@@ -64,9 +69,6 @@ export function RemoveAllData(props: Partial<TasksStateProps>) {
         fetch(HOST + "/remove-data", {
           method: "POST",
         });
-        fetchDataFromServer(
-          props.setTasks as React.Dispatch<React.SetStateAction<Task[]>>
-        );
       }}
     >
       // REMOVE ALL DATA //
@@ -85,6 +87,13 @@ export function removeTask(task: Task) {
       frontEndId: task.frontEndId,
     }),
   });
+}
+export function renderIcon(
+  Icon: React.ComponentClass<{}, any> | React.FunctionComponent<{}> | undefined
+) {
+  if (Icon) {
+    return <Icon />;
+  }
 }
 export function moveToAnotherGroup(
   status: string,

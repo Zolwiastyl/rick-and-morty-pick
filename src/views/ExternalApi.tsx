@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-/*
+
 // src/views/ExternalApi.js
 
 import { useAuth0 } from "../react-auth0-spa";
@@ -40,4 +40,3 @@ const ExternalApi = () => {
 };
 
 export default ExternalApi;
-*/

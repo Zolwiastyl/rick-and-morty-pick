@@ -1,16 +1,9 @@
-import React, {
-  SyntheticEvent,
-  ChangeEvent,
-  Props,
-  ComponentType,
-} from "react";
-import { StateProps } from "./interfaces";
+import React, { ChangeEvent } from "react";
 import { Task, TasksStateProps } from "./types";
-import styled, { createGlobalStyle, css } from "styled-components";
-import { motion } from "framer-motion";
-import { sendNewTask, removeTask, moveToAnotherGroup } from "./api";
+
+import { sendNewTask, removeTask, moveToAnotherGroup, renderIcon } from "./api";
 import { Autocomplete } from "@material-ui/lab";
-import { TextField, ClickAwayListener } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 
 import {
   Layers,
@@ -21,14 +14,6 @@ import {
   Trash2,
 } from "react-feather";
 import { useAuth0 } from "./react-auth0-spa";
-
-function renderIcon(
-  Icon: React.ComponentClass<{}, any> | React.FunctionComponent<{}> | undefined
-) {
-  if (Icon) {
-    return <Icon />;
-  }
-}
 
 interface TaskButtonProps {
   onClick: () => void;
@@ -81,11 +66,22 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
     { statusName: "done", StatusIcon: CheckCircle },
   ];
   const { client } = useAuth0();
-  async function getToken() {
-    const token = await client?.getTokenSilently();
-    return token;
-  }
-  const token = getToken();
+  const callApiToSendTask = async (
+    status: string,
+    task: Task,
+    state: TasksStateProps,
+    token: any
+  ) => {
+    try {
+      const token = await client?.getTokenSilently();
+      const response = async () =>
+        await moveToAnotherGroup(status, task, state, token);
+      response();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const token = "dupa1";
   const DeleteButton = (task: Task) => {
     return (
       <button
@@ -123,7 +119,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                 tasks.filter((t) => t.frontEndId == taskId)[0].status !=
                 status.statusName
               ) {
-                moveToAnotherGroup(
+                callApiToSendTask(
                   status.statusName,
                   tasks.filter((task) => task.frontEndId == taskId)[0],
                   { tasks, setTasks },
@@ -168,7 +164,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                     event.clientY - event.currentTarget.offsetTop >
                     event.currentTarget.offsetHeight / 2
                   ) {
-                    moveToAnotherGroup(
+                    callApiToSendTask(
                       status.statusName,
                       {
                         ...tasks.filter((task) => task.frontEndId == taskId)[0],
@@ -192,7 +188,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                     tasks.filter((t) => t.frontEndId == taskId)[0].status !=
                     status.statusName
                   ) {
-                    moveToAnotherGroup(
+                    callApiToSendTask(
                       status.statusName,
                       tasks.filter((task) => task.frontEndId == taskId)[0],
                       { tasks, setTasks },
@@ -213,7 +209,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                       .map((status) => (
                         <TaskButton
                           onClick={() =>
-                            moveToAnotherGroup(
+                            callApiToSendTask(
                               status.statusName,
                               task,
                               {

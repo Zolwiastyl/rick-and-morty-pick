@@ -12,7 +12,7 @@ import {
   fetchDataFromServer,
   RemoveAllData,
 } from "./api";
-import { Plus } from "react-feather";
+import { Plus, User } from "react-feather";
 import { NavBar } from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
 import { Profile } from "./components/Profile";
@@ -25,17 +25,32 @@ const tasksArray: Array<Task> = [];
 const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 
 export function App() {
-  const { loading, client } = useAuth0();
+  const { loading, client, user } = useAuth0();
   const [tasks, setTasks] = useState<Task[]>(tasksArray);
-  async function getToken() {
-    const token = await client?.getTokenSilently();
-    return token;
-  }
-  const token = getToken();
   useEffect(() => {
-    fetchDataFromServer(setTasks);
-  }, []);
-  const { user } = useAuth0();
+    callApiToFetchData(setTasks);
+  }, [loading, user, client]);
+
+  const callApiToFetchData = async (
+    setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+  ) => {
+    try {
+      const token = await client?.getTokenSilently();
+      const response = async () => await fetchDataFromServer(setTasks, token);
+      response();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const callApiToSendTask = async (task: Task) => {
+    try {
+      const token = await client?.getTokenSilently();
+      const response = async () => await sendNewTask(task, token);
+      response();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const onSubmit: (event: React.FormEvent<HTMLFormElement>) => void = (
     event
@@ -50,11 +65,11 @@ export function App() {
       frontEndId: generateIdForTask(),
       dependencyId: [],
       isReady: true,
-      userId: user.toString(),
+      userId: user.id,
       ordinalNumber: 1,
     };
     ArrayWithTasksToSave.unshift(newTask);
-    sendNewTask(newTask, token);
+    callApiToSendTask(newTask);
     setTasks(ArrayWithTasksToSave);
   };
   console.log();
@@ -63,7 +78,7 @@ export function App() {
   }
   return (
     <Fragment>
-      <button onClick={() => fetchDataFromServer(setTasks)}>fetch data</button>
+      <button onClick={() => callApiToFetchData(setTasks)}>fetch data</button>
       <Router history={history}>
         <PrivateRoute path="/profile" component={Profile} />
         <header>
