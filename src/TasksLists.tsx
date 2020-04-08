@@ -69,8 +69,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
   const callApiToSendTask = async (
     status: string,
     task: Task,
-    state: TasksStateProps,
-    token: any
+    state: TasksStateProps
   ) => {
     try {
       const token = await client?.getTokenSilently();
@@ -95,9 +94,14 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
     );
   };
 
+  const Dependencies = (task: Task) => {
+    task.dependencyId?.map((id) => (
+      <div>dependencies: {tasks.filter((t) => t.frontEndId == id)[0].name}</div>
+    ));
+  };
+
   return (
     <div className="tasks-lists-item">
-      {/* TODO: ^ Kipeska nazwa klasy, to chyba jest tasks-lists */}
       {statuses.map((status) => (
         <TaskList
           // useDrop.ref
@@ -122,8 +126,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                 callApiToSendTask(
                   status.statusName,
                   tasks.filter((task) => task.frontEndId == taskId)[0],
-                  { tasks, setTasks },
-                  token
+                  { tasks, setTasks }
                 );
               }
               console.log("dragged");
@@ -173,8 +176,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                             (t) => t.frontEndId == event.currentTarget.id
                           )[0].ordinalNumber! + 1,
                       },
-                      { tasks, setTasks },
-                      token
+                      { tasks, setTasks }
                     );
                   } else {
                     console.log(
@@ -191,15 +193,18 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                     callApiToSendTask(
                       status.statusName,
                       tasks.filter((task) => task.frontEndId == taskId)[0],
-                      { tasks, setTasks },
-                      token
+                      { tasks, setTasks }
                     );
                   }
                   console.log("dragged");
                 }}
               >
                 <div className="upper-part-of-task-element">
-                  <p className="task-name">{task.name}</p>
+                  <p className="task-name">
+                    {task.name}
+                    <br /> here display if its ready:
+                    {task.isReady.toString()}
+                  </p>
                   <ButtonsGroup>
                     {statuses
                       .filter(
@@ -209,15 +214,10 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                       .map((status) => (
                         <TaskButton
                           onClick={() =>
-                            callApiToSendTask(
-                              status.statusName,
-                              task,
-                              {
-                                tasks,
-                                setTasks,
-                              },
-                              token
-                            )
+                            callApiToSendTask(status.statusName, task, {
+                              tasks,
+                              setTasks,
+                            })
                           }
                         >
                           {renderIcon(status.StatusIcon)}
@@ -231,23 +231,39 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                   id={task.frontEndId}
                   options={tasks}
                   getOptionLabel={(option: Task) => option.name}
-                  style={{ width: 300 }}
                   onChange={(event: ChangeEvent<{}>, value: Task | null) => {
                     const dependencyTask = tasks.filter(
                       (element) => element.name == value?.name
                     )[0];
-                    console.log(dependencyTask);
-                    console.log(task.frontEndId, task.dependencyId);
-                    const newTask = {
-                      ...task,
-                    };
-                    newTask?.dependencyId?.push(dependencyTask.frontEndId);
+
+                    dependencyTask.dependOnThisTask?.push(task.frontEndId);
+                    const newTask = task;
+                    const newArray = [dependencyTask.frontEndId];
+                    newTask.dependencyId?.push(dependencyTask.frontEndId);
+                    //newTask.dependencyId?.concat(newArray);
+                    callApiToSendTask(newTask.status, newTask, {
+                      setTasks,
+                      tasks,
+                    });
                     console.log(newTask);
-                    sendNewTask(newTask, token);
-                    tasks.push(newTask);
-                    setTasks(tasks.filter((element) => element != task));
-                    console.log(task.dependencyId);
-                    console.log(value?.frontEndId);
+
+                    //Adding depends on:
+                    const newDependencyTask = dependencyTask;
+                    const newArray2 = [task.frontEndId];
+                    //newDependencyTask.dependOnThisTask?.concat(newArray2);
+                    console.log(newDependencyTask);
+                    callApiToSendTask(
+                      newDependencyTask.status,
+                      newDependencyTask,
+                      { setTasks, tasks }
+                    );
+                    setTasks(
+                      tasks.filter(
+                        (element) =>
+                          element != task && element != dependencyTask
+                      )
+                    );
+                    console.log(tasks);
                   }}
                   renderInput={(params) => (
                     <TextField

@@ -4,10 +4,11 @@ export type Task = {
   name: string;
   status: string;
   frontEndId: string;
-  dependencyId?: string[];
+  dependencyId: string[];
   isReady: boolean;
   userId: string;
   ordinalNumber: number;
+  dependOnThisTask: string[];
 };
 
 export type TasksStateProps = {

@@ -32,6 +32,7 @@ export function sendNewTask(task: Partial<Task>, token: any) {
       dependencyId: task.dependencyId,
       isReady: task.isReady,
       userId: "task.userId",
+      dependOnThisTask: task.dependOnThisTask,
     }),
   }).catch((error) => {
     console.log("problem with fetching data:", error);
@@ -95,26 +96,19 @@ export function renderIcon(
     return <Icon />;
   }
 }
+function checkIfTaskIsReady(task: Task, tasks: Task[], token: any) {
+  console.log(
+    task.dependencyId?.map((id) =>
+      tasks.filter((task) => task.frontEndId == id)
+    )
+  );
+}
 export function moveToAnotherGroup(
   status: string,
   task: Task,
   state: TasksStateProps,
   token: any
 ) {
-  // WHAT IF SERVER UPDATE FAILS?
-
-  // 1.
-  // UPDATE ON SERVER
-  // THEN IF IT SUCCEEDS UPDATE LOCAL COPY
-  // OTHERWISE DISPLAY ERROR
-  // 2. (OPTIMISTIC UPDATE)
-  // UPDATE ON SERVER,
-  // UPDATE LOCAL COPY WHILE YOU WAIT,
-  // IF SERVER UPDATE FAILS,
-  // ROLLBACK YOUR LOCAL UPDATE
-  // AND DISPLAY ERROR
-
-  // UPDATE ON SERVER
   if (
     sendNewTask(
       {
@@ -128,6 +122,16 @@ export function moveToAnotherGroup(
       token
     )
   ) {
+    if (status == "done") {
+      console.log("done");
+      console.log({ key: task.name, value: task.dependencyId });
+      console.log({ key: task.name, value: task.dependOnThisTask });
+      task.dependOnThisTask?.map((id) =>
+        state.tasks
+          .filter((task) => task.frontEndId == id)
+          .map((task) => checkIfTaskIsReady(task, state.tasks, token))
+      );
+    }
     // UPDATE LOCAL COPY
     console.log("submitted");
     state.setTasks(
@@ -141,6 +145,8 @@ export function moveToAnotherGroup(
               isReady: task.isReady,
               userId: task.userId,
               ordinalNumber: task.ordinalNumber,
+              dependOnThisTask: task.dependOnThisTask,
+              dependencyId: task.dependencyId,
             }
       )
     );

@@ -64,9 +64,10 @@ export function App() {
       status: "todo",
       frontEndId: generateIdForTask(),
       dependencyId: [],
-      isReady: true,
-      userId: user.id,
+      isReady: false,
+      userId: user.sub,
       ordinalNumber: 1,
+      dependOnThisTask: [],
     };
     ArrayWithTasksToSave.unshift(newTask);
     callApiToSendTask(newTask);
