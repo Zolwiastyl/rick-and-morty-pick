@@ -31,8 +31,9 @@ export function sendNewTask(task: Partial<Task>, token: any) {
       frontEndId: task.frontEndId,
       dependencyId: task.dependencyId,
       isReady: task.isReady,
-      userId: "task.userId",
+      userId: task.userId,
       dependOnThisTask: task.dependOnThisTask,
+      ordinalNumber: task.ordinalNumber,
     }),
   }).catch((error) => {
     console.log("problem with fetching data:", error);
@@ -112,12 +113,9 @@ export function moveToAnotherGroup(
   if (
     sendNewTask(
       {
-        name: task.name,
+        ...task,
+
         status: status,
-        dependencyId: task.dependencyId,
-        frontEndId: task.frontEndId,
-        isReady: task.isReady,
-        userId: task.userId,
       },
       token
     )
@@ -154,3 +152,41 @@ export function moveToAnotherGroup(
     return console.log("couldn't sent the task to server");
   }
 }
+
+function generateOrdinalNumber(tasks: Task[]) {
+  tasks.sort((x, y) => x.ordinalNumber - y.ordinalNumber);
+  const ordinalsAsDigits = tasks.map((t) => t.ordinalNumber.toString().split);
+  ordinalsAsDigits[(0, 0)];
+}
+
+/*import React from "react";
+import "./styles.css";
+
+type Task = {
+  ordinalNumber: number;
+};
+
+export default function App() {
+  function generateOrdinalNumber(tasks: Task[]) {
+    tasks.sort((x, y) => x.ordinalNumber - y.ordinalNumber);
+    const ordinalsAsDigits = tasks.map(t =>
+      t.ordinalNumber.toString().split("")
+    );
+    const firstOrdinal = ordinalsAsDigits[0];
+    console.log(firstOrdinal[firstOrdinal.length - 1]);
+    return <div>{ordinalsAsDigits[0]}</div>;
+  }
+  const arrayOfTasks: Array<Task> = [
+    { ordinalNumber: 2.34 },
+    { ordinalNumber: 2.35 }
+  ];
+  generateOrdinalNumber(arrayOfTasks);
+  return (
+    <div className="App">
+      <h1>Hello CodeSandbox</h1>
+
+      <h2>Start editing to see some magic happen!</h2>
+    </div>
+  );
+}
+ */

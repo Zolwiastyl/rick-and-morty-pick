@@ -14,6 +14,7 @@ import {
   Trash2,
 } from "react-feather";
 import { useAuth0 } from "./react-auth0-spa";
+import { findByAltText } from "@testing-library/react";
 
 interface TaskButtonProps {
   onClick: () => void;
@@ -116,21 +117,14 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
               event.currentTarget.hasChildNodes()
             );
             if (event.currentTarget.hasChildNodes()) {
-              console.log("first con passed");
-              event.preventDefault();
-              const taskId = event.dataTransfer.getData("text/plain");
-              if (
-                tasks.filter((t) => t.frontEndId == taskId)[0].status !=
-                status.statusName
-              ) {
-                callApiToSendTask(
-                  status.statusName,
-                  tasks.filter((task) => task.frontEndId == taskId)[0],
-                  { tasks, setTasks }
-                );
-              }
-              console.log("dragged");
+              return;
             }
+            const taskId = event.dataTransfer.getData("text/plain");
+            callApiToSendTask(
+              status.statusName,
+              tasks.filter((task) => task.frontEndId == taskId)[0],
+              { tasks, setTasks }
+            );
           }}
           onDragEnter={(event) => event.preventDefault()}
         >
@@ -149,8 +143,6 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                 onDragOver={(event) => {
                   event.preventDefault();
 
-                  const draggedTaskId = event.currentTarget.id;
-
                   event.currentTarget.parentNode?.insertBefore(
                     event.currentTarget,
                     event.currentTarget
@@ -159,25 +151,31 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                 onDrop={(event) => {
                   event.preventDefault();
                   const taskId = event.dataTransfer.getData("text/plain");
-
-                  const positionX = event.clientX;
-
-                  const parent = event.currentTarget.parentNode;
+                  console.log(event.pageY);
+                  console.log(event.currentTarget.offsetTop);
+                  console.log(event.currentTarget.offsetHeight);
                   if (
-                    event.clientY - event.currentTarget.offsetTop >
+                    event.pageY - event.currentTarget.offsetTop >
                     event.currentTarget.offsetHeight / 2
                   ) {
-                    callApiToSendTask(
-                      status.statusName,
-                      {
-                        ...tasks.filter((task) => task.frontEndId == taskId)[0],
-                        ordinalNumber:
-                          tasks.filter(
-                            (t) => t.frontEndId == event.currentTarget.id
-                          )[0].ordinalNumber! + 1,
-                      },
-                      { tasks, setTasks }
-                    );
+                    const taskToSave = {
+                      ...tasks.filter((task) => task.frontEndId == taskId)[0],
+                      ordinalNumber:
+                        tasks.filter(
+                          (t) => t.frontEndId == event.currentTarget.id
+                        )[0].ordinalNumber + 1,
+                    };
+                    callApiToSendTask(status.statusName, taskToSave, {
+                      tasks,
+                      setTasks,
+                    });
+                    console.log({
+                      ...tasks.filter((task) => task.frontEndId == taskId)[0],
+                      ordinalNumber:
+                        tasks.filter(
+                          (t) => t.frontEndId == event.currentTarget.id
+                        )[0].ordinalNumber + 1,
+                    });
                   } else {
                     console.log(
                       "it's in the top of " +
@@ -236,10 +234,9 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                       (element) => element.name == value?.name
                     )[0];
 
-                    dependencyTask.dependOnThisTask?.push(task.frontEndId);
+                    dependencyTask.dependOnThisTask.push(task.frontEndId);
                     const newTask = task;
-                    const newArray = [dependencyTask.frontEndId];
-                    newTask.dependencyId?.push(dependencyTask.frontEndId);
+                    newTask.dependencyId.push(dependencyTask.frontEndId);
                     //newTask.dependencyId?.concat(newArray);
                     callApiToSendTask(newTask.status, newTask, {
                       setTasks,
@@ -249,7 +246,6 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
 
                     //Adding depends on:
                     const newDependencyTask = dependencyTask;
-                    const newArray2 = [task.frontEndId];
                     //newDependencyTask.dependOnThisTask?.concat(newArray2);
                     console.log(newDependencyTask);
                     callApiToSendTask(
