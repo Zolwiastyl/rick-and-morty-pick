@@ -120,73 +120,149 @@ export function moveToAnotherGroup(
       token
     )
   ) {
-    if (status == "done") {
-      console.log("done");
-      console.log({ key: task.name, value: task.dependencyId });
-      console.log({ key: task.name, value: task.dependOnThisTask });
-      task.dependOnThisTask?.map((id) =>
-        state.tasks
-          .filter((task) => task.frontEndId == id)
-          .map((task) => checkIfTaskIsReady(task, state.tasks, token))
-      );
-    }
     // UPDATE LOCAL COPY
     console.log("submitted");
     state.setTasks(
       state.tasks.map((t) =>
-        t.frontEndId !== task.frontEndId
+        t.frontEndId === task.frontEndId
           ? t
           : {
-              name: task.name,
+              ...task,
               status: status,
-              frontEndId: task.frontEndId,
-              isReady: task.isReady,
-              userId: task.userId,
-              ordinalNumber: task.ordinalNumber,
-              dependOnThisTask: task.dependOnThisTask,
-              dependencyId: task.dependencyId,
             }
       )
     );
   } else {
-    return console.log("couldn't sent the task to server");
+    return console.error("couldn't sent the task to server");
   }
 }
 
-function generateOrdinalNumber(tasks: Task[]) {
-  tasks.sort((x, y) => x.ordinalNumber - y.ordinalNumber);
-  const ordinalsAsDigits = tasks.map((t) => t.ordinalNumber.toString().split);
-  ordinalsAsDigits[(0, 0)];
-}
-
-/*import React from "react";
-import "./styles.css";
-
-type Task = {
-  ordinalNumber: number;
-};
-
-export default function App() {
-  function generateOrdinalNumber(tasks: Task[]) {
-    tasks.sort((x, y) => x.ordinalNumber - y.ordinalNumber);
-    const ordinalsAsDigits = tasks.map(t =>
-      t.ordinalNumber.toString().split("")
-    );
-    const firstOrdinal = ordinalsAsDigits[0];
-    console.log(firstOrdinal[firstOrdinal.length - 1]);
-    return <div>{ordinalsAsDigits[0]}</div>;
+export function generateOrdinalNumber(ordinals: number[]) {
+  if (!numbersAreValid(ordinals)) {
+    return console.error("number not valid");
   }
-  const arrayOfTasks: Array<Task> = [
-    { ordinalNumber: 2.34 },
-    { ordinalNumber: 2.35 }
-  ];
-  generateOrdinalNumber(arrayOfTasks);
-  return (
-    <div className="App">
-      <h1>Hello CodeSandbox</h1>
-
-      <h2>Start editing to see some magic happen!</h2>
-    </div>
+  try {
+    numbersAreValid(ordinals);
+  } catch (error) {
+    return "numbers are not valid";
+  }
+  const ordinalsAsDigits = ordinals
+    .sort((x, y) => x - y)
+    .map((t) => t.toString().split(""));
+  const [firstOrdinal, secondOrdinal] = makeArraysEqual(
+    ordinalsAsDigits[0],
+    ordinalsAsDigits[1]
   );
+
+  const indexOfLastDigitOfNewOrdinal = findIndexOfLastDigitOfNewOrdinal(
+    firstOrdinal,
+    secondOrdinal
+  );
+
+  const lastNumberX = +firstOrdinal[indexOfLastDigitOfNewOrdinal];
+  const lastNumberY = +secondOrdinal[indexOfLastDigitOfNewOrdinal];
+
+  const ordinalBase = makeNewOrdinalBase(
+    firstOrdinal,
+    indexOfLastDigitOfNewOrdinal
+  );
+  return generateMiddleValue(lastNumberX, lastNumberY, ordinalBase);
 }
- */
+
+export function makeArraysEqual(
+  array3: Array<string>,
+  array4: Array<string>
+): Array<Array<string>> {
+  const array1 = array3.slice();
+  const array2 = array4.slice();
+  if (!array1.some((digit) => digit == ".")) {
+    array1.push(".");
+    return makeArraysEqual(array1, array2);
+  }
+  if (!array2.some((digit) => digit == ".")) {
+    array2.push(".");
+    return makeArraysEqual(array1, array2);
+  }
+  if (array1.length < array2.length) {
+    array1.push("0");
+    return makeArraysEqual(array1, array2);
+  } else if (array1.length > array2.length) {
+    array2.push("0");
+    return makeArraysEqual(array1, array2);
+  } else return [array1, array2];
+}
+export function generateMiddleValue(
+  lastNumberX: number,
+  lastNumberY: number,
+  newOrdinal: string[]
+) {
+  if (lastNumberY - lastNumberX <= 1) {
+    newOrdinal.push("5");
+    return +newOrdinal.join("");
+  }
+  if (lastNumberY - lastNumberX > 1) {
+    newOrdinal.pop();
+    const halfOfDiffrence = (lastNumberY - lastNumberX) / 2;
+    if (halfOfDiffrence % 2 == 0) {
+      newOrdinal.push((halfOfDiffrence + +lastNumberX).toString());
+      return +newOrdinal.join("");
+    } else {
+      newOrdinal.push((halfOfDiffrence + +lastNumberX - 0.5).toString());
+      return +newOrdinal.join("");
+    }
+  }
+
+  if (lastNumberY === 0) {
+    newOrdinal.pop();
+    const valueToPush = ((10 - lastNumberX) / 2 + +lastNumberX).toString();
+    newOrdinal.push(valueToPush);
+    return +newOrdinal.join("");
+  }
+}
+export function findIndexOfLastDigitOfNewOrdinal(
+  firstOrdinal: Array<string>,
+  secondOrdinal: Array<string>
+) {
+  const indexOfLastDigit = firstOrdinal.findIndex(
+    (digit) =>
+      digit !== secondOrdinal[firstOrdinal.indexOf(digit)] &&
+      firstOrdinal[firstOrdinal.indexOf(digit) + 1] != "9"
+  );
+  if (
+    firstOrdinal[indexOfLastDigit] == "0" &&
+    firstOrdinal[indexOfLastDigit - 1] == "."
+  ) {
+    return indexOfLastDigit;
+  } else {
+    return indexOfLastDigit;
+  }
+}
+
+export function makeNewOrdinalBase(
+  firstOrdinal: string[],
+  indexOfLastDigitOfNewOrdinal: number
+): string[] {
+  {
+    if (
+      firstOrdinal
+        .slice(0, indexOfLastDigitOfNewOrdinal + 1)
+        .some((digit) => digit == ".")
+    ) {
+      return firstOrdinal.slice(0, indexOfLastDigitOfNewOrdinal + 1);
+    } else {
+      const newOrdinal = firstOrdinal.slice(
+        0,
+        indexOfLastDigitOfNewOrdinal + 1
+      );
+      newOrdinal.push(".");
+
+      return newOrdinal;
+    }
+  }
+}
+
+export function numbersAreValid(arrayOfNumbers: Array<number>): boolean {
+  if (arrayOfNumbers.some((number) => number == undefined && number == null)) {
+    return false;
+  } else return true;
+}
