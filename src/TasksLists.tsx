@@ -111,7 +111,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
             event.preventDefault();
           }}
           onDrop={(event) => {
-            event.preventDefault();
+            event.preventDefault(); /* 
             console.log(
               "has child nodes ",
               event.currentTarget.hasChildNodes()
@@ -125,6 +125,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
               tasks.filter((task) => task.frontEndId == taskId)[0],
               { tasks, setTasks }
             );
+          */
           }}
           onDragEnter={(event) => event.preventDefault()}
         >
@@ -135,36 +136,48 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
               <article
                 id={task.frontEndId}
                 className="task-item"
-                draggable
+                draggable="true"
                 onDragStart={(event) => {
                   event.dataTransfer.setData("text/plain", task.frontEndId);
-                  event.dataTransfer.effectAllowed = "move";
                 }}
                 onDragOver={(event) => {
                   event.preventDefault();
-
-                  event.currentTarget.parentNode?.insertBefore(
-                    event.currentTarget,
-                    event.currentTarget
-                  );
+                  console.log(event.currentTarget.id);
                 }}
                 onDrop={(event) => {
                   event.preventDefault();
                   const taskId = event.dataTransfer.getData("text/plain");
-                  console.log(event.pageY);
-                  console.log(event.currentTarget.offsetTop);
-                  console.log(event.currentTarget.offsetHeight);
                   if (
                     event.pageY - event.currentTarget.offsetTop >
                     event.currentTarget.offsetHeight / 2
                   ) {
+                    const taskAboveIndex = tasks
+                      .sort((x, y) => x.ordinalNumber - y.ordinalNumber)
+                      .findIndex((t) => t.frontEndId == event.currentTarget.id);
+                    const taskAbove = tasks[taskAboveIndex];
+                    console.log(
+                      taskAboveIndex,
+                      taskAbove,
+                      tasks[taskAboveIndex + 1]
+                    );
+                    const taskBelow = tasks[taskAboveIndex + 1];
                     const taskToSave = {
                       ...tasks.filter((task) => task.frontEndId == taskId)[0],
                       ordinalNumber:
-                        tasks.filter(
-                          (t) => t.frontEndId == event.currentTarget.id
-                        )[0].ordinalNumber + 1,
+                        (taskAbove.ordinalNumber + taskBelow.ordinalNumber) / 2,
                     };
+                    console.log(taskToSave.frontEndId);
+                    console.log(
+                      tasks
+                        .filter((t) => t.frontEndId !== taskToSave.frontEndId)
+                        .concat([taskToSave])
+                    );
+                    console.log(
+                      tasks.map((t) =>
+                        t.frontEndId == taskToSave.frontEndId ? t : taskToSave
+                      )
+                    );
+
                     callApiToSendTask(status.statusName, taskToSave, {
                       tasks,
                       setTasks,
@@ -188,11 +201,11 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                     tasks.filter((t) => t.frontEndId == taskId)[0].status !=
                     status.statusName
                   ) {
-                    callApiToSendTask(
+                    /*callApiToSendTask(
                       status.statusName,
                       tasks.filter((task) => task.frontEndId == taskId)[0],
                       { tasks, setTasks }
-                    );
+                    );*/
                   }
                   console.log("dragged");
                 }}
@@ -200,6 +213,8 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                 <div className="upper-part-of-task-element">
                   <p className="task-name">
                     {task.name}
+                    <br />
+                    {task.ordinalNumber}
                     <br /> here display if its ready:
                     {task.isReady.toString()}
                   </p>
