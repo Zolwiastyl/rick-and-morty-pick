@@ -278,7 +278,7 @@ export function makeNewOrdinalBase(
   }
 }
 
-export function numbersAreValid(arrayOfNumbers: Array<number>): boolean {
+export function numbersAreValid(arrayOfNumbers: Array<any>): boolean {
   if (arrayOfNumbers.some((number) => number == undefined && number == null)) {
     return false;
   } else return true;
@@ -293,9 +293,57 @@ export function takeOrdinalNumbers(
   idOfDraggedTask: string,
   idOfEventTarget: string,
   tasks: Task[],
-  wherPlaceTask: TaskPlacement
-): Array<number> {
-  tasks.findIndex((t) => t.frontEndId == idOfDraggedTask);
+  wherePlaceTask: TaskPlacement
+): Array<number> | undefined | string {
   const theArray: Array<number> = [];
-  return theArray;
+  const indexOfDragged = tasks.findIndex(
+    (t) => t.frontEndId == idOfDraggedTask
+  );
+  const sortedTasksGroup = tasks
+    .filter(
+      (t) =>
+        t.status ==
+        tasks.filter((t) => t.frontEndId == idOfEventTarget)[0].status
+    )
+    .sort((x, y) => x.ordinalNumber - y.ordinalNumber);
+  const indexOfDrop = sortedTasksGroup.findIndex(
+    (t) => t.frontEndId == idOfEventTarget
+  );
+  if (wherePlaceTask == TaskPlacement.Below) {
+    if (indexOfDrop == sortedTasksGroup.length - 1) {
+      theArray.push(sortedTasksGroup[indexOfDrop].ordinalNumber);
+      theArray.push(sortedTasksGroup[indexOfDrop].ordinalNumber + 1);
+      return theArray;
+    }
+    if (indexOfDrop + 1 == indexOfDragged) {
+      const secondTaskOrdinal = sortedTasksGroup[indexOfDrop + 1].ordinalNumber;
+      theArray.push(sortedTasksGroup[indexOfDrop].ordinalNumber);
+      theArray.push(secondTaskOrdinal);
+      return theArray;
+    } else {
+      theArray.push(sortedTasksGroup[indexOfDrop].ordinalNumber);
+      theArray.push(sortedTasksGroup[indexOfDrop + 1].ordinalNumber);
+      return theArray;
+    }
+  } else if (wherePlaceTask == TaskPlacement.Above) {
+    if (indexOfDrop == 0) {
+      theArray.push(0);
+      theArray.push(sortedTasksGroup[indexOfDrop].ordinalNumber);
+      return theArray;
+    } else {
+      const indexOfSecondTask = indexOfDrop - 1;
+      theArray.push(tasks[indexOfDrop - 1].ordinalNumber);
+      theArray.push(tasks[indexOfDrop].ordinalNumber);
+      return theArray;
+    }
+  }
 }
+
+function areTasksTheSame(task1id: string, task2id: string) {
+  if (task1id !== task2id) {
+    return false;
+  } else {
+    return true;
+  }
+}
+type FunctionOutput = {};
