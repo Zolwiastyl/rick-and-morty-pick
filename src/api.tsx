@@ -2,7 +2,7 @@ import react from "react";
 import { Task, TasksStateProps } from "./types";
 import React from "react";
 import { useAuth0 } from "./react-auth0-spa";
-import { any } from "prop-types";
+import { any, string } from "prop-types";
 
 export const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");
@@ -122,19 +122,36 @@ export function moveToAnotherGroup(
   ) {
     // UPDATE LOCAL COPY
     console.log("submitted");
+    console.log(state.tasks);
+    console.log(
+      state.tasks.map((t) => {
+        if (t == task) {
+          return {
+            ...task,
+            status: status,
+          };
+        } else {
+          return t;
+        }
+      })
+    );
+    console.log(task);
+    console.log(task.frontEndId);
     state.setTasks(
-      state.tasks.map((t) =>
-        t.frontEndId === task.frontEndId
-          ? t
-          : {
-              ...task,
-              status: status,
-            }
-      )
+      state.tasks.filter((t) => t.frontEndId !== task.frontEndId).concat([task])
     );
   } else {
     return console.error("couldn't sent the task to server");
   }
+
+  state.setTasks(
+    state.tasks.map((t) =>
+      t.frontEndId == task.frontEndId ? t : { ...task, status: status }
+    )
+  );
+  state.setTasks(
+    state.tasks.filter((t) => t.frontEndId !== task.frontEndId).concat([task])
+  );
 }
 
 export function generateOrdinalNumber(ordinals: number[]) {
@@ -265,4 +282,20 @@ export function numbersAreValid(arrayOfNumbers: Array<number>): boolean {
   if (arrayOfNumbers.some((number) => number == undefined && number == null)) {
     return false;
   } else return true;
+}
+
+export enum TaskPlacement {
+  Above,
+  Below,
+}
+
+export function takeOrdinalNumbers(
+  idOfDraggedTask: string,
+  idOfEventTarget: string,
+  tasks: Task[],
+  wherPlaceTask: TaskPlacement
+): Array<number> {
+  tasks.findIndex((t) => t.frontEndId == idOfDraggedTask);
+  const theArray: Array<number> = [];
+  return theArray;
 }

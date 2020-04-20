@@ -68,7 +68,7 @@ test("generateMiddleValue should return 1.2", () => {
   expect(generateMiddleValue(1, 2, ["1", ".", "1"])).toBe(1.15);
 });
 
-test("main should return 1.295 given 1.29 and 1.3", () => {
+test("main should return 1.15 given 1.1 and 1.2", () => {
   expect(generateOrdinalNumber([1.1, 1.2])).toBe(1.15);
 });
 test("main should return 1.34 given 1.3 and 1.38", () => {
