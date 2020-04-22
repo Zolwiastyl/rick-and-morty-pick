@@ -5,10 +5,11 @@ import {
   makeNewOrdinalBase,
   numbersAreValid,
   generateMiddleValue,
+  curriedAddThree,
 } from "./api";
 import { number } from "prop-types";
 
-const makeItIntoDigits = (ordinals) => {
+const makeItIntoDigits = (ordinals: Array<any>) => {
   return ordinals.sort((x, y) => x - y).map((t) => t.toString().split(""));
 };
 const digitsToTestInFindingIndexOfLast = makeItIntoDigits([1.29, 1.3]);

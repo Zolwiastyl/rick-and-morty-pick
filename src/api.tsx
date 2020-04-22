@@ -2,7 +2,7 @@ import react from "react";
 import { Task, TasksStateProps } from "./types";
 import React from "react";
 import { useAuth0 } from "./react-auth0-spa";
-import { any, string } from "prop-types";
+import { any, string, number } from "prop-types";
 
 export const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");
@@ -122,38 +122,23 @@ export function moveToAnotherGroup(
   ) {
     // UPDATE LOCAL COPY
     console.log("submitted");
-    console.log(state.tasks);
-    console.log(
-      state.tasks.map((t) => {
-        if (t == task) {
-          return {
-            ...task,
-            status: status,
-          };
-        } else {
-          return t;
-        }
-      })
-    );
+
     console.log(task);
     console.log(task.frontEndId);
     state.setTasks(
-      state.tasks.filter((t) => t.frontEndId !== task.frontEndId).concat([task])
+      state.tasks
+        .filter((t) => t.frontEndId !== task.frontEndId)
+        .concat([{ ...task, status: status }])
     );
   } else {
     return console.error("couldn't sent the task to server");
   }
-
-  state.setTasks(
-    state.tasks.map((t) =>
-      t.frontEndId == task.frontEndId ? t : { ...task, status: status }
-    )
-  );
-  state.setTasks(
-    state.tasks.filter((t) => t.frontEndId !== task.frontEndId).concat([task])
-  );
 }
 
+/**
+ *
+ * @param ordinals takes array of two numbers and generates new ordinal to be between them
+ */
 export function generateOrdinalNumber(ordinals: number[]) {
   if (!numbersAreValid(ordinals)) {
     return console.error("number not valid");
@@ -289,11 +274,27 @@ export enum TaskPlacement {
   Below,
 }
 
+const curriedtakeOrdinalNumbers = curry(takeOrdinalNumbers);
+/**takes id: 1. of dragged task 2. dropped task, and all tasks array*/
+export const putItAbove = curriedtakeOrdinalNumbers(TaskPlacement.Above);
+/**takes id: 1. of dragged task 2. dropped task, and all tasks array*/
+export const putItBelow = curriedtakeOrdinalNumbers(TaskPlacement.Below);
+
+/**takes ids of dragged and dropped task, and all tasks array*/
+function ensureThatOrdinalIsFloat(ordinals: Array<number>) {
+  if (ordinals.reduce((acc, x) => (acc += x)) % 1 == 0) {
+    ordinals[0] += 0.1;
+    return ordinals;
+  } else {
+    return ordinals;
+  }
+}
+
 export function takeOrdinalNumbers(
+  wherePlaceTask: TaskPlacement,
   idOfDraggedTask: string,
   idOfEventTarget: string,
-  tasks: Task[],
-  wherePlaceTask: TaskPlacement
+  tasks: Task[]
 ): Array<number> | undefined | string {
   const theArray: Array<number> = [];
   const indexOfDragged = tasks.findIndex(
@@ -313,28 +314,28 @@ export function takeOrdinalNumbers(
     if (indexOfDrop == sortedTasksGroup.length - 1) {
       theArray.push(sortedTasksGroup[indexOfDrop].ordinalNumber);
       theArray.push(sortedTasksGroup[indexOfDrop].ordinalNumber + 1);
-      return theArray;
+      return ensureThatOrdinalIsFloat(theArray);
     }
     if (indexOfDrop + 1 == indexOfDragged) {
       const secondTaskOrdinal = sortedTasksGroup[indexOfDrop + 1].ordinalNumber;
       theArray.push(sortedTasksGroup[indexOfDrop].ordinalNumber);
       theArray.push(secondTaskOrdinal);
-      return theArray;
+      return ensureThatOrdinalIsFloat(theArray);
     } else {
       theArray.push(sortedTasksGroup[indexOfDrop].ordinalNumber);
       theArray.push(sortedTasksGroup[indexOfDrop + 1].ordinalNumber);
-      return theArray;
+      return ensureThatOrdinalIsFloat(theArray);
     }
   } else if (wherePlaceTask == TaskPlacement.Above) {
     if (indexOfDrop == 0) {
       theArray.push(0);
       theArray.push(sortedTasksGroup[indexOfDrop].ordinalNumber);
-      return theArray;
+      return ensureThatOrdinalIsFloat(theArray);
     } else {
       const indexOfSecondTask = indexOfDrop - 1;
       theArray.push(tasks[indexOfDrop - 1].ordinalNumber);
       theArray.push(tasks[indexOfDrop].ordinalNumber);
-      return theArray;
+      return ensureThatOrdinalIsFloat(theArray);
     }
   }
 }
@@ -347,3 +348,27 @@ function areTasksTheSame(task1id: string, task2id: string) {
   }
 }
 type FunctionOutput = {};
+
+export const add = (x: number) => (y: number) => x + y;
+
+const incremenet = add(1);
+const add10 = add(10);
+
+export const its10Plus10 = add10(0);
+
+export function curry(fn: Function) {
+  return function curried(...args: any[]) {
+    if (args.length >= fn.length) {
+      return fn(...args);
+    } else {
+      return function (a: any) {
+        return curried(...[...args, a]);
+      };
+    }
+  };
+}
+export const curriedAddThree = curry(addThreeThings);
+
+export function addThreeThings(a: number, b: number, c: number) {
+  return a + b + c;
+}

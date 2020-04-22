@@ -1,7 +1,14 @@
 import React, { ChangeEvent } from "react";
 import { Task, TasksStateProps } from "./types";
 
-import { sendNewTask, removeTask, moveToAnotherGroup, renderIcon } from "./api";
+import {
+  sendNewTask,
+  removeTask,
+  moveToAnotherGroup,
+  renderIcon,
+  putItBelow,
+  putItAbove,
+} from "./api";
 import { Autocomplete } from "@material-ui/lab";
 import { TextField } from "@material-ui/core";
 
@@ -81,7 +88,6 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
       console.error(error);
     }
   };
-  const token = "dupa1";
   const DeleteButton = (task: Task) => {
     return (
       <button
@@ -111,27 +117,28 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
             event.preventDefault();
           }}
           onDrop={(event) => {
-            event.preventDefault(); /* 
-            console.log(
-              "has child nodes ",
-              event.currentTarget.hasChildNodes()
-            );
-            if (event.currentTarget.hasChildNodes()) {
+            event.preventDefault();
+            console.log(tasks.filter((t) => t.status == status.statusName));
+            if (
+              tasks.filter((t) => t.status == status.statusName).length != 0
+            ) {
+              console.log("it's not empty empty");
               return;
+            } else {
+              console.log("it's empty");
+              const taskId = event.dataTransfer.getData("text/plain");
+              return callApiToSendTask(
+                status.statusName,
+                tasks.filter((task) => task.frontEndId == taskId)[0],
+                { tasks, setTasks }
+              );
             }
-            const taskId = event.dataTransfer.getData("text/plain");
-            callApiToSendTask(
-              status.statusName,
-              tasks.filter((task) => task.frontEndId == taskId)[0],
-              { tasks, setTasks }
-            );
-          */
           }}
           onDragEnter={(event) => event.preventDefault()}
         >
           {tasks
-            .filter((task) => task.status == status.statusName)
             .sort((x, y) => x.ordinalNumber - y.ordinalNumber)
+            .filter((task) => task.status == status.statusName)
             .map((task) => (
               <article
                 id={task.frontEndId}
@@ -151,61 +158,37 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                     event.pageY - event.currentTarget.offsetTop >
                     event.currentTarget.offsetHeight / 2
                   ) {
-                    const taskAboveIndex = tasks
-                      .sort((x, y) => x.ordinalNumber - y.ordinalNumber)
-                      .findIndex((t) => t.frontEndId == event.currentTarget.id);
-                    const taskAbove = tasks[taskAboveIndex];
-                    console.log(
-                      taskAboveIndex,
-                      taskAbove,
-                      tasks[taskAboveIndex + 1]
+                    const ordinals = putItBelow(taskId)(event.currentTarget.id)(
+                      tasks
                     );
-                    const taskBelow = tasks[taskAboveIndex + 1];
+                    console.log(ordinals[0]);
                     const taskToSave = {
                       ...tasks.filter((task) => task.frontEndId == taskId)[0],
-                      ordinalNumber:
-                        (taskAbove.ordinalNumber + taskBelow.ordinalNumber) / 2,
+                      ordinalNumber: (ordinals[0] + ordinals[1]) / 2,
                     };
-                    console.log(taskToSave.frontEndId);
-                    console.log(
-                      tasks
-                        .filter((t) => t.frontEndId !== taskToSave.frontEndId)
-                        .concat([taskToSave])
-                    );
-                    console.log(
-                      tasks.map((t) =>
-                        t.frontEndId == taskToSave.frontEndId ? t : taskToSave
-                      )
-                    );
-
                     callApiToSendTask(status.statusName, taskToSave, {
                       tasks,
                       setTasks,
                     });
-                    console.log({
-                      ...tasks.filter((task) => task.frontEndId == taskId)[0],
-                      ordinalNumber:
-                        tasks.filter(
-                          (t) => t.frontEndId == event.currentTarget.id
-                        )[0].ordinalNumber + 1,
-                    });
+                    console.log(taskToSave);
                   } else {
-                    console.log(
-                      "it's in the top of " +
-                        tasks.filter(
-                          (t) => t.frontEndId == event.currentTarget.id
-                        )[0].name
-                    );
-                  }
-                  if (
-                    tasks.filter((t) => t.frontEndId == taskId)[0].status !=
-                    status.statusName
-                  ) {
-                    /*callApiToSendTask(
-                      status.statusName,
-                      tasks.filter((task) => task.frontEndId == taskId)[0],
-                      { tasks, setTasks }
-                    );*/
+                    const ordinals = putItAbove;
+                    console.log(ordinals[0]);
+
+                    const newOrdinal = () => {
+                      if (ordinals) {
+                        return ordinals[0] + ordinals[1];
+                      }
+                    };
+                    const taskToSave = {
+                      ...tasks.filter((task) => task.frontEndId == taskId)[0],
+                      ordinalNumber: newOrdinal(),
+                    };
+                    callApiToSendTask(status.statusName, taskToSave, {
+                      tasks,
+                      setTasks,
+                    });
+                    console.log(taskToSave);
                   }
                   console.log("dragged");
                 }}
@@ -259,7 +242,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                     });
                     console.log(newTask);
 
-                    //Adding depends on:
+                    /**Adding depends on it:*/
                     const newDependencyTask = dependencyTask;
                     //newDependencyTask.dependOnThisTask?.concat(newArray2);
                     console.log(newDependencyTask);

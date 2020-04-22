@@ -11,6 +11,9 @@ import {
   generateIdForTask,
   fetchDataFromServer,
   RemoveAllData,
+  putItAbove,
+  takeOrdinalNumbers,
+  generateOrdinalNumber,
 } from "./api";
 import { Plus, User } from "react-feather";
 import { NavBar } from "./components/NavBar";
@@ -59,6 +62,17 @@ export function App() {
     const { name } = readFormValues(event.currentTarget);
     event.currentTarget.reset();
     const ArrayWithTasksToSave = tasks.slice();
+    function generateOrdinalForNewTask(tasks: Task[]) {
+      const tasksToDo = tasks.filter((t) => t.status == "todo");
+      if (tasksToDo.length == 0) {
+        return 2.1;
+      } else {
+        return tasksToDo.sort((x, y) => x.ordinalNumber - y.ordinalNumber)[0]
+          .ordinalNumber;
+      }
+    }
+    const newOrdinal = (0 + generateOrdinalForNewTask(tasks)) / 2;
+
     const newTask: Task = {
       name: name,
       status: "todo",
@@ -66,14 +80,13 @@ export function App() {
       dependencyId: [],
       isReady: false,
       userId: user.sub,
-      ordinalNumber: 1,
+      ordinalNumber: newOrdinal,
       dependOnThisTask: [],
     };
     ArrayWithTasksToSave.unshift(newTask);
     callApiToSendTask(newTask);
     setTasks(ArrayWithTasksToSave);
   };
-  console.log();
   if (loading) {
     return <div>Loading...</div>;
   }
