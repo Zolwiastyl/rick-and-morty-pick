@@ -128,11 +128,6 @@ test("numbersAreValid should return false given one null", () => {
   expect(numbersAreValid([null, 12])).toBe(false);
 });
 
-test("main should return numbers are not valid", () => {
-  expect(generateOrdinalNumber([undefined, 1])).toBe(
-    console.error("number not valid")
-  );
-});
 test("what main returns given 1 and 1.5", () => {
   console.log(generateOrdinalNumber([1, 1.5]));
 });
