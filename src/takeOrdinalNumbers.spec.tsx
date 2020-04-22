@@ -24,10 +24,10 @@ const takeOrdinalsNumbersFromMockupFor3rdTask = (
   wherePlaceTask: TaskPlacement
 ) =>
   takeOrdinalNumbers(
+    wherePlaceTask,
     indexOfDraggedTask,
     idOfEventTarget,
-    mockUpTasks,
-    wherePlaceTask
+    mockUpTasks
   );
 
 const placeItAbove = (idOfEventTarget: string) =>
