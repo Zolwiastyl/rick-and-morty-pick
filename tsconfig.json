@@ -15,8 +15,5 @@
     "noEmit": true,
     "jsx": "react"
   },
-  "include": [
-    "src",
-    "./node_modules/@auth0/auth0-spa-js/dist/typings/global.d.ts"
-  ]
+  "include": ["src"]
 }
