@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import createAuth0Client from "@auth0/auth0-spa-js";
+import createAuth0Client, {
+  PopupLoginOptions,
+  PopupConfigOptions,
+} from "@auth0/auth0-spa-js";
 import Auth0Client from "@auth0/auth0-spa-js/dist/typings/Auth0Client";
 
 interface AuthContextValue {
