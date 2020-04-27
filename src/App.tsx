@@ -22,12 +22,15 @@ import { Profile } from "./components/Profile";
 import { Router, Route, Switch, Link } from "react-router-dom";
 import history from "./utils/history";
 import { PrivateRoute } from "./components/PrivateRoute";
+import { TasksGraph } from "./TasksGraph";
+import { BruteGraph } from "./BruteGraph";
 
 const tasksArray: Array<Task> = [];
 
 const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 
 export function App() {
+  const [showGraph, toggleGraph] = useState<boolean>(false);
   const { loading, client, user } = useAuth0();
   const [tasks, setTasks] = useState<Task[]>(tasksArray);
   useEffect(() => {
@@ -54,7 +57,13 @@ export function App() {
       console.error(error);
     }
   };
+  /*  const callApiToDeleteTask = async (task: Task) => {
+    try {
+      const token = await client?.getTokenSilently();
 
+    }
+  }
+*/
   const onSubmit: (event: React.FormEvent<HTMLFormElement>) => void = (
     event
   ) => {
@@ -90,9 +99,17 @@ export function App() {
   if (loading) {
     return <div>Loading...</div>;
   }
+
   return (
     <Fragment>
       <button onClick={() => callApiToFetchData(setTasks)}>fetch data</button>
+      <button
+        onClick={() => {
+          toggleGraph(!showGraph);
+        }}
+      >
+        toggle graph
+      </button>
       <Router history={history}>
         <PrivateRoute path="/profile" component={Profile} />
         <header>
@@ -104,12 +121,16 @@ export function App() {
         </Switch>
         <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
         <TaskForm onSubmit={onSubmit} />
-        <TasksLists setTasks={setTasks} tasks={tasks} />
+        <div>
+          {!showGraph && <TasksLists setTasks={setTasks} tasks={tasks} />}
+          {showGraph && <BruteGraph setTasks={setTasks} tasks={tasks} />}
+        </div>
         <RemoveAllData setTasks={setTasks} />
       </Router>
     </Fragment>
   );
 }
+/*{showGraph && <TasksGraph setTasks={setTasks} tasks={tasks} />} */
 /*
 const Task: React.FC<TaskProps> = ({ amazingProp, ...rest }) => {
   return <button {...rest}>{amazingProp + 10}</button>
