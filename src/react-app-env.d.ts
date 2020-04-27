@@ -14,4 +14,6 @@ declare module "styled-components" {
   }
 }
 
+declare module "d3-dag";
+declare module "cytoscape-cose-bilkent";
 declare module "react-search";

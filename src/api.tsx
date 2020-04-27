@@ -349,13 +349,6 @@ function areTasksTheSame(task1id: string, task2id: string) {
 }
 type FunctionOutput = {};
 
-export const add = (x: number) => (y: number) => x + y;
-
-const incremenet = add(1);
-const add10 = add(10);
-
-export const its10Plus10 = add10(0);
-
 export function curry(fn: Function) {
   return function curried(...args: any[]) {
     if (args.length >= fn.length) {
@@ -366,9 +359,4 @@ export function curry(fn: Function) {
       };
     }
   };
-}
-export const curriedAddThree = curry(addThreeThings);
-
-export function addThreeThings(a: number, b: number, c: number) {
-  return a + b + c;
 }

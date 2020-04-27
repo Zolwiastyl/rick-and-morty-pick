@@ -1,38 +1,52 @@
 [
   {
     "dependencyId": [],
-    "frontEndId": "1234",
+    "frontEndId": "1",
     "isReady": false,
-    "name": "middle task",
+    "name": "root",
     "ordinalNumber": 1.6,
-    "status": "todo",
-    "userId": "github|45352717"
+    "status": "done",
+    "userId": "github|45352717",
+    "dependOnThisTask": []
   },
   {
     "dependencyId": [],
-    "frontEndId": "12345",
+    "frontEndId": "2",
     "isReady": false,
-    "name": "middle task",
+    "name": "parent",
     "ordinalNumber": 2.3,
     "status": "todo",
-    "userId": "github|45352717"
+    "userId": "github|45352717",
+    "dependOnThisTask": []
   },
   {
     "dependencyId": [],
-    "frontEndId": "12356",
+    "frontEndId": "3",
     "isReady": false,
-    "name": "middle task",
+    "name": "children1",
     "ordinalNumber": 2.5,
     "status": "todo",
-    "userId": "github|45352717"
+    "userId": "github|45352717",
+    "dependOnThisTask": []
   },
   {
     "dependencyId": [],
-    "frontEndId": "2120202014130200",
+    "frontEndId": "4",
     "isReady": false,
-    "name": "new task",
+    "name": "children 2",
     "ordinalNumber": 1.1,
     "status": "todo",
-    "userId": "github|45352717"
+    "userId": "github|45352717",
+    "dependOnThisTask": []
+  },
+  {
+    "dependencyId": [],
+    "frontEndId": "5",
+    "isReady": false,
+    "name": "children3",
+    "ordinalNumber": 1.1,
+    "status": "todo",
+    "userId": "github|45352717",
+    "dependOnThisTask": []
   }
 ]

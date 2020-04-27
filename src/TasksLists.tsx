@@ -172,7 +172,9 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                     });
                     console.log(taskToSave);
                   } else {
-                    const ordinals = putItAbove;
+                    const ordinals = putItAbove(taskId)(event.currentTarget.id)(
+                      tasks
+                    );
                     console.log(ordinals[0]);
 
                     const newOrdinal = () => {
@@ -197,7 +199,6 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
                   <p className="task-name">
                     {task.name}
                     <br />
-                    {task.ordinalNumber}
                     <br /> here display if its ready:
                     {task.isReady.toString()}
                   </p>

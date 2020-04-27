@@ -8,6 +8,8 @@ import history from "./utils/history";
 //import App from "./App";
 
 import { App } from "./App";
+import { TasksGraph } from "./TasksGraph";
+import { BruteGraph } from "./BruteGraph";
 
 const onRedirectCallback = (appState: any) => {
   history.push(
@@ -16,7 +18,12 @@ const onRedirectCallback = (appState: any) => {
       : window.location.pathname
   );
 };
-
+/*<App/>
+<TasksGraph style={stylesX} width={1000} height={1000} />*/
+const stylesX = {
+  width: "100%",
+  height: "100%",
+};
 ReactDOM.render(
   <Auth0Provider
     domain={config.domain}
