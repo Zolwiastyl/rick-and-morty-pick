@@ -9,7 +9,6 @@ import { TasksStateProps, Task } from "./types";
 import cola from "cytoscape-cola";
 import { TasksGraph } from "./TasksGraph";
 
-const mockUpTasks: Task[] = require("./mockup-for-graph.json");
 cytoscape.use(cola);
 
 function prepareElementsForGraph(tasks: Task[]) {
