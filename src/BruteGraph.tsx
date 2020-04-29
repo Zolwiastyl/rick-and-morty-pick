@@ -1,13 +1,10 @@
 import React, { useEffect } from "react";
-import cytoscape, {
-  NodeDefinition,
-  ElementsDefinition,
-  EdgeDefinition,
-} from "cytoscape";
-import { Layout } from "react-feather";
+import cytoscape, { ElementsDefinition, EdgeDefinition } from "cytoscape";
 import { TasksStateProps, Task } from "./types";
 import cola from "cytoscape-cola";
-import { TasksGraph } from "./TasksGraph";
+import { sendNewTask, callApi, curriedSendNewTask } from "./api";
+import { useAuth0 } from "./react-auth0-spa";
+import { Auth0Client } from "@auth0/auth0-spa-js";
 
 cytoscape.use(cola);
 
@@ -30,7 +27,14 @@ function prepareElementsForGraph(tasks: Task[]) {
   return elements;
 }
 
-function renderCytoscapeElement({ tasks, setTasks }: TasksStateProps) {
+function renderCytoscapeElement(
+  { tasks, setTasks }: TasksStateProps,
+  client: Auth0Client | undefined
+) {
+  /**
+   * requires only task that's need to be sent.
+   */
+
   const cy = cytoscape({
     container: document.getElementById("cy-placeholder"),
 
@@ -41,13 +45,12 @@ function renderCytoscapeElement({ tasks, setTasks }: TasksStateProps) {
       {
         selector: "node",
         style: {
-          "background-color": "red",
           height: 80,
           width: 80,
           "background-fit": "cover",
           "border-color": "#000",
-          "border-width": 3,
-          "border-opacity": 0.5,
+          "border-width": 5,
+          "border-opacity": 0,
           content: "data(label)",
           "text-valign": "center",
         },
@@ -57,8 +60,7 @@ function renderCytoscapeElement({ tasks, setTasks }: TasksStateProps) {
         style: {
           width: 6,
           "target-arrow-shape": "triangle",
-          "line-color": "#ffaaaa",
-          "target-arrow-color": "#ffaaaa",
+
           "curve-style": "bezier",
         },
       },
@@ -75,36 +77,43 @@ function renderCytoscapeElement({ tasks, setTasks }: TasksStateProps) {
   let firstNode: string;
 
   let startedAddingEdge: boolean = false;
+  cy.on("tap", (evt) => {
+    if (evt.target == cy) {
+      startedAddingEdge = false;
+    }
+  });
   cy.on("tap", "node", function (evt) {
     if (!startedAddingEdge) {
       firstNode = evt.target.id();
     } else {
       console.log(tasks);
-      const newArray = tasks.slice();
-
-      const diffrentArray = tasks
+      const sourceTaskToSave: Task = {
+        ...tasks.find((t) => t.frontEndId == firstNode)!,
+        dependencyId: tasks
+          .find((t) => t.frontEndId == firstNode)!
+          .dependencyId.concat([evt.target.id()]),
+      };
+      const targetTaskToSave: Task = {
+        ...tasks.find((t) => t.frontEndId == evt.target.id())!,
+        dependOnThisTask: tasks
+          .find((t) => t.frontEndId == evt.target.id())!
+          .dependOnThisTask.concat([firstNode]),
+      };
+      const bufforArray = tasks
         .filter(
           (t) => t.frontEndId !== firstNode && t.frontEndId !== evt.target.id()
         )
-        .concat([
-          {
-            ...tasks.find((t) => t.frontEndId == firstNode)!,
-            dependencyId: tasks
-              .find((t) => t.frontEndId == firstNode)!
-              .dependencyId.concat([evt.target.id()]),
-          },
-        ])
-        .concat([
-          {
-            ...tasks.find((t) => t.frontEndId == evt.target.id())!,
-            dependOnThisTask: tasks
-              .find((t) => t.frontEndId == evt.target.id())!
-              .dependOnThisTask.concat([firstNode]),
-          },
-        ]);
-      setTasks(diffrentArray);
-      console.log(tasks);
-      console.log(tasks.map((t) => diffrentArray.includes(t)));
+        .concat([sourceTaskToSave])
+        .concat([targetTaskToSave]);
+
+      if (
+        callApi(client, curriedSendNewTask(sourceTaskToSave)) &&
+        callApi(client, curriedSendNewTask(targetTaskToSave))
+      ) {
+        setTasks(bufforArray);
+      } else {
+        console.error("couldn't send tasks");
+      }
 
       cy.add({
         group: "edges",
@@ -113,19 +122,23 @@ function renderCytoscapeElement({ tasks, setTasks }: TasksStateProps) {
     }
     startedAddingEdge = !startedAddingEdge;
   });
+  cy.maxZoom(2.5);
+  cy.fit();
+  cy.minZoom(0.5);
   return cy;
 }
 
 export function BruteGraph({ tasks, setTasks }: TasksStateProps) {
   let cyStyle = {
-    height: "500px",
-    width: "500px",
+    height: "800px",
+    width: "1900px",
     margin: "20px 0px",
   };
+  const { client } = useAuth0();
 
   useEffect(() => {
-    renderCytoscapeElement({ tasks, setTasks });
-  }, []);
+    renderCytoscapeElement({ tasks, setTasks }, client);
+  }, [tasks]);
   return (
     <div>
       <button> layout </button>

@@ -22,7 +22,7 @@ import { Profile } from "./components/Profile";
 import { Router, Route, Switch, Link } from "react-router-dom";
 import history from "./utils/history";
 import { PrivateRoute } from "./components/PrivateRoute";
-import { TasksGraph } from "./TasksGraph";
+
 import { BruteGraph } from "./BruteGraph";
 
 const tasksArray: Array<Task> = [];

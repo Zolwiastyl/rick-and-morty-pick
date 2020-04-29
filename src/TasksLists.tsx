@@ -21,7 +21,6 @@ import {
   Trash2,
 } from "react-feather";
 import { useAuth0 } from "./react-auth0-spa";
-import { findByAltText } from "@testing-library/react";
 
 interface TaskButtonProps {
   onClick: () => void;
@@ -82,7 +81,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
     try {
       const token = await client?.getTokenSilently();
       const response = async () =>
-        await moveToAnotherGroup(status, task, state, token);
+        await moveToAnotherGroup(state, status, task, token);
       response();
     } catch (error) {
       console.error(error);

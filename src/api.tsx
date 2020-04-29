@@ -3,11 +3,12 @@ import { Task, TasksStateProps } from "./types";
 import React from "react";
 import { useAuth0 } from "./react-auth0-spa";
 import { any, string, number } from "prop-types";
+import { Auth0Client } from "@auth0/auth0-spa-js";
 
 export const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");
 const newTaskPostURL = new Request(HOST + "/tasks");
-const updateTaskPostURL = new Request(HOST + "/update-tasks");
+const updateTaskPostURL = new Request(HOST + "state/update-tasks");
 const removeTaskUrl = new Request(HOST + "/remove-task");
 
 export function generateIdForTask() {
@@ -16,6 +17,22 @@ export function generateIdForTask() {
     .filter((element) => /\d/.test(element))
     .join("");
 }
+
+export async function callApi(
+  client: Auth0Client | undefined,
+  partialCallBack: Function
+) {
+  try {
+    const token = await client?.getTokenSilently();
+    const response = async () => await partialCallBack(token);
+    response();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const curriedMoveToAnotherGroup = curry(moveToAnotherGroup);
+export const curriedSendNewTask: Function = curry(sendNewTask);
 
 export function sendNewTask(task: Partial<Task>, token: any) {
   const fetchAction = fetch(newTaskPostURL, {
@@ -104,10 +121,18 @@ function checkIfTaskIsReady(task: Task, tasks: Task[], token: any) {
     )
   );
 }
+/**
+ *
+ * @param state array of tasks and setTasks func
+ * @param status to which status task should shift
+ * @param task which task we are talking about
+ * @param token token from auth0 to send to backend
+ */
+
 export function moveToAnotherGroup(
+  state: TasksStateProps,
   status: string,
   task: Task,
-  state: TasksStateProps,
   token: any
 ) {
   if (
@@ -349,7 +374,7 @@ function areTasksTheSame(task1id: string, task2id: string) {
 }
 type FunctionOutput = {};
 
-export function curry(fn: Function) {
+export function curry(fn: Function): Function {
   return function curried(...args: any[]) {
     if (args.length >= fn.length) {
       return fn(...args);

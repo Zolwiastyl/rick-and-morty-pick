@@ -8,8 +8,6 @@ import history from "./utils/history";
 //import App from "./App";
 
 import { App } from "./App";
-import { TasksGraph } from "./TasksGraph";
-import { BruteGraph } from "./BruteGraph";
 
 const onRedirectCallback = (appState: any) => {
   history.push(
