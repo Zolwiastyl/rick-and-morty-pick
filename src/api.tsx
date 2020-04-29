@@ -33,6 +33,7 @@ export async function callApi(
 
 export const curriedMoveToAnotherGroup = curry(moveToAnotherGroup);
 export const curriedSendNewTask: Function = curry(sendNewTask);
+export const curriedRemoveTask: Function = curry(removeTask);
 
 export function sendNewTask(task: Partial<Task>, token: any) {
   const fetchAction = fetch(newTaskPostURL, {
@@ -95,12 +96,13 @@ export function RemoveAllData(props: Partial<TasksStateProps>) {
   );
 }
 
-export function removeTask(task: Task) {
+export function removeTask(task: Task, token: any) {
   fetch(removeTaskUrl, {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-type": "application/json",
+      authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       frontEndId: task.frontEndId,

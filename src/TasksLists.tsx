@@ -3,11 +3,13 @@ import { Task, TasksStateProps } from "./types";
 
 import {
   sendNewTask,
-  removeTask,
+  curriedRemoveTask,
+  callApi,
   moveToAnotherGroup,
   renderIcon,
   putItBelow,
   putItAbove,
+  removeTask,
 } from "./api";
 import { Autocomplete } from "@material-ui/lab";
 import { TextField } from "@material-ui/core";
@@ -92,7 +94,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
       <button
         onClick={() => {
           setTasks(tasks.filter((t) => t.frontEndId != task.frontEndId));
-          removeTask(task);
+          callApi(client, curriedRemoveTask(task));
         }}
       >
         {renderIcon(Trash2)}
