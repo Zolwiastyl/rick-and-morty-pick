@@ -8,7 +8,6 @@ import { Auth0Client } from "@auth0/auth0-spa-js";
 export const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");
 const newTaskPostURL = new Request(HOST + "/tasks");
-const updateTaskPostURL = new Request(HOST + "state/update-tasks");
 const removeTaskUrl = new Request(HOST + "/remove-task");
 
 export function generateIdForTask() {

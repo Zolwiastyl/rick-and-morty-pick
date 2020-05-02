@@ -11,9 +11,6 @@ import {
   generateIdForTask,
   fetchDataFromServer,
   RemoveAllData,
-  putItAbove,
-  takeOrdinalNumbers,
-  generateOrdinalNumber,
 } from "./api";
 import { Plus, User } from "react-feather";
 import { NavBar } from "./components/NavBar";
@@ -22,6 +19,7 @@ import { Profile } from "./components/Profile";
 import { Router, Route, Switch, Link } from "react-router-dom";
 import history from "./utils/history";
 import { PrivateRoute } from "./components/PrivateRoute";
+import Graph from "./PiotresGraph";
 
 import { BruteGraph } from "./BruteGraph";
 
@@ -30,7 +28,7 @@ const tasksArray: Array<Task> = [];
 const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 
 export function App() {
-  const [showGraph, toggleGraph] = useState<boolean>(false);
+  const [showGraph, toggleGraph] = useState<boolean>(true);
   const { loading, client, user } = useAuth0();
   const [tasks, setTasks] = useState<Task[]>(tasksArray);
   useEffect(() => {
@@ -123,7 +121,12 @@ export function App() {
         <TaskForm onSubmit={onSubmit} />
         <div>
           {!showGraph && <TasksLists setTasks={setTasks} tasks={tasks} />}
-          {showGraph && <BruteGraph setTasks={setTasks} tasks={tasks} />}
+          {showGraph && (
+            <Fragment>
+              <BruteGraph setTasks={setTasks} tasks={tasks} />
+              <Graph />
+            </Fragment>
+          )}
         </div>
         <RemoveAllData setTasks={setTasks} />
       </Router>

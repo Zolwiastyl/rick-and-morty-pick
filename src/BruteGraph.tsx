@@ -17,6 +17,7 @@ function prepareElementsForGraph(tasks: Task[]) {
       return t.dependencyId.map((id) => {
         const newEdge: EdgeDefinition = {
           data: { source: t.frontEndId, target: id },
+          selectable: true,
         };
         return newEdge;
       });
@@ -48,19 +49,26 @@ function renderCytoscapeElement(
           height: 80,
           width: 80,
           "background-fit": "cover",
-          "border-color": "#000",
+          "border-color": "inherit",
           "border-width": 5,
-          "border-opacity": 0,
-          content: "data(label)",
-          "text-valign": "center",
+          "border-opacity": 0.1,
+
+          label: "data(label)",
+          "text-max-width": "15em",
+          "text-wrap": "wrap",
+          "text-halign": "left",
+          "text-valign": "top",
+          "text-outline-color": "white",
+          "text-outline-width": 3,
+          "text-outline-opacity": 1,
+          "text-events": "yes",
         },
       },
       {
         selector: "edge",
         style: {
-          width: 6,
+          width: 7,
           "target-arrow-shape": "triangle",
-
           "curve-style": "bezier",
         },
       },
@@ -68,7 +76,8 @@ function renderCytoscapeElement(
     layout: {
       name: "breadthfirst",
       directed: true,
-      padding: 10,
+      padding: 5,
+      spacingFactor: 1.25,
       animate: true,
     },
     elements: prepareElementsForGraph(tasks),
@@ -86,44 +95,68 @@ function renderCytoscapeElement(
     if (!startedAddingEdge) {
       firstNode = evt.target.id();
     } else {
-      console.log(tasks);
-      const sourceTaskToSave: Task = {
-        ...tasks.find((t) => t.frontEndId == firstNode)!,
-        dependencyId: tasks
-          .find((t) => t.frontEndId == firstNode)!
-          .dependencyId.concat([evt.target.id()]),
-      };
-      const targetTaskToSave: Task = {
-        ...tasks.find((t) => t.frontEndId == evt.target.id())!,
-        dependOnThisTask: tasks
-          .find((t) => t.frontEndId == evt.target.id())!
-          .dependOnThisTask.concat([firstNode]),
-      };
-      const bufforArray = tasks
-        .filter(
-          (t) => t.frontEndId !== firstNode && t.frontEndId !== evt.target.id()
-        )
-        .concat([sourceTaskToSave])
-        .concat([targetTaskToSave]);
+      if (firstNode != evt.target.id()) {
+        console.log(tasks);
+        const sourceTaskToSave: Task = {
+          ...tasks.find((t) => t.frontEndId == firstNode)!,
+          dependencyId: tasks
+            .find((t) => t.frontEndId == firstNode)!
+            .dependencyId.concat([evt.target.id()]),
+        };
+        const targetTaskToSave: Task = {
+          ...tasks.find((t) => t.frontEndId == evt.target.id())!,
+          dependOnThisTask: tasks
+            .find((t) => t.frontEndId == evt.target.id())!
+            .dependOnThisTask.concat([firstNode]),
+        };
+        const bufforArray = tasks
+          .filter(
+            (t) =>
+              t.frontEndId !== firstNode && t.frontEndId !== evt.target.id()
+          )
+          .concat([sourceTaskToSave])
+          .concat([targetTaskToSave]);
 
-      if (
-        callApi(client, curriedSendNewTask(sourceTaskToSave)) &&
-        callApi(client, curriedSendNewTask(targetTaskToSave))
-      ) {
-        setTasks(bufforArray);
+        if (
+          callApi(client, curriedSendNewTask(sourceTaskToSave)) &&
+          callApi(client, curriedSendNewTask(targetTaskToSave))
+        ) {
+          setTasks(bufforArray);
+        } else {
+          console.error("couldn't send tasks");
+        }
+        cy.add({
+          group: "edges",
+          data: { source: firstNode, target: evt.target.id() },
+        });
       } else {
-        console.error("couldn't send tasks");
+        startedAddingEdge = !startedAddingEdge;
       }
-
-      cy.add({
-        group: "edges",
-        data: { source: firstNode, target: evt.target.id() },
-      });
     }
     startedAddingEdge = !startedAddingEdge;
   });
+  cy.on("tap", "edge", (evt) => {
+    const newEdge = cy.getElementById(evt.target.id());
+    console.log(newEdge.id());
+    console.log(newEdge.isEdge());
+    newEdge
+      .connectedNodes()
+      .toArray()
+      .map((t) => console.log(t.id()));
+    newEdge
+      .target()
+      .toArray()
+      .map((t) => console.log(t.id()));
+    console.log(
+      newEdge
+        .target()
+        .toArray()
+        .filter((t) => t.id() != undefined)[0]
+    );
+    cy.remove(newEdge);
+  });
   cy.maxZoom(2.5);
-  cy.fit();
+
   cy.minZoom(0.5);
   return cy;
 }
@@ -148,27 +181,3 @@ export function BruteGraph({ tasks, setTasks }: TasksStateProps) {
     </div>
   );
 }
-
-/*{
-      nodes: [
-        { data: { id: "cat" } },
-        { data: { id: "bird" } },
-        { data: { id: "ladybug" } },
-        { data: { id: "aphid" } },
-        { data: { id: "rose" } },
-        { data: { id: "grasshopper" } },
-        { data: { id: "plant" } },
-        { data: { id: "wheat" } },
-      ],
-      edges: [
-        { data: { source: "cat", target: "bird" } },
-        { data: { source: "bird", target: "ladybug" } },
-        { data: { source: "bird", target: "grasshopper" } },
-        { data: { source: "grasshopper", target: "plant" } },
-        { data: { source: "grasshopper", target: "wheat" } },
-        { data: { source: "ladybug", target: "aphid" } },
-        { data: { source: "aphid", target: "rose" } },
-      ],
-    },
-
-    */
