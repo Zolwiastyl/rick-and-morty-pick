@@ -5,8 +5,7 @@ import {
   makeNewOrdinalBase,
   numbersAreValid,
   generateMiddleValue,
-  curriedAddThree,
-} from "./api";
+} from "../api";
 import { number } from "prop-types";
 
 const makeItIntoDigits = (ordinals: Array<any>) => {
@@ -30,10 +29,6 @@ const newOrdinalBase = makeNewOrdinalBase(
   indexOfLastDigitOfNewOrdinal
 );
 
-test("main should return 1.2 given 1 and 1.5", () => {
-  expect(generateOrdinalNumber(numbers)).toBe(1.15);
-});
-
 test("makeArraysEqual should return 1.0 and 1.5 given 1 and 1.5", () => {
   expect(makeArraysEqual(numbersAsDigits[0], numbersAsDigits[1])).toStrictEqual(
     [
@@ -41,42 +36,6 @@ test("makeArraysEqual should return 1.0 and 1.5 given 1 and 1.5", () => {
       ["1", ".", "2"],
     ]
   );
-});
-
-test("findIndexOfLastDigitOfNewOrdinal for 1.1 and 1.2 should be 2", () => {
-  expect(
-    findIndexOfLastDigitOfNewOrdinal(["1", ".", "1"], ["1", ".", "2"])
-  ).toBe(2);
-});
-
-test("makeNewOrdinalBase should return 1. when given 1.0 and 1.5", () => {
-  expect(
-    makeNewOrdinalBase(numbersMadeEqual[0], indexOfLastDigitOfNewOrdinal)
-  ).toStrictEqual(["1", ".", "1"]);
-});
-
-test("generateMiddleValue should return 1.2", () => {
-  expect(
-    generateMiddleValue(
-      +numbersMadeEqual[0][indexOfLastDigitOfNewOrdinal],
-      +numbersMadeEqual[1][indexOfLastDigitOfNewOrdinal],
-      newOrdinalBase
-    )
-  ).toBe(1.15);
-});
-
-test("generateMiddleValue should return 1.2", () => {
-  expect(generateMiddleValue(1, 2, ["1", ".", "1"])).toBe(1.15);
-});
-
-test("main should return 1.15 given 1.1 and 1.2", () => {
-  expect(generateOrdinalNumber([1.1, 1.2])).toBe(1.15);
-});
-test("main should return 1.34 given 1.3 and 1.38", () => {
-  expect(generateOrdinalNumber([1.3, 1.38])).toBe(1.34);
-});
-test("main should return 1.2 given 1 and 1.8", () => {
-  expect(generateOrdinalNumber([1, 1.5])).toBe(1.2);
 });
 
 test("makeNewOrdinalBase should return 1. when given 1 and 2", () => {

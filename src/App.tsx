@@ -21,14 +21,14 @@ import history from "./utils/history";
 import { PrivateRoute } from "./components/PrivateRoute";
 import Graph from "./PiotresGraph";
 
-import { BruteGraph } from "./BruteGraph";
+import { BruteGraph, TasksGraph } from "./BruteGraph";
 
 const tasksArray: Array<Task> = [];
 
 const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 
 export function App() {
-  const [showGraph, toggleGraph] = useState<boolean>(true);
+  const [showGraph, toggleGraph] = useState<boolean>(false);
   const { loading, client, user } = useAuth0();
   const [tasks, setTasks] = useState<Task[]>(tasksArray);
   useEffect(() => {
@@ -124,7 +124,6 @@ export function App() {
           {showGraph && (
             <Fragment>
               <BruteGraph setTasks={setTasks} tasks={tasks} />
-              <Graph />
             </Fragment>
           )}
         </div>

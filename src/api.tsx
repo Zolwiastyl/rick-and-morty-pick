@@ -52,10 +52,19 @@ export function sendNewTask(task: Partial<Task>, token: any) {
       dependOnThisTask: task.dependOnThisTask,
       ordinalNumber: task.ordinalNumber,
     }),
-  }).catch((error) => {
-    console.log("problem with fetching data:", error);
-    return false;
-  });
+  })
+    .then((response) => {
+      if (!response.ok) {
+        console.log("response not okay, mkay");
+        throw new Error(response.status.toString());
+      }
+      return response;
+    })
+    .catch((error) => {
+      console.log("problem with fetching data:", error);
+      return false;
+    });
+  console.log("task sent");
   return fetchAction;
 }
 
@@ -94,6 +103,13 @@ export function RemoveAllData(props: Partial<TasksStateProps>) {
     </button>
   );
 }
+
+function checkDependsOnIt(task: Task, tasks: Task[]) {
+  task.dependOnThisTask.map((id) =>
+    tasks.find((t) => t.frontEndId == id)?.dependencyId.filter((d) => d != id)
+  );
+}
+function checkDependencyId(task: Task, tasks: Task[]) {}
 
 export function removeTask(task: Task, token: any) {
   fetch(removeTaskUrl, {
