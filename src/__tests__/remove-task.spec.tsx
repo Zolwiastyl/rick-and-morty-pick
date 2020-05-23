@@ -3,7 +3,7 @@ import {
 	overwriteTask,
 	removeCrossDependencies,
 	saveTheDiff,
-} from "../api/removingTask";
+} from "../api/removeTask";
 import { Task } from "../types";
 
 const tasks: Task[] = require("./remove-task-mockup.json");

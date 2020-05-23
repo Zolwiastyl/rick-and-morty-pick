@@ -23,13 +23,17 @@ export async function callApi(
 	client: Auth0Client | undefined,
 	partialCallBack: Function
 ) {
-	try {
-		const token = await client?.getTokenSilently();
-		const response = async () => await partialCallBack(token);
-		response();
-	} catch (error) {
-		console.error(error);
+	async function callApi() {
+		try {
+			const token = await client?.getTokenSilently();
+			return (await partialCallBack(token)) as Promise<boolean>;
+		} catch (error) {
+			console.error(error);
+		}
 	}
+
+	const finalResponse = await callApi().then((response) => response);
+	return finalResponse;
 }
 
 export const curriedMoveToAnotherGroup = curry(moveToAnotherGroup);
@@ -62,14 +66,22 @@ export async function plainSendNewTask(
 			}),
 		}).then((response) => response);
 
-		return response.ok;
+		return response;
 	}
 
 	return sendTask()
-		.then((success) => {
+		.then((response) => {
+			const success = response.ok;
+			const code = response.status;
 			if (!success) {
-				console.log("response not okay, mkay");
-				throw Error("sending task failed");
+				throw (
+					"sending task " +
+					task.name! +
+					" failed" +
+					"/n" +
+					"response code: " +
+					code.toString()
+				);
 			} else {
 				return success;
 			}

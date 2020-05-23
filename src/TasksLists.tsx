@@ -15,7 +15,7 @@ import {
 	curriedRemoveCrossDependencies,
 	removeCrossDependencies,
 	saveTheDiff,
-} from "./api/removingTask";
+} from "./api/removeTask";
 import { Autocomplete } from "@material-ui/lab";
 import { TextField } from "@material-ui/core";
 
@@ -98,20 +98,23 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
 		return (
 			<button
 				onClick={() => {
-					callApi(
-						client,
-						curriedSendMultipleTasks(
-							removeCrossDependencies(task.frontEndId, tasks)
-						)
-					);
-					callApi(client, curriedRemoveTask(task));
-					console.log(removeCrossDependencies(task.frontEndId, tasks));
-					setTasks(
-						saveTheDiff(
-							removeCrossDependencies(task.frontEndId, tasks),
-							tasks
-						).filter((t) => t.frontEndId != task.frontEndId)
-					);
+					if (
+						callApi(
+							client,
+							curriedSendMultipleTasks(
+								removeCrossDependencies(task.frontEndId, tasks)
+							)
+						) &&
+						callApi(client, curriedRemoveTask(task))
+					) {
+						console.log(removeCrossDependencies(task.frontEndId, tasks));
+						setTasks(
+							saveTheDiff(
+								removeCrossDependencies(task.frontEndId, tasks),
+								tasks
+							).filter((t) => t.frontEndId != task.frontEndId)
+						);
+					}
 				}}
 			>
 				{renderIcon(Trash2)}

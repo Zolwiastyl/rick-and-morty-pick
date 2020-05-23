@@ -7,10 +7,12 @@ import { Task } from "./types";
 import { TasksLists } from "./TasksLists";
 
 import {
-  sendNewTask,
-  generateIdForTask,
-  fetchDataFromServer,
-  RemoveAllData,
+	sendNewTask,
+	generateIdForTask,
+	fetchDataFromServer,
+	RemoveAllData,
+	callApi,
+	curriedSendNewTask,
 } from "./api";
 import { Plus, User } from "react-feather";
 import { NavBar } from "./components/NavBar";
@@ -28,109 +30,116 @@ const tasksArray: Array<Task> = [];
 const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 
 export function App() {
-  const [showGraph, toggleGraph] = useState<boolean>(false);
-  const { loading, client, user } = useAuth0();
-  const [tasks, setTasks] = useState<Task[]>(tasksArray);
-  useEffect(() => {
-    callApiToFetchData(setTasks);
-  }, [loading, user, client]);
+	const [showGraph, toggleGraph] = useState<boolean>(false);
+	const { loading, client, user } = useAuth0();
+	const [tasks, setTasks] = useState<Task[]>(tasksArray);
+	useEffect(() => {
+		callApiToFetchData(setTasks);
+	}, [loading, user, client]);
 
-  const callApiToFetchData = async (
-    setTasks: React.Dispatch<React.SetStateAction<Task[]>>
-  ) => {
-    try {
-      const token = await client?.getTokenSilently();
-      const response = async () => await fetchDataFromServer(setTasks, token);
-      response();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const callApiToSendTask = async (task: Task) => {
-    try {
-      const token = await client?.getTokenSilently();
-      const response = async () => await sendNewTask(task, token);
-      response();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  /*  const callApiToDeleteTask = async (task: Task) => {
+	const callApiToFetchData = async (
+		setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+	) => {
+		try {
+			const token = await client?.getTokenSilently();
+			const response = async () =>
+				await fetchDataFromServer(setTasks, token);
+			response();
+		} catch (error) {
+			console.error(error);
+		}
+	};
+	const callApiToSendTask = async (task: Task) => {
+		try {
+			const token = await client?.getTokenSilently();
+			const response = async () => await sendNewTask(task, token);
+			response();
+		} catch (error) {
+			console.error(error);
+		}
+	};
+	/*  const callApiToDeleteTask = async (task: Task) => {
     try {
       const token = await client?.getTokenSilently();
 
     }
   }
 */
-  const onSubmit: (event: React.FormEvent<HTMLFormElement>) => void = (
-    event
-  ) => {
-    event.preventDefault();
-    const { name } = readFormValues(event.currentTarget);
-    event.currentTarget.reset();
-    const ArrayWithTasksToSave = tasks.slice();
-    function generateOrdinalForNewTask(tasks: Task[]) {
-      const tasksToDo = tasks.filter((t) => t.status == "todo");
-      if (tasksToDo.length == 0) {
-        return 2.1;
-      } else {
-        return tasksToDo.sort((x, y) => x.ordinalNumber - y.ordinalNumber)[0]
-          .ordinalNumber;
-      }
-    }
-    const newOrdinal = (0 + generateOrdinalForNewTask(tasks)) / 2;
+	const onSubmit: (
+		event: React.FormEvent<HTMLFormElement>
+	) => Promise<void> = async (event) => {
+		event.preventDefault();
+		const { name } = readFormValues(event.currentTarget);
+		event.currentTarget.reset();
+		const ArrayWithTasksToSave = tasks.slice();
+		function generateOrdinalForNewTask(tasks: Task[]) {
+			const tasksToDo = tasks.filter((t) => t.status == "todo");
+			if (tasksToDo.length == 0) {
+				return 2.1;
+			} else {
+				return tasksToDo.sort(
+					(x, y) => x.ordinalNumber - y.ordinalNumber
+				)[0].ordinalNumber;
+			}
+		}
+		const newOrdinal = (0 + generateOrdinalForNewTask(tasks)) / 2;
 
-    const newTask: Task = {
-      name: name,
-      status: "todo",
-      frontEndId: generateIdForTask(),
-      dependencyId: [],
-      isReady: false,
-      userId: user.sub,
-      ordinalNumber: newOrdinal,
-      dependOnThisTask: [],
-    };
-    ArrayWithTasksToSave.unshift(newTask);
-    callApiToSendTask(newTask);
-    setTasks(ArrayWithTasksToSave);
-  };
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+		const newTask: Task = {
+			name: name,
+			status: "todo",
+			frontEndId: generateIdForTask(),
+			dependencyId: [],
+			isReady: false,
+			userId: user.sub,
+			ordinalNumber: newOrdinal,
+			dependOnThisTask: [],
+		};
+		ArrayWithTasksToSave.unshift(newTask);
+		if (await callApi(client, curriedSendNewTask(newTask))) {
+			setTasks(ArrayWithTasksToSave);
+		} else {
+			console.log("couldn't send task");
+		}
+	};
+	if (loading) {
+		return <div>Loading...</div>;
+	}
 
-  return (
-    <Fragment>
-      <button onClick={() => callApiToFetchData(setTasks)}>fetch data</button>
-      <button
-        onClick={() => {
-          toggleGraph(!showGraph);
-        }}
-      >
-        toggle graph
-      </button>
-      <Router history={history}>
-        <PrivateRoute path="/profile" component={Profile} />
-        <header>
-          <NavBar />
-        </header>
+	return (
+		<Fragment>
+			<button onClick={() => callApiToFetchData(setTasks)}>
+				fetch data
+			</button>
+			<button
+				onClick={() => {
+					toggleGraph(!showGraph);
+				}}
+			>
+				toggle graph
+			</button>
+			<Router history={history}>
+				<PrivateRoute path="/profile" component={Profile} />
+				<header>
+					<NavBar />
+				</header>
 
-        <Switch>
-          <Route path="/" exact />
-        </Switch>
-        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-        <TaskForm onSubmit={onSubmit} />
-        <div>
-          {!showGraph && <TasksLists setTasks={setTasks} tasks={tasks} />}
-          {showGraph && (
-            <Fragment>
-              <BruteGraph setTasks={setTasks} tasks={tasks} />
-            </Fragment>
-          )}
-        </div>
-        <RemoveAllData setTasks={setTasks} />
-      </Router>
-    </Fragment>
-  );
+				<Switch>
+					<Route path="/" exact />
+				</Switch>
+				<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+				<TaskForm onSubmit={onSubmit} />
+				<div>
+					{!showGraph && <TasksLists setTasks={setTasks} tasks={tasks} />}
+					{showGraph && (
+						<Fragment>
+							<BruteGraph setTasks={setTasks} tasks={tasks} />
+						</Fragment>
+					)}
+				</div>
+				<RemoveAllData setTasks={setTasks} />
+			</Router>
+		</Fragment>
+	);
 }
 /*{showGraph && <TasksGraph setTasks={setTasks} tasks={tasks} />} */
 /*
@@ -139,46 +148,46 @@ const Task: React.FC<TaskProps> = ({ amazingProp, ...rest }) => {
   }*/
 
 function readFormValues(form: HTMLFormElement) {
-  const { taskName } = (form.elements as any) as Record<
-    string,
-    HTMLInputElement | undefined
-  >;
-  if (!taskName) {
-    throw new Error("something is missing");
-  }
-  return { name: taskName.value };
+	const { taskName } = (form.elements as any) as Record<
+		string,
+		HTMLInputElement | undefined
+	>;
+	if (!taskName) {
+		throw new Error("something is missing");
+	}
+	return { name: taskName.value };
 }
 
 function TaskForm({
-  onSubmit,
+	onSubmit,
 }: {
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) {
-  generateIdForTask();
-  return (
-    <div
-      className="add-task-form-item"
-      sx={{
-        fontWeight: "bold",
-        fontSize: 4, // picks up value from `theme.fontSizes[4]`
-        color: "primary", // picks up value from `theme.colors.primary`
-      }}
-    >
-      <form className="add-task-form" onSubmit={onSubmit}>
-        <label className="add-task-label">
-          <input
-            name="taskName"
-            className="add-task-input-field"
-            type="text"
-            placeholder="task name"
-            minLength={1}
-          />
-          <i data-feather="align-center"></i>
-          <button type="submit" className="submit-button" value="add task">
-            <Plus />
-          </button>
-        </label>
-      </form>
-    </div>
-  );
+	generateIdForTask();
+	return (
+		<div
+			className="add-task-form-item"
+			sx={{
+				fontWeight: "bold",
+				fontSize: 4, // picks up value from `theme.fontSizes[4]`
+				color: "primary", // picks up value from `theme.colors.primary`
+			}}
+		>
+			<form className="add-task-form" onSubmit={onSubmit}>
+				<label className="add-task-label">
+					<input
+						name="taskName"
+						className="add-task-input-field"
+						type="text"
+						placeholder="task name"
+						minLength={1}
+					/>
+					<i data-feather="align-center"></i>
+					<button type="submit" className="submit-button" value="add task">
+						<Plus />
+					</button>
+				</label>
+			</form>
+		</div>
+	);
 }
