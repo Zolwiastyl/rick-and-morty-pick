@@ -8,44 +8,40 @@ export enum FromWhere {
 	dependencyId = "dependencyId",
 }
 
+export function saveTheDiff(tasks: Task[], tasksDiff: Task[]) {
+	return tasks
+		.filter(
+			(t) =>
+				!tasksDiff.map((tdiff) => tdiff.frontEndId).includes(t.frontEndId)
+		)
+		.concat(tasksDiff);
+}
+
+export function removeCrossDependencies(taskId: string, tasks: Task[]): Task[] {
+	const taskToDelete = tasks.find((t) => t.frontEndId == taskId);
+	const tasksToReturn = removeIdFromOtherTasks(
+		taskToDelete?.dependOnThisTask!.slice(),
+		tasks,
+		taskId,
+		removeIdFromOtherTasks(
+			taskToDelete?.dependencyId!.slice(),
+			tasks,
+			taskId,
+			[]
+		)
+	)
+		.filter((t) => t.frontEndId != taskId)
+		.sort((x, y) => y.ordinalNumber - x.ordinalNumber);
+	console.log(tasksToReturn);
+	return tasksToReturn;
+}
+
 export function takeIdsArray(task: Task, theEnum: FromWhere): string[] {
 	if (theEnum == "dependsOnIt") {
 		return task.dependOnThisTask;
 	}
 	return task.dependencyId;
 }
-
-export function removeTaskFromEmbbededTasks(
-	taskId: string,
-	findTaskInTasksById: any,
-	fromWhere: FromWhere,
-	tasks: Task[]
-) {
-	const arrayOfIds = (Id: string) =>
-		takeIdsArray(findTaskInTasksById(Id) as Task, fromWhere);
-	return tasks;
-}
-
-export function overwriteTask(tasks: Task[], task: Task): Task[] {
-	return tasks.filter((t) => t.frontEndId !== task.frontEndId).concat(task);
-}
-
-/*
-Take the array and for all elements in Array remove theTaskId
-
-*/
-
-/*
-take task
-take its dependencies:
-go through dependencies, remove the task from their "depends on it"
-add to depends on it all depends on it of removed tasks.
-go to all tasks from
-
-
-Wywołaj rekurencyjną funkcję dla całej tablicy, od tej tablicy
-
-*/
 
 export function removeIdFromOtherTasks(
 	arrayOfIds: string[],
@@ -76,30 +72,6 @@ export function removeIdFromOtherTasks(
 	}
 }
 
-export function removeCrossDependencies(taskId: string, tasks: Task[]): Task[] {
-	const taskToDelete = tasks.find((t) => t.frontEndId == taskId);
-	const tasksToReturn = removeIdFromOtherTasks(
-		taskToDelete?.dependOnThisTask!.slice(),
-		tasks,
-		taskId,
-		removeIdFromOtherTasks(
-			taskToDelete?.dependencyId!.slice(),
-			tasks,
-			taskId,
-			[]
-		)
-	)
-		.filter((t) => t.frontEndId != taskId)
-		.sort((x, y) => y.ordinalNumber - x.ordinalNumber);
-	console.log(tasksToReturn);
-	return tasksToReturn;
-}
-
-export function saveTheDiff(tasks: Task[], tasksDiff: Task[]) {
-	return tasks
-		.filter(
-			(t) =>
-				!tasksDiff.map((tdiff) => tdiff.frontEndId).includes(t.frontEndId)
-		)
-		.concat(tasksDiff);
+export function overwriteTask(tasks: Task[], task: Task): Task[] {
+	return tasks.filter((t) => t.frontEndId !== task.frontEndId).concat(task);
 }

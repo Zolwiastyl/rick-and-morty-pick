@@ -26,14 +26,13 @@ export async function callApi(
 	async function callApi() {
 		try {
 			const token = await client?.getTokenSilently();
-			return (await partialCallBack(token)) as Promise<boolean>;
+			return await partialCallBack(token);
 		} catch (error) {
 			console.error(error);
 		}
 	}
 
-	const finalResponse = await callApi().then((response) => response);
-	return finalResponse;
+	return await callApi();
 }
 
 export const curriedMoveToAnotherGroup = curry(moveToAnotherGroup);
@@ -64,7 +63,7 @@ export async function plainSendNewTask(
 				dependOnThisTask: task.dependOnThisTask,
 				ordinalNumber: task.ordinalNumber,
 			}),
-		}).then((response) => response);
+		});
 
 		return response;
 	}
@@ -106,16 +105,15 @@ export async function plainSendMultipleTasks(
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify(tasks),
-		}).then((response) => response);
+		});
 		return response;
 	}
 	return sendTasks()
-		.then((success) => {
-			if (!success) {
-				console.log("response not okay, mkay");
-				throw Error("sending task failed");
+		.then((isSuccess) => {
+			if (!isSuccess.ok) {
+				throw Error(isSuccess.statusText);
 			} else {
-				return success;
+				return isSuccess;
 			}
 		})
 		.catch((error) => {

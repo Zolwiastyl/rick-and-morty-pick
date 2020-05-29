@@ -21,7 +21,6 @@ import { Profile } from "./components/Profile";
 import { Router, Route, Switch, Link } from "react-router-dom";
 import history from "./utils/history";
 import { PrivateRoute } from "./components/PrivateRoute";
-import Graph from "./PiotresGraph";
 
 import { BruteGraph, TasksGraph } from "./BruteGraph";
 
@@ -58,13 +57,7 @@ export function App() {
 			console.error(error);
 		}
 	};
-	/*  const callApiToDeleteTask = async (task: Task) => {
-    try {
-      const token = await client?.getTokenSilently();
 
-    }
-  }
-*/
 	const onSubmit: (
 		event: React.FormEvent<HTMLFormElement>
 	) => Promise<void> = async (event) => {
@@ -95,8 +88,9 @@ export function App() {
 			dependOnThisTask: [],
 		};
 		ArrayWithTasksToSave.unshift(newTask);
-		if (await callApi(client, curriedSendNewTask(newTask))) {
-			setTasks(ArrayWithTasksToSave);
+		setTasks(ArrayWithTasksToSave);
+		if (!(await callApi(client, curriedSendNewTask(newTask)))) {
+			setTasks(tasks.filter((t) => t.frontEndId !== newTask.frontEndId));
 		} else {
 			console.log("couldn't send task");
 		}

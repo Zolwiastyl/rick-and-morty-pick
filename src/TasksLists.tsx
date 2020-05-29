@@ -54,7 +54,6 @@ const TaskList: React.FC<TaskListProps> = ({
 			<p className="group-heading">
 				{renderIcon(StatusIcon)} // {statusName} //
 			</p>
-			{console.log(StatusIcon)}
 
 			{children}
 		</div>
@@ -110,11 +109,14 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
 						console.log(removeCrossDependencies(task.frontEndId, tasks));
 						setTasks(
 							saveTheDiff(
-								removeCrossDependencies(task.frontEndId, tasks),
-								tasks
-							).filter((t) => t.frontEndId != task.frontEndId)
+								tasks,
+								removeCrossDependencies(task.frontEndId, tasks)
+							).filter((t) => t.frontEndId !== task.frontEndId)
 						);
 					}
+					console.log(
+						tasks.filter((t) => t.frontEndId !== task.frontEndId)
+					);
 				}}
 			>
 				{renderIcon(Trash2)}
