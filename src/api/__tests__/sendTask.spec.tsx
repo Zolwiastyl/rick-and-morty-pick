@@ -1,5 +1,6 @@
-import { sendNewTask, plainSendNewTask, plainSendMultipleTasks } from "../api";
-import { Task } from "../types";
+import { Task } from "../../types";
+import { sendNewTask, plainSendNewTask } from "../sendNewTask";
+import { plainSendMultipleTasks } from "../sendMultipleTasks";
 
 const BaseUrl: string = "https://httpstat.us/";
 

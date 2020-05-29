@@ -1,7 +1,7 @@
 import after from "./after.json";
 import before from "./before.json";
-import { Task } from "../../types";
-import { saveTheDiff, removeCrossDependencies } from "../../api/removeTask";
+import { Task } from "../../../types";
+import { saveTheDiff, removeCrossDependencies } from "../../removeTask";
 
 test("it should return theDiff.json", () => {
 	expect(removeCrossDependencies(before[2].frontEndId, before)).toStrictEqual(

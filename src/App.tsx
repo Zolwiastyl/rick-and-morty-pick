@@ -4,16 +4,10 @@ import { Fragment } from "react";
 import "./App.scss";
 
 import { Task } from "./types";
-import { TasksLists } from "./TasksLists";
+import { TasksLists } from "./views/tasks-lists/TasksLists";
 
-import {
-	sendNewTask,
-	generateIdForTask,
-	fetchDataFromServer,
-	RemoveAllData,
-	callApi,
-	curriedSendNewTask,
-} from "./api";
+import { fetchDataFromServer, RemoveAllData, callApi } from "./api/api";
+import { generateIdForTask } from "./api/generateIdForTask";
 import { Plus, User } from "react-feather";
 import { NavBar } from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
@@ -22,7 +16,8 @@ import { Router, Route, Switch, Link } from "react-router-dom";
 import history from "./utils/history";
 import { PrivateRoute } from "./components/PrivateRoute";
 
-import { BruteGraph, TasksGraph } from "./BruteGraph";
+import { BruteGraph, TasksGraph } from "./views/tasks-graph/BruteGraph";
+import { sendNewTask, curriedSendNewTask } from "./api/sendNewTask";
 
 const tasksArray: Array<Task> = [];
 

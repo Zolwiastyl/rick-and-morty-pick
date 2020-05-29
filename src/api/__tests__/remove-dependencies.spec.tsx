@@ -1,31 +1,31 @@
-import { makeNewTasksRemovingDependencies } from "../../GraphAPI";
+import { makeNewTasksRemovingDependencies } from "../../views/tasks-graph/GraphAPI";
 
-const tasks = require("./before.json");
+const tasks = require("./remove-dependencies.json");
 
 const returnedTasks = [
 	{
-		dependOnThisTask: [],
+		dependOnThisTask: ["0620201435140200", "0620201435160200"],
 		dependencyId: [],
-		frontEndId: "2020201146250200",
+		frontEndId: "0620201435110200",
 		isReady: false,
-		name: "task one",
+		name: "Task 1",
 		ordinalNumber: 1.05,
 		status: "todo",
 		userId: "github|45352717",
 	},
 	{
-		dependOnThisTask: ["2020201146290200"],
+		dependOnThisTask: [],
 		dependencyId: [],
-		frontEndId: "2020201146270200",
+		frontEndId: "0620201435120200",
 		isReady: false,
-		name: "task two",
+		name: "Task 2",
 		ordinalNumber: 0.525,
 		status: "todo",
 		userId: "github|45352717",
 	},
 ];
-const sourceMockupId = "2020201146250200";
-const targetMockupId = "2020201146270200";
+const sourceMockupId = "0620201435110200";
+const targetMockupId = "0620201435120200";
 
 test("it should be the same as mockup", () => {
 	expect(

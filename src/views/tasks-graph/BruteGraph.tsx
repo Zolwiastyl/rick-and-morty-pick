@@ -5,19 +5,17 @@ import cytoscape, {
 	ElementDefinition,
 	LayoutOptions,
 } from "cytoscape";
-import { TasksStateProps, Task } from "./types";
+import { TasksStateProps, Task } from "../../types";
 import cola from "cytoscape-cola";
-import { callApi, curriedSendNewTask, sendNewTask } from "./api";
-import { useAuth0 } from "./react-auth0-spa";
+import { useAuth0 } from "../../react-auth0-spa";
 import { Auth0Client } from "@auth0/auth0-spa-js";
+import { prepareElementsForGraph, graphStyle, copyTaskById } from "./GraphAPI";
+import { curriedSendNewTask } from "../../api/sendNewTask";
 import {
-	prepareElementsForGraph,
 	makeNewTasksWithDependencies,
-	graphStyle,
 	sendSourceAndTargetTasks,
 	makeNewTasksRemovingDependencies,
-	copyTaskById,
-} from "./GraphAPI";
+} from "../../api/addDependencies";
 
 cytoscape.use(cola);
 

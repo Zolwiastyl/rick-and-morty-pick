@@ -1,11 +1,27 @@
 import { Task } from "../types";
-import { curry, TaskPlacement } from "../api";
+import { curry, HOST } from "./api";
 
 export const curriedRemoveCrossDependencies = curry(removeCrossDependencies);
 
 export enum FromWhere {
 	dependsOnIt = "dependsOnIt",
 	dependencyId = "dependencyId",
+}
+
+const removeTaskUrl = new Request(HOST + "/remove-task");
+export const curriedRemoveTask: Function = curry(removeTask);
+export function removeTask(task: Task, token: any) {
+	fetch(removeTaskUrl, {
+		method: "POST",
+		headers: {
+			Accept: "application/json",
+			"Content-type": "application/json",
+			authorization: `Bearer ${token}`,
+		},
+		body: JSON.stringify({
+			frontEndId: task.frontEndId,
+		}),
+	});
 }
 
 export function saveTheDiff(tasks: Task[], tasksDiff: Task[]) {
