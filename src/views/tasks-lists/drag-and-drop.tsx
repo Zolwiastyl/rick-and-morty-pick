@@ -1,16 +1,12 @@
 import { putItBelow, putItAbove } from "../../api/generateOrdinalNumber";
 import { TasksStateProps, Status } from "../../types";
-import { curriedSendNewTask } from "../../api/sendNewTask";
 import { callApi } from "../../api/api";
-import {
-	moveToAnotherGroup,
-	curriedMoveToAnotherGroup,
-} from "../../api/moveToAnotherGroup";
+import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
 
 /**
  *
  * @param event on which it will work
- * @param param1 tasks and setTasks
+ * @param state in brackets - tasks and setTasks
  * @param client client from Auth0
  * @param status of group in which it is triggered
  */

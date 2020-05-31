@@ -20,3 +20,19 @@ export type Status = {
 	statusName: string;
 	StatusIcon?: React.ComponentClass<{}, any> | React.FunctionComponent<{}>;
 };
+
+interface GroupTask extends Task {
+	Task: Task[];
+}
+
+const firstGroup: GroupTask = {
+	name: "string",
+	status: "string",
+	frontEndId: "string",
+	dependencyId: [],
+	isReady: false,
+	userId: "string",
+	ordinalNumber: 1,
+	dependOnThisTask: [],
+	Task: [],
+};

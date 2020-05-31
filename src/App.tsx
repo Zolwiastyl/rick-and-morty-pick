@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Fragment } from "react";
 
-import "./App.scss";
+import "./index.css";
 
 import { Task } from "./types";
 import { TasksLists } from "./views/tasks-lists/TasksLists";
@@ -100,6 +100,7 @@ export function App() {
 				fetch data
 			</button>
 			<button
+				className="bg-gray-600"
 				onClick={() => {
 					toggleGraph(!showGraph);
 				}}

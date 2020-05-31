@@ -1,10 +1,5 @@
 import React, { useEffect, useRef, MutableRefObject, lazy } from "react";
-import cytoscape, {
-	CytoscapeOptions,
-	Core,
-	ElementDefinition,
-	LayoutOptions,
-} from "cytoscape";
+import cytoscape, { Core, ElementDefinition, LayoutOptions } from "cytoscape";
 import { TasksStateProps, Task } from "../../types";
 import cola from "cytoscape-cola";
 import { useAuth0 } from "../../react-auth0-spa";
