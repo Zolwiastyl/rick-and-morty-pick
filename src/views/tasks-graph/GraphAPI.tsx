@@ -9,13 +9,18 @@ export function prepareElementsForGraph(tasks: Task[]) {
 	});
 	const edges: EdgeDefinition[] = tasks
 		.map((t) => {
-			return t.dependOnThisTask.map((id) => {
-				const newEdge: EdgeDefinition = {
-					data: { source: t.frontEndId, target: id },
-					selectable: true,
-				};
-				return newEdge;
-			});
+			return t.dependOnThisTask.map(
+				(id): EdgeDefinition => {
+					return {
+						data: {
+							source: t.frontEndId,
+							target: id,
+							id: `${t.frontEndId}->${id}`,
+						},
+						selectable: true,
+					};
+				}
+			);
 		})
 		.flat(10);
 	const elements: ElementDefinition[] = nodes.concat(edges);

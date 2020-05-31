@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useReducer } from "react";
 import { Fragment } from "react";
 
 import "./index.css";
 
-import { Task } from "./types";
+import { Task, TaskId } from "./types";
 import { TasksLists } from "./views/tasks-lists/TasksLists";
 
 import { fetchDataFromServer, RemoveAllData, callApi } from "./api/api";
@@ -16,17 +16,83 @@ import { Router, Route, Switch, Link } from "react-router-dom";
 import history from "./utils/history";
 import { PrivateRoute } from "./components/PrivateRoute";
 
-import { BruteGraph, TasksGraph } from "./views/tasks-graph/BruteGraph";
+import { TasksGraph } from "./views/tasks-graph/BruteGraph";
 import { sendNewTask, curriedSendNewTask } from "./api/sendNewTask";
+import {
+	makeNewTasksWithDependencies,
+	sendSourceAndTargetTasks,
+	makeNewTasksRemovingDependencies,
+} from "./api/addDependencies";
 
 const tasksArray: Array<Task> = [];
 
 const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 
 export function App() {
-	const [showGraph, toggleGraph] = useState<boolean>(false);
+	// secondary boring state
 	const { loading, client, user } = useAuth0();
+
+	// ui state -- this can be replaced with url match or sth like that / router
+	const [showGraph, toggleGraph] = useState<boolean>(true);
+
+	// core domain state
 	const [tasks, setTasks] = useState<Task[]>(tasksArray);
+
+	const addEdge = useCallback(
+		(from: TaskId, to: TaskId) => {
+			const [
+				sourceTaskToSave,
+				targetTaskToSave,
+			] = makeNewTasksWithDependencies(tasks, [from, to]);
+
+			const edgeAddedToDatabase = sendSourceAndTargetTasks(
+				client,
+				curriedSendNewTask,
+				[sourceTaskToSave, targetTaskToSave]
+			);
+
+			if (edgeAddedToDatabase) {
+				setTasks(
+					tasks
+						.filter((t) => t.frontEndId !== from && t.frontEndId !== to)
+						.concat([sourceTaskToSave, targetTaskToSave])
+				);
+			} else {
+				console.error("couldn't send tasks");
+			}
+		},
+		[tasks, setTasks]
+	);
+
+	const removeEdge = useCallback(
+		(from: TaskId, to: TaskId) => {
+			const [
+				sourceTaskToSave,
+				targetTaskToSave,
+			] = makeNewTasksRemovingDependencies(tasks, [from, to]);
+			console.log(sourceTaskToSave, targetTaskToSave);
+
+			const edgeRemovedFromDatabase = sendSourceAndTargetTasks(
+				client,
+				curriedSendNewTask,
+				[sourceTaskToSave, targetTaskToSave]
+			);
+
+			if (edgeRemovedFromDatabase) {
+				setTasks(
+					tasks
+						.filter(
+							(t) =>
+								t.frontEndId != sourceTaskToSave.frontEndId &&
+								t.frontEndId != targetTaskToSave.frontEndId
+						)
+						.concat([sourceTaskToSave, targetTaskToSave])
+				);
+			}
+		},
+		[tasks, setTasks]
+	);
+
 	useEffect(() => {
 		callApiToFetchData(setTasks);
 	}, [loading, user, client]);
@@ -86,8 +152,9 @@ export function App() {
 		setTasks(ArrayWithTasksToSave);
 		if (!(await callApi(client, curriedSendNewTask(newTask)))) {
 			setTasks(tasks.filter((t) => t.frontEndId !== newTask.frontEndId));
-		} else {
 			console.log("couldn't send task");
+		} else {
+			console.log("sent task");
 		}
 	};
 	if (loading) {
@@ -116,13 +183,19 @@ export function App() {
 				<Switch>
 					<Route path="/" exact />
 				</Switch>
+				{/* TODO: install feather react from npm */}
 				<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 				<TaskForm onSubmit={onSubmit} />
 				<div>
 					{!showGraph && <TasksLists setTasks={setTasks} tasks={tasks} />}
 					{showGraph && (
 						<Fragment>
-							<BruteGraph setTasks={setTasks} tasks={tasks} />
+							{/* <BruteGraph setTasks={setTasks} tasks={tasks} /> */}
+							<TasksGraph
+								addEdge={addEdge}
+								removeEdge={removeEdge}
+								tasks={tasks}
+							/>
 						</Fragment>
 					)}
 				</div>

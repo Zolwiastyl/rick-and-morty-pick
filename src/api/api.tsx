@@ -13,16 +13,12 @@ export async function callApi(
 	client: Auth0Client | undefined,
 	partialCallBack: Function
 ) {
-	async function callApi() {
-		try {
-			const token = await client?.getTokenSilently();
-			return await partialCallBack(token);
-		} catch (error) {
-			console.error(error);
-		}
+	try {
+		const token = await client?.getTokenSilently();
+		return await partialCallBack(token);
+	} catch (error) {
+		console.error(error);
 	}
-
-	return await callApi();
 }
 
 export function curry(fn: Function): Function {

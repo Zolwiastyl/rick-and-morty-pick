@@ -1,10 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
 
+export type TaskId = string;
+
 export type Task = {
 	name: string;
 	status: string;
-	frontEndId: string;
-	dependencyId: string[];
+	frontEndId: TaskId;
+	dependencyId: TaskId[];
 	isReady: boolean;
 	userId: string;
 	ordinalNumber: number;

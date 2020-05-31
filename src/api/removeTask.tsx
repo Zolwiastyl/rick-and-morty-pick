@@ -34,7 +34,7 @@ export function saveTheDiff(tasks: Task[], tasksDiff: Task[]) {
 }
 
 export function removeCrossDependencies(taskId: string, tasks: Task[]): Task[] {
-	const taskToDelete = tasks.find((t) => t.frontEndId == taskId);
+	const taskToDelete = tasks.find((t) => t.frontEndId == taskId)!;
 	const tasksToReturn = removeIdFromOtherTasks(
 		taskToDelete?.dependOnThisTask!.slice(),
 		tasks,

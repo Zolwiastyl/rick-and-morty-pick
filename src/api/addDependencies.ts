@@ -3,13 +3,26 @@ import { copyTaskById } from "../views/tasks-graph/GraphAPI";
 import { Auth0Client } from "@auth0/auth0-spa-js";
 import { callApi } from "./api";
 
+type Source = Task;
+type Target = Task;
+type Edge = [Source, Target];
+
+type TaskId = string;
+
 /**
  *
  * @param tasks array of tasks
  * @param tasksId first id is source, second is target
  */
 
-export function makeNewTasksWithDependencies(tasks: Task[], tasksId: string[]) {
+export function makeNewTasksWithDependencies(
+	tasks: Task[],
+	tasksId: readonly [TaskId, TaskId]
+): Edge {
+	console.log(
+		tasks.map((t) => ({ key: t.frontEndId, value: t.name })),
+		tasksId
+	);
 	return [
 		{
 			...tasks.find((t) => t.frontEndId == tasksId[0])!,
@@ -28,8 +41,8 @@ export function makeNewTasksWithDependencies(tasks: Task[], tasksId: string[]) {
 
 export function makeNewTasksRemovingDependencies(
 	tasks: Task[],
-	tasksId: string[]
-) {
+	tasksId: readonly [TaskId, TaskId]
+): Edge {
 	const sourceTaskToSave: Task = {
 		...tasks.find((t) => t.frontEndId == tasksId[0])!,
 		dependOnThisTask: tasks
