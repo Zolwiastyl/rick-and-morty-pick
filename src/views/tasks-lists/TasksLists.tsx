@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Task, TasksStateProps, Status } from "../../types";
 
 import { callApi, renderIcon } from "../../api/api";
@@ -22,6 +22,8 @@ import {
 	makeNewTasksWithDependencies,
 } from "../../api/addDependencies";
 import { curriedSendNewTask } from "../../api/sendNewTask";
+import { TaskComponent } from "./components/TaskComponent";
+import { TaskCard } from "../../reusable-ui/TaskCard";
 
 interface TaskButtonProps {
 	onClick: () => void;
@@ -111,85 +113,94 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
 					{tasks
 						.sort((x, y) => x.ordinalNumber - y.ordinalNumber)
 						.filter((task) => task.status == status.statusName)
-						.map((task) => (
-							<article
-								id={task.frontEndId}
-								className="flex flex-col bg-gray-100 m-2 max-h-full h-56 w-11/12 max-w-full min-w-full"
-								draggable="true"
-								onDragStart={(event) => {
-									event.dataTransfer.setData(
-										"text/plain",
-										task.frontEndId
-									);
-								}}
-								onDrop={(event) => {
-									handleDrop(
-										event,
-										{ tasks, setTasks },
-										client,
-										status
-									);
-								}}
-							>
-								<div className="upper-part-of-task-element">
-									<p className="task-name">
-										{task.name}
-										<br />
-										<br /> here display if its ready:
-										{task.isReady.toString()}
-									</p>
-									<ButtonsGroup>
-										{statuses
-											.filter(
-												(currentStatus) =>
-													currentStatus.statusName != task.status
-											)
-											.map((status) => (
-												<TaskButton
-													onClick={() => {
-														callApi(
-															client,
-															curriedMoveToAnotherGroup({
-																tasks,
-																setTasks,
-															})(status.statusName)(task)
-														);
-													}}
-												>
-													{renderIcon(status.StatusIcon)}
-												</TaskButton>
-											))}
-										{DeleteButton(task, { tasks, setTasks }, client)}
-									</ButtonsGroup>
-								</div>
-								<Autocomplete
-									className="add-dependency-box"
-									id={task.frontEndId}
-									options={tasks}
-									getOptionLabel={(option: Task) => option.name}
-									onChange={(
-										event: ChangeEvent<{}>,
-										value: Task | null
-									) => {
-										sendSourceAndTargetTasks(
-											client,
-											curriedSendNewTask,
-											makeNewTasksWithDependencies(tasks, [
-												value!.frontEndId,
-												task.frontEndId,
-											])
-										);
-									}}
-									renderInput={(params) => (
-										<TextField
-											{...params}
-											label="add dependency"
-											variant="outlined"
+						.map((task) => {
+							return (
+								<TaskComponent task={task}>
+									<article
+										id={task.frontEndId}
+										className="flex flex-col bg-gray-100 m-2 max-h-full h-56 w-11/12 max-w-full min-w-full"
+										draggable="true"
+										onDragStart={(event) => {
+											event.dataTransfer.setData(
+												"text/plain",
+												task.frontEndId
+											);
+										}}
+										onDrop={(event) => {
+											handleDrop(
+												event,
+												{ tasks, setTasks },
+												client,
+												status
+											);
+										}}
+									>
+										<div className="upper-part-of-task-element">
+											<p className="task-name">
+												{task.name}
+												<br />
+												<br /> here display if its ready:
+												{task.isReady.toString()}
+											</p>
+											<ButtonsGroup>
+												{statuses
+													.filter(
+														(currentStatus) =>
+															currentStatus.statusName !=
+															task.status
+													)
+													.map((status) => (
+														<TaskButton
+															onClick={() => {
+																callApi(
+																	client,
+																	curriedMoveToAnotherGroup({
+																		tasks,
+																		setTasks,
+																	})(status.statusName)(task)
+																);
+															}}
+														>
+															{renderIcon(status.StatusIcon)}
+														</TaskButton>
+													))}
+												{DeleteButton(
+													task,
+													{ tasks, setTasks },
+													client
+												)}
+											</ButtonsGroup>
+										</div>
+										<Autocomplete
+											className="add-dependency-box"
+											id={task.frontEndId}
+											options={tasks}
+											getOptionLabel={(option: Task) => option.name}
+											onChange={(
+												event: ChangeEvent<{}>,
+												value: Task | null
+											) => {
+												sendSourceAndTargetTasks(
+													client,
+													curriedSendNewTask,
+													makeNewTasksWithDependencies(tasks, [
+														value!.frontEndId,
+														task.frontEndId,
+													])
+												);
+											}}
+											renderInput={(params) => (
+												<TextField
+													{...params}
+													label="add dependency"
+													variant="outlined"
+												/>
+											)}
 										/>
-									)}
-								/>
-							</article>
-						))}
+									</article>
+								</TaskComponent>
+							);
+						})}
 				</TaskList>
 			))}
 		</div>
