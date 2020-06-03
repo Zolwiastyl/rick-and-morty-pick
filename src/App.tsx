@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useReducer } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Fragment } from "react";
 
 import "./index.css";
@@ -6,10 +6,15 @@ import "./index.css";
 import { Task, TaskId } from "./types";
 import { TasksLists } from "./views/tasks-lists/TasksLists";
 
-import { fetchDataFromServer, RemoveAllData, callApi } from "./api/api";
+import {
+	fetchDataFromServer,
+	RemoveAllData,
+	callApi,
+	renderIcon,
+} from "./api/api";
 import { generateIdForTask } from "./api/generateIdForTask";
-import { Plus, User } from "react-feather";
-import { NavBar } from "./components/NavBar";
+import { Plus, GitMerge, RefreshCcw, AlignJustify, Image } from "react-feather";
+import { Auth0NavBar } from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
 import { Profile } from "./components/Profile";
 import { Router, Route, Switch, Link } from "react-router-dom";
@@ -23,17 +28,17 @@ import {
 	sendSourceAndTargetTasks,
 	makeNewTasksRemovingDependencies,
 } from "./api/addDependencies";
+import { Button } from "./reusable-ui/Button";
+import { NavigationBar } from "./reusable-ui/NavigationBar";
 
 const tasksArray: Array<Task> = [];
-
-const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 
 export function App() {
 	// secondary boring state
 	const { loading, client, user } = useAuth0();
 
 	// ui state -- this can be replaced with url match or sth like that / router
-	const [showGraph, toggleGraph] = useState<boolean>(true);
+	const [showGraph, toggleGraph] = useState<boolean>(false);
 
 	// core domain state
 	const [tasks, setTasks] = useState<Task[]>(tasksArray);
@@ -61,7 +66,7 @@ export function App() {
 				console.error("couldn't send tasks");
 			}
 		},
-		[tasks, setTasks]
+		[tasks, client, setTasks]
 	);
 
 	const removeEdge = useCallback(
@@ -163,44 +168,75 @@ export function App() {
 
 	return (
 		<Fragment>
-			<button onClick={() => callApiToFetchData(setTasks)}>
-				fetch data
-			</button>
-			<button
-				className="bg-gray-600"
-				onClick={() => {
-					toggleGraph(!showGraph);
-				}}
-			>
-				toggle graph
-			</button>
-			<Router history={history}>
-				<PrivateRoute path="/profile" component={Profile} />
-				<header>
-					<NavBar />
-				</header>
+			<div className="flex flex-row w-screen">
+				<NavigationBar>
+					<Button onClick={(evt) => evt} label={"click me"} />
+					<Button
+						onClick={(evt) => {
+							callApiToFetchData(setTasks);
+						}}
+						icon={renderIcon(RefreshCcw)}
+					/>
+					<Button
+						onClick={(evt) => {
+							toggleGraph(true);
+						}}
+						icon={renderIcon(GitMerge)}
+					/>
+					<Button
+						onClick={(evt) => {
+							toggleGraph(false);
+						}}
+						icon={renderIcon(AlignJustify)}
+					/>
+					<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+					<TaskForm onSubmit={onSubmit} />
 
-				<Switch>
-					<Route path="/" exact />
-				</Switch>
-				{/* TODO: install feather react from npm */}
-				<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-				<TaskForm onSubmit={onSubmit} />
-				<div>
-					{!showGraph && <TasksLists setTasks={setTasks} tasks={tasks} />}
-					{showGraph && (
-						<Fragment>
-							{/* <BruteGraph setTasks={setTasks} tasks={tasks} /> */}
-							<TasksGraph
-								addEdge={addEdge}
-								removeEdge={removeEdge}
-								tasks={tasks}
-							/>
-						</Fragment>
-					)}
-				</div>
-				<RemoveAllData setTasks={setTasks} />
-			</Router>
+					<RemoveAllData setTasks={setTasks} />
+					<div>
+						<Router history={history}>
+							<PrivateRoute path="/profile" component={Profile} />
+							<header>
+								<Auth0NavBar />
+							</header>
+						</Router>
+					</div>
+					<Link
+						className="bg-gray-400 text-lg w-16 text-blue-600 rounded-full p-2 hover:text-blue-400 stroke-2 stroke-current mt-2"
+						to="./design"
+					>
+						<svg
+							className="h-12 w-12 bg-gray-400 rounded-full p-2"
+							viewBox="0 0 24 24"
+						>
+							{renderIcon(Image)}
+						</svg>
+					</Link>
+				</NavigationBar>
+
+				<Router history={history}>
+					<div className="w-full">
+						{!showGraph && (
+							<TasksLists setTasks={setTasks} tasks={tasks} />
+						)}
+						{showGraph && (
+							<Fragment>
+								{/* <BruteGraph setTasks={setTasks} tasks={tasks} /> */}
+								<TasksGraph
+									addEdge={addEdge}
+									removeEdge={removeEdge}
+									tasks={tasks}
+								/>
+							</Fragment>
+						)}
+					</div>
+
+					<Switch>
+						<Route path="/" exact />
+					</Switch>
+					{/* TODO: install feather react from npm */}
+				</Router>
+			</div>
 		</Fragment>
 	);
 }

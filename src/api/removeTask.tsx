@@ -34,7 +34,7 @@ export function saveTheDiff(tasks: Task[], tasksDiff: Task[]) {
 }
 
 export function removeCrossDependencies(taskId: string, tasks: Task[]): Task[] {
-	const taskToDelete = tasks.find((t) => t.frontEndId == taskId)!;
+	const taskToDelete = tasks.find((t) => t.frontEndId === taskId)!;
 	const tasksToReturn = removeIdFromOtherTasks(
 		taskToDelete?.dependOnThisTask!.slice(),
 		tasks,
@@ -46,14 +46,14 @@ export function removeCrossDependencies(taskId: string, tasks: Task[]): Task[] {
 			[]
 		)
 	)
-		.filter((t) => t.frontEndId != taskId)
+		.filter((t) => t.frontEndId !== taskId)
 		.sort((x, y) => y.ordinalNumber - x.ordinalNumber);
 	console.log(tasksToReturn);
 	return tasksToReturn;
 }
 
 export function takeIdsArray(task: Task, theEnum: FromWhere): string[] {
-	if (theEnum == "dependsOnIt") {
+	if (theEnum === "dependsOnIt") {
 		return task.dependOnThisTask;
 	}
 	return task.dependencyId;
@@ -70,7 +70,7 @@ export function removeIdFromOtherTasks(
 		const idToProcess = arrayOfIds.pop();
 		console.log(idToProcess);
 		const taskToOverwrite: Task = tasks.find(
-			(t) => t.frontEndId == idToProcess
+			(t) => t.frontEndId === idToProcess
 		)!;
 		const taskToSave: Task = {
 			...taskToOverwrite,

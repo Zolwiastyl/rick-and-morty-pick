@@ -14,12 +14,9 @@ import {
 	Activity,
 } from "react-feather";
 import { useAuth0 } from "../../react-auth0-spa";
-import {
-	moveToAnotherGroup,
-	curriedMoveToAnotherGroup,
-} from "../../api/moveToAnotherGroup";
-import { DeleteButton } from "./components/deleteButton";
-import { handleDrop } from "./drag-and-drop";
+import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
+import { DeleteButton } from "./components/DeleteButton";
+import { handleDrop } from "./dragAndDrop";
 import {
 	sendSourceAndTargetTasks,
 	makeNewTasksWithDependencies,
@@ -47,10 +44,16 @@ const TaskList: React.FC<TaskListProps> = ({
 	...rest
 }) => {
 	return (
-		<div className="tasks-group" {...rest}>
-			<p className="group-heading">
-				{renderIcon(StatusIcon)} // {statusName} //
-			</p>
+		<div
+			className="bg-gray-200 h-screen ml-4 hover:bg-gray-100 w-1/5 rounded-lg"
+			{...rest}
+		>
+			<header className="flex flex-col bg-blue-100">
+				<svg viewBox="0 0 24 24" className=" h-12 p-2 max-h-sm">
+					{renderIcon(StatusIcon)}
+				</svg>
+				<p className="self-center p-6">{statusName}</p>
+			</header>
 
 			{children}
 		</div>
@@ -74,13 +77,13 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
 	const Dependencies = (task: Task) => {
 		task.dependencyId?.map((id) => (
 			<div>
-				dependencies: {tasks.filter((t) => t.frontEndId == id)[0].name}
+				dependencies: {tasks.filter((t) => t.frontEndId === id)[0].name}
 			</div>
 		));
 	};
 
 	return (
-		<div className="tasks-lists-item">
+		<div className="flex flex-row p-4 ml-4 mt-4">
 			{statuses.map((status) => (
 				<TaskList
 					// useDrop.ref
@@ -95,7 +98,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
 						);
 						if (
 							tasks.filter((t) => t.status == status.statusName)
-								.length != 0
+								.length !== 0
 						) {
 							console.log("it's not empty empty");
 							return;
@@ -118,7 +121,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
 						.map((task) => (
 							<article
 								id={task.frontEndId}
-								className="task-item"
+								className="flex flex-col bg-gray-100 m-2"
 								draggable="true"
 								onDragStart={(event) => {
 									event.dataTransfer.setData(

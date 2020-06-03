@@ -1,10 +1,8 @@
-import react from "react";
 import { Task, TasksStateProps } from "../types";
 import React from "react";
-import { useAuth0 } from "../react-auth0-spa";
-import { any, string, number } from "prop-types";
+
 import { Auth0Client } from "@auth0/auth0-spa-js";
-import { resolve } from "dns";
+import { Button } from "../reusable-ui/Button";
 
 export const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");
@@ -54,18 +52,20 @@ export function fetchDataFromServer(
 		.catch((error) => console.log("We had en error" + error));
 }
 
+/*{() => {
+				fetch(HOST + "/remove-data", {
+					method: "POST",
+				}); */
 export function RemoveAllData(props: Partial<TasksStateProps>) {
 	return (
-		<button
-			className="remove-data-button"
-			onClick={() => {
+		<Button
+			label={"remove data"}
+			onClick={(evt) => {
 				fetch(HOST + "/remove-data", {
 					method: "POST",
 				});
 			}}
-		>
-			// REMOVE ALL DATA //
-		</button>
+		/>
 	);
 }
 
@@ -76,10 +76,5 @@ export function renderIcon(
 		return <Icon />;
 	}
 }
-function checkIfTaskIsReady(task: Task, tasks: Task[], token: any) {
-	console.log(
-		task.dependencyId?.map((id) =>
-			tasks.filter((task) => task.frontEndId == id)
-		)
-	);
-}
+
+export type IconType = typeof renderIcon;
