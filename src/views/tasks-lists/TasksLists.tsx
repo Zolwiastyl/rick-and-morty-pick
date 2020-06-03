@@ -45,7 +45,7 @@ const TaskList: React.FC<TaskListProps> = ({
 }) => {
 	return (
 		<div
-			className="bg-gray-200 h-screen ml-4 hover:bg-gray-100 w-1/5 rounded-lg"
+			className="bg-gray-300 max-h-screen h-full flex flex-col hover:bg-gray-200 w-1/5 rounded-lg m-1"
 			{...rest}
 		>
 			<header className="flex flex-col bg-blue-100">
@@ -54,8 +54,9 @@ const TaskList: React.FC<TaskListProps> = ({
 				</svg>
 				<p className="self-center p-6">{statusName}</p>
 			</header>
-
-			{children}
+			<div className=" overflow-y-scroll max-h-full h-full w-full max-w-full flex flex-col">
+				{children}
+			</div>
 		</div>
 	);
 };
@@ -74,16 +75,8 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
 	];
 	const { client } = useAuth0();
 
-	const Dependencies = (task: Task) => {
-		task.dependencyId?.map((id) => (
-			<div>
-				dependencies: {tasks.filter((t) => t.frontEndId === id)[0].name}
-			</div>
-		));
-	};
-
 	return (
-		<div className="flex flex-row p-4 ml-4 mt-4">
+		<div className="flex flex-row mt-4 w-auto max-h-full h-full">
 			{statuses.map((status) => (
 				<TaskList
 					// useDrop.ref
@@ -121,7 +114,7 @@ export function TasksLists({ tasks, setTasks }: TasksStateProps) {
 						.map((task) => (
 							<article
 								id={task.frontEndId}
-								className="flex flex-col bg-gray-100 m-2"
+								className="flex flex-col bg-gray-100 m-2 max-h-full h-56 w-11/12 max-w-full min-w-full"
 								draggable="true"
 								onDragStart={(event) => {
 									event.dataTransfer.setData(

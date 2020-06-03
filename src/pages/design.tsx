@@ -10,7 +10,6 @@ export const DesignLook = () => {
 	return (
 		<div className="flex flex-row w-screen">
 			<NavigationBar>
-				<TaskCard task={task} />
 				<Link
 					className="bg-gray-400 text-lg w-16 text-blue-600 rounded-full p-2 hover:text-blue-400 stroke-2 stroke-current mt-2"
 					to="./"
@@ -23,11 +22,37 @@ export const DesignLook = () => {
 					</svg>
 				</Link>
 			</NavigationBar>
-			second route
+			<div className="flex justify-center w-screen">
+				<div className="flex p-10 bg-gray-100 justify-center">
+					<div className="flex flex-col p-2">
+						<TaskCard task={task} />
+						<TaskCard task={task2} />
+						second route
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 };
 
 const task: Partial<Task> = {
 	name: "name of task",
+	status: "todo",
+	frontEndId: "1",
+	dependencyId: [],
+	isReady: true,
+	userId: "userId",
+	ordinalNumber: 1,
+	dependOnThisTask: [],
+};
+
+const task2: Partial<Task> = {
+	name: "really long name of task",
+	status: "todo",
+	frontEndId: "1",
+	dependencyId: [],
+	isReady: false,
+	userId: "userId",
+	ordinalNumber: 1,
+	dependOnThisTask: [],
 };

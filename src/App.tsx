@@ -13,7 +13,14 @@ import {
 	renderIcon,
 } from "./api/api";
 import { generateIdForTask } from "./api/generateIdForTask";
-import { Plus, GitMerge, RefreshCcw, AlignJustify, Image } from "react-feather";
+import {
+	Plus,
+	GitMerge,
+	RefreshCcw,
+	AlignJustify,
+	Image,
+	List,
+} from "react-feather";
 import { Auth0NavBar } from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
 import { Profile } from "./components/Profile";
@@ -168,7 +175,7 @@ export function App() {
 
 	return (
 		<Fragment>
-			<div className="flex flex-row w-screen">
+			<div className="flex flex-row w-screen max-w-screen p-1 overflow-hidden h-screen max-h-screen">
 				<NavigationBar>
 					<Button onClick={(evt) => evt} label={"click me"} />
 					<Button
@@ -187,7 +194,7 @@ export function App() {
 						onClick={(evt) => {
 							toggleGraph(false);
 						}}
-						icon={renderIcon(AlignJustify)}
+						icon={renderIcon(List)}
 					/>
 					<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 					<TaskForm onSubmit={onSubmit} />
@@ -213,9 +220,8 @@ export function App() {
 						</svg>
 					</Link>
 				</NavigationBar>
-
-				<Router history={history}>
-					<div className="w-full">
+				<div className="w-full min-w-full max-w-full max-h-screen h-full">
+					<Router history={history}>
 						{!showGraph && (
 							<TasksLists setTasks={setTasks} tasks={tasks} />
 						)}
@@ -229,13 +235,13 @@ export function App() {
 								/>
 							</Fragment>
 						)}
-					</div>
 
-					<Switch>
-						<Route path="/" exact />
-					</Switch>
-					{/* TODO: install feather react from npm */}
-				</Router>
+						<Switch>
+							<Route path="/" exact />
+						</Switch>
+						{/* TODO: install feather react from npm */}
+					</Router>
+				</div>
 			</div>
 		</Fragment>
 	);
