@@ -30,6 +30,7 @@ export async function plainSendNewTask(
 				userId: task.userId,
 				dependOnThisTask: task.dependOnThisTask,
 				ordinalNumber: task.ordinalNumber,
+				description: task.description,
 			}),
 		});
 

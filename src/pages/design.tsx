@@ -25,9 +25,8 @@ export const DesignLook = () => {
 			<div className="flex justify-center w-screen">
 				<div className="flex p-10 bg-gray-100 justify-center">
 					<div className="flex flex-col p-2">
-						<TaskCard task={task} />
-						<TaskCard task={task2} />
-						second route
+						<TaskCard task={task} updateDescription={() => {}} />
+						<TaskCard task={task2} updateDescription={() => {}} />
 					</div>
 				</div>
 			</div>
@@ -44,6 +43,7 @@ const task: Partial<Task> = {
 	userId: "userId",
 	ordinalNumber: 1,
 	dependOnThisTask: [],
+	description: "description of the task",
 };
 
 const task2: Partial<Task> = {

@@ -26,7 +26,7 @@ export function handleDrop(
 		const ordinals = putItBelow(taskId)(event.currentTarget.id)(tasks);
 		console.log(ordinals[0]);
 		const taskToSave = {
-			...tasks.filter((task) => task.frontEndId == taskId)[0],
+			...tasks.filter((task) => task.frontEndId === taskId)[0],
 			ordinalNumber: (ordinals[0] + ordinals[1]) / 2,
 		};
 		callApi(
@@ -45,7 +45,7 @@ export function handleDrop(
 			}
 		};
 		const taskToSave = {
-			...tasks.filter((task) => task.frontEndId == taskId)[0],
+			...tasks.filter((task) => task.frontEndId === taskId)[0],
 			ordinalNumber: newOrdinal(),
 		};
 		callApi(

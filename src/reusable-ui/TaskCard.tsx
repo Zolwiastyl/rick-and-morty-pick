@@ -1,37 +1,61 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useRef, ChangeEvent, useState } from "react";
 import { Task } from "../types";
 import { renderIcon } from "../api/api";
-import { X } from "react-feather";
+import { X, Circle } from "react-feather";
+import { Button } from "./Button";
 
 type TaskCardProps = {
 	task: Partial<Task>;
+	updateDescription: (taskId: string, description: string) => void;
 };
 
-export const TaskCard: FunctionComponent<TaskCardProps> = (
-	props: TaskCardProps
-) => {
+export const TaskCard: FunctionComponent<TaskCardProps> = ({
+	task,
+	updateDescription,
+}) => {
+	const [descriptionState, setDescription] = useState(
+		task.description ? task.description : ""
+	);
+
+	const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+		setDescription(event.target.value);
+	};
+
 	return (
 		<div
-			className="bg-blue-200 rounded-lg max-w-3xl w-56 text-lg h-64 m-2 p-1
+			className="bg-gray-300 rounded-lg max-w-6xl w-full text-lg h-64 p-3 mt-2
 	 x-"
 		>
 			<header className="flex flex-row mt-1 justify-center border-b border-gray-900 py-1">
 				<div className="self-start text-xl  mr-5 overflow-auto h-full w-full">
-					{props.task.name}
+					{task.name}
 				</div>
 				<div
 					className={
-						props.task.isReady
+						task.isReady
 							? "rounded-full m-1 w-4 h-4 self-center p-3 bg-green-600"
 							: "rounded-full m-1 w-4 h-4 self-center p-3 bg-red-600"
 					}
 				></div>
-				<button className="bg-blue-100 rounded-full object-right self-end">
-					{renderIcon(X)}
-				</button>
 			</header>
 			<div>
-				<div className="p-4">description of the task</div>
+				<form
+					onSubmit={(evt) => {
+						evt.preventDefault();
+						updateDescription(task.frontEndId!, descriptionState!);
+					}}
+				>
+					<label>
+						<textarea
+							className="w-full h-full bg-gray-200 text-base p-3 mt-1"
+							value={descriptionState}
+							onChange={handleChange}
+						></textarea>
+						<div className="flex justify-center">
+							<Button onClick={() => {}} icon={renderIcon(Circle)} />
+						</div>
+					</label>
+				</form>
 				<div></div>
 			</div>
 		</div>

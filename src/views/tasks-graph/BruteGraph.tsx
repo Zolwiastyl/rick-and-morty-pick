@@ -1,21 +1,10 @@
-import React, { useEffect, useRef, MutableRefObject, lazy } from "react";
-import cytoscape, {
-	Core,
-	ElementDefinition,
-	LayoutOptions,
-	CytoscapeOptions,
-} from "cytoscape";
-import { TasksStateProps, Task, TaskId } from "../../types";
+import React, { useEffect, useRef, MutableRefObject } from "react";
+import cytoscape, { Core, ElementDefinition, LayoutOptions } from "cytoscape";
+import { Task, TaskId } from "../../types";
 import cola from "cytoscape-cola";
 import { useAuth0 } from "../../react-auth0-spa";
 import { Auth0Client } from "@auth0/auth0-spa-js";
-import { prepareElementsForGraph, graphStyle, copyTaskById } from "./GraphAPI";
-import { curriedSendNewTask } from "../../api/sendNewTask";
-import {
-	makeNewTasksWithDependencies,
-	sendSourceAndTargetTasks,
-	makeNewTasksRemovingDependencies,
-} from "../../api/addDependencies";
+import { prepareElementsForGraph, graphStyle } from "./GraphAPI";
 
 cytoscape.use(cola);
 
@@ -34,8 +23,6 @@ interface ActionHandlers {
 
 function renderCytoscapeElement(
 	initialTasks: Task[],
-	{ addEdge, removeEdge }: ActionHandlers,
-	client: Auth0Client | undefined,
 	container: MutableRefObject<null>
 ) {
 	/**
@@ -94,13 +81,8 @@ export function TasksGraph({ addEdge, removeEdge, tasks }: TasksGraphProps) {
 		client
 	);
 	useTaskNodes(cy, prepareElementsForGraph(tasks));
-	const cyStyle = {
-		height: "800px",
-		width: "1900px",
-		margin: "20px 0px",
-	};
 
-	return <div ref={container} style={cyStyle}></div>;
+	return <div ref={container} className="w-full h-screen"></div>;
 }
 
 function useCytoscape(
@@ -115,13 +97,8 @@ function useCytoscape(
 	}
 	useEffect(() => {
 		if (container.current) {
-			ref.current = renderCytoscapeElement(
-				initialTasks,
-				actionHandlers,
-				client,
-				container
-			);
-			ref.current.on("render", "node", (evt) => {
+			ref.current = renderCytoscapeElement(initialTasks, container);
+			ref.current.on("render", "node", () => {
 				ref.current?.layout(breadthfirstLayout).run();
 			});
 			return () => {
@@ -129,7 +106,7 @@ function useCytoscape(
 				ref.current = cytoscape({});
 			};
 		}
-	}, []);
+	}, [initialTasks]);
 
 	const { addEdge, removeEdge } = actionHandlers;
 	const firstEdgeNodeId = useRef<TaskId | undefined>();
@@ -142,7 +119,7 @@ function useCytoscape(
 
 		cy.on("tap", (evt) => {
 			console.log("tapped");
-			if (evt.target == cy) {
+			if (evt.target === cy) {
 				console.log("clearing firstNodeEdgeId");
 				firstEdgeNodeId.current = undefined;
 			}
@@ -157,7 +134,7 @@ function useCytoscape(
 			} else {
 				console.log("setting targetId");
 				const targetId = evt.target.id();
-				if (firstEdgeNodeId.current != targetId) {
+				if (firstEdgeNodeId.current !== targetId) {
 					addEdge(firstEdgeNodeId.current, targetId);
 				}
 				firstEdgeNodeId.current = undefined;

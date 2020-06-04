@@ -11,6 +11,7 @@ export type Task = {
 	userId: string;
 	ordinalNumber: number;
 	dependOnThisTask: string[];
+	description?: string;
 };
 
 export type TasksStateProps = {

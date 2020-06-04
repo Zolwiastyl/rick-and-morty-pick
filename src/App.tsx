@@ -50,6 +50,35 @@ export function App() {
 	// core domain state
 	const [tasks, setTasks] = useState<Task[]>(tasksArray);
 
+	const callApiToSendTask = async (task: Task) => {
+		try {
+			const token = await client?.getTokenSilently();
+			const response = async () => await sendNewTask(task, token);
+			response();
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const addDescription = useCallback(
+		(taskId: TaskId, description: string) => {
+			const taskToSave: Task = {
+				...(tasks.find((t) => t.frontEndId === taskId) as Task),
+				description: description,
+			};
+
+			const addTaskToDatabase = callApiToSendTask(taskToSave);
+			if (addTaskToDatabase) {
+				setTasks(
+					tasks.filter((t) => t.frontEndId !== taskId).concat([taskToSave])
+				);
+			} else {
+				console.error("couldn't send task");
+			}
+		},
+		[tasks, setTasks, client]
+	);
+
 	const addEdge = useCallback(
 		(from: TaskId, to: TaskId) => {
 			const [
@@ -95,8 +124,8 @@ export function App() {
 					tasks
 						.filter(
 							(t) =>
-								t.frontEndId != sourceTaskToSave.frontEndId &&
-								t.frontEndId != targetTaskToSave.frontEndId
+								t.frontEndId !== sourceTaskToSave.frontEndId &&
+								t.frontEndId !== targetTaskToSave.frontEndId
 						)
 						.concat([sourceTaskToSave, targetTaskToSave])
 				);
@@ -121,15 +150,6 @@ export function App() {
 			console.error(error);
 		}
 	};
-	const callApiToSendTask = async (task: Task) => {
-		try {
-			const token = await client?.getTokenSilently();
-			const response = async () => await sendNewTask(task, token);
-			response();
-		} catch (error) {
-			console.error(error);
-		}
-	};
 
 	const onSubmit: (
 		event: React.FormEvent<HTMLFormElement>
@@ -140,7 +160,7 @@ export function App() {
 		const ArrayWithTasksToSave = tasks.slice();
 		function generateOrdinalForNewTask(tasks: Task[]) {
 			const tasksToDo = tasks.filter((t) => t.status == "todo");
-			if (tasksToDo.length == 0) {
+			if (tasksToDo.length === 0) {
 				return 2.1;
 			} else {
 				return tasksToDo.sort(
@@ -223,7 +243,11 @@ export function App() {
 				<div className="w-full min-w-full max-w-full max-h-screen h-full">
 					<Router history={history}>
 						{!showGraph && (
-							<TasksLists setTasks={setTasks} tasks={tasks} />
+							<TasksLists
+								setTasks={setTasks}
+								tasks={tasks}
+								addDescription={addDescription}
+							/>
 						)}
 						{showGraph && (
 							<Fragment>
