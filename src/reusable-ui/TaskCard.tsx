@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useRef, ChangeEvent, useState } from "react";
+import React, {
+	FunctionComponent,
+	ChangeEvent,
+	useState,
+	SetStateAction,
+} from "react";
 import { Task } from "../types";
 import { renderIcon } from "../api/api";
 import { X, Circle } from "react-feather";
@@ -7,11 +12,13 @@ import { Button } from "./Button";
 type TaskCardProps = {
 	task: Partial<Task>;
 	updateDescription: (taskId: string, description: string) => void;
+	hideTaskCard: () => void;
 };
 
 export const TaskCard: FunctionComponent<TaskCardProps> = ({
 	task,
 	updateDescription,
+	hideTaskCard,
 }) => {
 	const [descriptionState, setDescription] = useState(
 		task.description ? task.description : ""
@@ -43,6 +50,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 					onSubmit={(evt) => {
 						evt.preventDefault();
 						updateDescription(task.frontEndId!, descriptionState!);
+						hideTaskCard();
 					}}
 				>
 					<label>

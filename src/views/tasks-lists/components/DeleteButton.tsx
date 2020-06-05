@@ -35,7 +35,7 @@ export const DeleteButton = (
 				console.log(tasks.filter((t) => t.frontEndId !== task.frontEndId));
 			}}
 		>
-			{renderIcon(Trash2)}
+			<Trash2 />
 		</button>
 	);
 };

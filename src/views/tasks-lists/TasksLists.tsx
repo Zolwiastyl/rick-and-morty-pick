@@ -128,7 +128,7 @@ export function TasksLists({
 								>
 									<article
 										id={task.frontEndId}
-										className="flex flex-col bg-gray-100 m-2 max-h-full h-full w-11/12 max-w-full min-w-full"
+										className="flex flex-col bg-gray-100 m-2 max-h-full h-14 w-11/12 max-w-full min-w-full object-center"
 										draggable="true"
 										onDragStart={(event) => {
 											event.dataTransfer.setData(
@@ -145,7 +145,7 @@ export function TasksLists({
 											);
 										}}
 									>
-										<div className="flex">
+										<div className="flex flex-row align-middle justify-between px-1">
 											<p>{task.name}</p>
 											<div>
 												{DeleteButton(

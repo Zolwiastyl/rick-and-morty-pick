@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth0 } from "../react-auth0-spa";
 import { Link } from "react-router-dom";
 import { renderIcon } from "../api/api";
-import { LogOut, LogIn } from "react-feather";
+import { LogOut, LogIn, User, Home } from "react-feather";
 import { Button } from "../reusable-ui/Button";
 
 export const Auth0NavBar = () => {
@@ -25,8 +25,13 @@ export const Auth0NavBar = () => {
 			)}
 			{isAuthenticated && (
 				<span>
-					<Link to="/">Home</Link>&nbsp;
-					<Link to="/profile">Profile</Link>
+					<Link to="/">
+						<Home />
+					</Link>
+					&nbsp;
+					{/* <Link to="/profile"> */}
+					{/* <User /> */}
+					{/* </Link> */}
 				</span>
 			)}
 		</div>

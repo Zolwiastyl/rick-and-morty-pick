@@ -4,7 +4,8 @@ import { TaskCard } from "../reusable-ui/TaskCard";
 import { Task } from "../types";
 import { Link } from "react-router-dom";
 import { renderIcon } from "../api/api";
-import { Trello } from "react-feather";
+import { Trello, Plus } from "react-feather";
+import { Button } from "../reusable-ui/Button";
 
 export const DesignLook = () => {
 	return (
@@ -25,8 +26,19 @@ export const DesignLook = () => {
 			<div className="flex justify-center w-screen">
 				<div className="flex p-10 bg-gray-100 justify-center">
 					<div className="flex flex-col p-2">
-						<TaskCard task={task} updateDescription={() => {}} />
-						<TaskCard task={task2} updateDescription={() => {}} />
+						<TaskCard
+							task={task}
+							updateDescription={() => {}}
+							hideTaskCard={() => {}}
+						/>
+						<TaskCard
+							task={task2}
+							updateDescription={() => {}}
+							hideTaskCard={() => {}}
+						/>
+						<div className="flex flex-row justify-center p-4">
+							<Button icon={<Plus />} onClick={() => {}}></Button>{" "}
+						</div>
 					</div>
 				</div>
 			</div>
