@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Fragment } from "react";
 
 import "./index.css";
@@ -8,7 +8,7 @@ import { TasksLists } from "./views/tasks-lists/TasksLists";
 
 import {
 	fetchDataFromServer,
-	RemoveAllData,
+	removeAllData,
 	callApi,
 	renderIcon,
 } from "./api/api";
@@ -17,9 +17,11 @@ import {
 	Plus,
 	GitMerge,
 	RefreshCcw,
-	AlignJustify,
 	Image,
 	List,
+	Trash2,
+	ChevronsRight,
+	ChevronsLeft,
 } from "react-feather";
 import { Auth0NavBar } from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
@@ -49,6 +51,7 @@ export function App() {
 
 	// core domain state
 	const [tasks, setTasks] = useState<Task[]>(tasksArray);
+	const [showNewTaskForm, toggleNewTaskForm] = useState<boolean>(false);
 
 	const callApiToSendTask = async (task: Task) => {
 		try {
@@ -192,12 +195,25 @@ export function App() {
 	if (loading) {
 		return <div>Loading...</div>;
 	}
-
+	//RELACJONALNA DAZA BANYCH
+	//RELATYWNA BAZA DANYCH
+	//ABSOLUTYSTYCZNA BAZA DANYCH
 	return (
 		<Fragment>
 			<div className="flex flex-row w-screen max-w-screen p-1 overflow-hidden h-screen max-h-screen">
 				<NavigationBar>
-					<Button onClick={(evt) => evt} label={"click me"} />
+					<div className="flex flex-row w-2/5 fixed opacity-75">
+						<Button
+							onClick={() => toggleNewTaskForm(!showNewTaskForm)}
+							icon={
+								showNewTaskForm ? <ChevronsLeft /> : <ChevronsRight />
+							}
+						/>
+						<div>
+							{showNewTaskForm ? <TaskForm onSubmit={onSubmit} /> : null}
+						</div>
+					</div>
+					<div className="h-20"></div>
 					<Button
 						onClick={(evt) => {
 							callApiToFetchData(setTasks);
@@ -216,10 +232,12 @@ export function App() {
 						}}
 						icon={renderIcon(List)}
 					/>
-					<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-					<TaskForm onSubmit={onSubmit} />
-
-					<RemoveAllData setTasks={setTasks} />
+					<Button
+						icon={renderIcon(Trash2)}
+						onClick={(evt) => {
+							removeAllData();
+						}}
+					/>
 					<div>
 						<Router history={history}>
 							<PrivateRoute path="/profile" component={Profile} />
@@ -263,18 +281,12 @@ export function App() {
 						<Switch>
 							<Route path="/" exact />
 						</Switch>
-						{/* TODO: install feather react from npm */}
 					</Router>
 				</div>
 			</div>
 		</Fragment>
 	);
 }
-/*{showGraph && <TasksGraph setTasks={setTasks} tasks={tasks} />} */
-/*
-const Task: React.FC<TaskProps> = ({ amazingProp, ...rest }) => {
-  return <button {...rest}>{amazingProp + 10}</button>
-  }*/
 
 function readFormValues(form: HTMLFormElement) {
 	const { taskName } = (form.elements as any) as Record<
@@ -293,28 +305,20 @@ function TaskForm({
 	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) {
 	generateIdForTask();
+
 	return (
-		<div
-			className="add-task-form-item"
-			sx={{
-				fontWeight: "bold",
-				fontSize: 4, // picks up value from `theme.fontSizes[4]`
-				color: "primary", // picks up value from `theme.colors.primary`
-			}}
-		>
-			<form className="add-task-form" onSubmit={onSubmit}>
-				<label className="add-task-label">
+		<div className=" w-full opacity-75 rounded-r-lg p-3 bg-gray-500  ml-1 h-16 border-gray-900 flex flex-row flex-no-wrap">
+			<form onSubmit={onSubmit}>
+				<label className="h-14 text-lg w-full">
 					<input
+						autoFocus
 						name="taskName"
-						className="add-task-input-field"
+						className="w-64"
 						type="text"
 						placeholder="task name"
 						minLength={1}
 					/>
 					<i data-feather="align-center"></i>
-					<button type="submit" className="submit-button" value="add task">
-						<Plus />
-					</button>
 				</label>
 			</form>
 		</div>

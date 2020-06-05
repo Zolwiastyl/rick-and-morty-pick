@@ -1,4 +1,4 @@
-import React, { ReactElement, FunctionComponent } from "react";
+import React, { FunctionComponent } from "react";
 
 export const NavigationBar: FunctionComponent = ({ children }) => {
 	return (

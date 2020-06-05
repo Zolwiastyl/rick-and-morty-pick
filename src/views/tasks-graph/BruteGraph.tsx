@@ -23,6 +23,8 @@ interface ActionHandlers {
 
 function renderCytoscapeElement(
 	initialTasks: Task[],
+	{ addEdge, removeEdge }: ActionHandlers,
+	client: Auth0Client | undefined,
 	container: MutableRefObject<null>
 ) {
 	/**
@@ -95,9 +97,15 @@ function useCytoscape(
 	if (!ref.current) {
 		ref.current = cytoscape({});
 	}
+
 	useEffect(() => {
 		if (container.current) {
-			ref.current = renderCytoscapeElement(initialTasks, container);
+			ref.current = renderCytoscapeElement(
+				initialTasks,
+				{ addEdge, removeEdge },
+				client,
+				container
+			);
 			ref.current.on("render", "node", () => {
 				ref.current?.layout(breadthfirstLayout).run();
 			});
@@ -106,7 +114,7 @@ function useCytoscape(
 				ref.current = cytoscape({});
 			};
 		}
-	}, [initialTasks]);
+	}, []);
 
 	const { addEdge, removeEdge } = actionHandlers;
 	const firstEdgeNodeId = useRef<TaskId | undefined>();

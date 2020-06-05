@@ -56,17 +56,10 @@ export function fetchDataFromServer(
 				fetch(HOST + "/remove-data", {
 					method: "POST",
 				}); */
-export function RemoveAllData(props: Partial<TasksStateProps>) {
-	return (
-		<Button
-			label={"remove data"}
-			onClick={(evt) => {
-				fetch(HOST + "/remove-data", {
-					method: "POST",
-				});
-			}}
-		/>
-	);
+export function removeAllData() {
+	fetch(HOST + "/remove-data", {
+		method: "POST",
+	});
 }
 
 export function renderIcon(

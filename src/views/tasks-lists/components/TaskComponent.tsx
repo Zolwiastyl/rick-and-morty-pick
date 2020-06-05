@@ -3,7 +3,7 @@ import { Task } from "../../../types";
 import { TaskCard } from "../../../reusable-ui/TaskCard";
 
 import { renderIcon } from "../../../api/api";
-import { ChevronsDown } from "react-feather";
+import { ChevronsDown, ChevronsUp, ChevronDown } from "react-feather";
 
 type TaskComponentProps = {
 	task: Task;
@@ -22,10 +22,10 @@ export const TaskComponent: FunctionComponent<TaskComponentProps> = ({
 			<div className="flex flex-row w-10/12">
 				{children}
 				<button
-					className="bg-gray-100"
+					className="bg-gray-100 focus:outline-none"
 					onClick={() => toggleTaskCard(!showTaskCard)}
 				>
-					{renderIcon(ChevronsDown)}
+					{showTaskCard ? <ChevronsUp /> : <ChevronsDown />}
 				</button>
 			</div>
 
