@@ -42,13 +42,13 @@ export async function plainSendNewTask(
 			const success = response.ok;
 			const code = response.status;
 			if (!success) {
-				throw (
+				throw new Error(
 					"sending task " +
-					task.name! +
-					" failed" +
-					"/n" +
-					"response code: " +
-					code.toString()
+						task.name! +
+						" failed" +
+						"/n" +
+						"response code: " +
+						code.toString()
 				);
 			} else {
 				return success;
