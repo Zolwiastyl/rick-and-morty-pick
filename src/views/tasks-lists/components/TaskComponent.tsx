@@ -1,9 +1,7 @@
-import React, { FunctionComponent, useState, ReactNode, useRef } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { Task } from "../../../types";
 import { TaskCard } from "../../../reusable-ui/TaskCard";
-
-import { renderIcon } from "../../../api/api";
-import { ChevronsDown, ChevronsUp, ChevronDown } from "react-feather";
+import { ChevronsDown, ChevronsUp } from "react-feather";
 
 type TaskComponentProps = {
 	task: Task;
@@ -40,30 +38,3 @@ export const TaskComponent: FunctionComponent<TaskComponentProps> = ({
 		</div>
 	);
 };
-
-/**	<Autocomplete
-											className="add-dependency-box"
-											id={task.frontEndId}
-											options={tasks}
-											getOptionLabel={(option: Task) => option.name}
-											onChange={(
-												event: ChangeEvent<{}>,
-												value: Task | null
-											) => {
-												sendSourceAndTargetTasks(
-													client,
-													curriedSendNewTask,
-													makeNewTasksWithDependencies(tasks, [
-														value!.frontEndId,
-														task.frontEndId,
-													])
-												);
-											}}
-											renderInput={(params) => (
-												<TextField
-													{...params}
-													label="add dependency"
-													variant="outlined"
-												/>
-											)}
-										/> */

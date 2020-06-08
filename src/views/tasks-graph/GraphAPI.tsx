@@ -1,11 +1,9 @@
-import { Task, TasksStateProps } from "../../types";
+import { Task } from "../../types";
 import { NodeDefinition, EdgeDefinition, ElementDefinition } from "cytoscape";
-import { callApi } from "../../api/api";
-import { Auth0Client } from "@auth0/auth0-spa-js";
 
 export function prepareElementsForGraph(tasks: Task[]) {
 	const nodes: NodeDefinition[] = tasks.map((t) => {
-		return { data: { id: t.frontEndId, label: t.name } };
+		return { data: { id: t.frontEndId, label: t.name, classes: t.status } };
 	});
 	const edges: EdgeDefinition[] = tasks
 		.map((t) => {
@@ -61,5 +59,5 @@ export const graphStyle: cytoscape.Stylesheet[] = [
 ];
 
 export function copyTaskById(tasks: Task[], id: string): Task {
-	return tasks.find((t) => t.frontEndId == id)!;
+	return tasks.find((t) => t.frontEndId === id)!;
 }

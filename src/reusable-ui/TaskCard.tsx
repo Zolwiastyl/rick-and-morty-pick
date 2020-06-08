@@ -1,12 +1,6 @@
-import React, {
-	FunctionComponent,
-	ChangeEvent,
-	useState,
-	SetStateAction,
-} from "react";
+import React, { FunctionComponent, ChangeEvent, useState } from "react";
 import { Task } from "../types";
-import { renderIcon } from "../api/api";
-import { X, Circle } from "react-feather";
+import { Upload } from "react-feather";
 import { Button } from "./Button";
 
 type TaskCardProps = {
@@ -60,7 +54,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 							onChange={handleChange}
 						></textarea>
 						<div className="flex justify-center">
-							<Button onClick={() => {}} icon={renderIcon(Circle)} />
+							<Button onClick={() => {}} icon={<Upload />} />
 						</div>
 					</label>
 				</form>

@@ -14,7 +14,6 @@ import {
 } from "./api/api";
 import { generateIdForTask } from "./api/generateIdForTask";
 import {
-	Plus,
 	GitMerge,
 	RefreshCcw,
 	Image,
