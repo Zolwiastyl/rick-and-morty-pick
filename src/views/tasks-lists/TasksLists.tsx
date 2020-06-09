@@ -16,6 +16,7 @@ import { DeleteButton } from "./components/DeleteButton";
 import { handleDrop } from "./dragAndDrop";
 import { TaskComponent } from "./components/TaskComponent";
 import { curriedSendNewTask } from "../../api/sendNewTask";
+import { UpdateFunction } from "../../reusable-ui/TaskCard";
 
 interface TaskButtonProps {
 	onClick: () => void;
@@ -35,7 +36,7 @@ const TaskList: React.FC<TaskListProps> = ({
 			className="bg-gray-300 max-h-screen h-full flex flex-col hover:bg-gray-200 w-1/5 rounded-lg m-1"
 			{...rest}
 		>
-			<header className="flex flex-col bg-blue-100">
+			<header className="flex flex-col bg-blue-200">
 				<svg viewBox="0 0 24 24" className=" h-12 p-2 max-h-sm">
 					{renderIcon(StatusIcon)}
 				</svg>
@@ -51,13 +52,15 @@ const TaskList: React.FC<TaskListProps> = ({
 type TasksListsProps = {
 	tasks: Task[];
 	setTasks: Dispatch<SetStateAction<Task[]>>;
-	addDescription: (taskId: string, description: string) => void;
+	updateDescription: UpdateFunction;
+	updateName: UpdateFunction;
 };
 
 export function TasksLists({
 	tasks,
 	setTasks,
-	addDescription,
+	updateDescription,
+	updateName,
 }: TasksListsProps) {
 	const statuses: Array<Status> = [
 		{ statusName: "todo", StatusIcon: Layers },
@@ -124,7 +127,8 @@ export function TasksLists({
 							return (
 								<TaskComponent
 									task={task}
-									addDescription={addDescription}
+									updateDescription={updateDescription}
+									updateName={updateName}
 								>
 									<article
 										id={task.frontEndId}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { NavigationBar } from "../reusable-ui/NavigationBar";
 import { TaskCard } from "../reusable-ui/TaskCard";
 import { Task } from "../types";
@@ -6,8 +6,11 @@ import { Link } from "react-router-dom";
 import { renderIcon } from "../api/api";
 import { Trello, Plus } from "react-feather";
 import { Button } from "../reusable-ui/Button";
+import { EditableText } from "../reusable-ui/EditableText";
 
 export const DesignLook = () => {
+	const sampleRef = useRef<HTMLInputElement>(null);
+	const [task1, setTasks] = useState<Task>(task);
 	return (
 		<div className="flex flex-row w-screen">
 			<NavigationBar>
@@ -30,15 +33,33 @@ export const DesignLook = () => {
 							task={task}
 							updateDescription={() => {}}
 							hideTaskCard={() => {}}
+							updateName={() => {}}
 						/>
 						<TaskCard
 							task={task2}
 							updateDescription={() => {}}
+							updateName={() => {
+								setTasks({ ...task });
+							}}
 							hideTaskCard={() => {}}
 						/>
 						<div className="flex flex-row justify-center p-4">
 							<Button icon={<Plus />} onClick={() => {}}></Button>{" "}
 						</div>
+						<EditableText
+							text={task.name!}
+							type={"input"}
+							placeholder={task.name!}
+							childRef={sampleRef}
+						>
+							<input
+								ref={sampleRef}
+								type="textarea"
+								placeholder={task.name}
+								value={task.name}
+								onChange={(e) => e.target.value}
+							/>
+						</EditableText>
 					</div>
 				</div>
 			</div>
@@ -46,7 +67,7 @@ export const DesignLook = () => {
 	);
 };
 
-const task: Partial<Task> = {
+const task: Task = {
 	name: "name of task",
 	status: "todo",
 	frontEndId: "1",

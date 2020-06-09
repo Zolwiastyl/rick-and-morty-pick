@@ -10,7 +10,7 @@ export const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
 	if (!props.icon) {
 		return (
 			<button
-				className="bg-gray-400 text-lg w-16 text-blue-600 rounded-full p-2 hover:text-blue-400 stroke-2 stroke-current
+				className="bg-gray-400 text-lg w-16 text-blue-700 rounded-full p-2 hover:text-blue-400 stroke-2 stroke-current
 				focus:outline-none focus:shadow-outline"
 				onClick={props.onClick}
 			>

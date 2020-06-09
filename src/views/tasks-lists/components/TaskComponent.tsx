@@ -1,18 +1,20 @@
 import React, { FunctionComponent, useState } from "react";
 import { Task } from "../../../types";
-import { TaskCard } from "../../../reusable-ui/TaskCard";
+import { TaskCard, UpdateFunction } from "../../../reusable-ui/TaskCard";
 import { ChevronsDown, ChevronsUp } from "react-feather";
 
 type TaskComponentProps = {
 	task: Task;
 	children: React.ReactNode;
-	addDescription: (taskId: string, description: string) => void;
+	updateDescription: UpdateFunction;
+	updateName: UpdateFunction;
 };
 
 export const TaskComponent: FunctionComponent<TaskComponentProps> = ({
 	children,
 	task,
-	addDescription,
+	updateDescription,
+	updateName,
 }) => {
 	const [showTaskCard, toggleTaskCard] = useState<boolean>(false);
 	const hideCard = () => toggleTaskCard(false);
@@ -30,9 +32,10 @@ export const TaskComponent: FunctionComponent<TaskComponentProps> = ({
 
 			{showTaskCard ? (
 				<TaskCard
+					updateName={updateName}
 					hideTaskCard={hideCard}
 					task={task}
-					updateDescription={addDescription}
+					updateDescription={updateDescription}
 				/>
 			) : null}
 		</div>

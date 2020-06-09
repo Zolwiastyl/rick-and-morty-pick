@@ -14,6 +14,7 @@ import {
 } from "./api/api";
 import { generateIdForTask } from "./api/generateIdForTask";
 import {
+	Plus,
 	GitMerge,
 	RefreshCcw,
 	Image,
@@ -38,6 +39,8 @@ import {
 } from "./api/addDependencies";
 import { Button } from "./reusable-ui/Button";
 import { NavigationBar } from "./reusable-ui/NavigationBar";
+import { TaskCard } from "./reusable-ui/TaskCard";
+import { DesignLook } from "./pages/design";
 
 const tasksArray: Array<Task> = [];
 
@@ -62,11 +65,29 @@ export function App() {
 		}
 	};
 
-	const addDescription = useCallback(
+	const updateDescription = useCallback(
 		(taskId: TaskId, description: string) => {
 			const taskToSave: Task = {
 				...(tasks.find((t) => t.frontEndId === taskId) as Task),
 				description: description,
+			};
+
+			const addTaskToDatabase = callApiToSendTask(taskToSave);
+			if (addTaskToDatabase) {
+				setTasks(
+					tasks.filter((t) => t.frontEndId !== taskId).concat([taskToSave])
+				);
+			} else {
+				console.error("couldn't send task");
+			}
+		},
+		[tasks, setTasks, client]
+	);
+	const updateName = useCallback(
+		(taskId: TaskId, name: string) => {
+			const taskToSave: Task = {
+				...(tasks.find((t) => t.frontEndId === taskId) as Task),
+				name: name,
 			};
 
 			const addTaskToDatabase = callApiToSendTask(taskToSave);
@@ -192,16 +213,16 @@ export function App() {
 		}
 	};
 	if (loading) {
-		return <div>Loading...</div>;
+		return <div>///loading</div>;
 	}
 	//RELACJONALNA DAZA BANYCH
 	//RELATYWNA BAZA DANYCH
 	//ABSOLUTYSTYCZNA BAZA DANYCH
 	return (
 		<Fragment>
-			<div className="flex flex-row w-screen max-w-screen p-1 overflow-hidden h-screen max-h-screen">
+			<div className="flex flex-row w-full max-w-screen  overflow-hidden h-screen max-h-screen">
 				<NavigationBar>
-					<div className="flex flex-row w-2/5 fixed opacity-75">
+					<div className="flex flex-row w-2/5 fixed opacity-75 z-10">
 						<Button
 							onClick={() => toggleNewTaskForm(!showNewTaskForm)}
 							icon={
@@ -237,14 +258,12 @@ export function App() {
 							removeAllData();
 						}}
 					/>
-					<div>
-						<Router history={history}>
-							<PrivateRoute path="/profile" component={Profile} />
-							<header>
-								<Auth0NavBar />
-							</header>
-						</Router>
-					</div>
+
+					<Router history={history}>
+						<PrivateRoute path="/profile" component={Profile} />
+						<Auth0NavBar />
+					</Router>
+
 					<Link
 						className="bg-gray-400 text-lg w-16 text-blue-600 rounded-full p-2 hover:text-blue-400 stroke-2 stroke-current mt-2"
 						to="./design"
@@ -257,30 +276,33 @@ export function App() {
 						</svg>
 					</Link>
 				</NavigationBar>
-				<div className="w-full min-w-full max-w-full max-h-screen h-full">
-					<Router history={history}>
-						{!showGraph && (
-							<TasksLists
-								setTasks={setTasks}
-								tasks={tasks}
-								addDescription={addDescription}
-							/>
-						)}
-						{showGraph && (
-							<Fragment>
-								{/* <BruteGraph setTasks={setTasks} tasks={tasks} /> */}
-								<TasksGraph
-									addEdge={addEdge}
-									removeEdge={removeEdge}
+				<div className="w-full mr-2">
+					<div className=" min-w-full max-w-full max-h-screen h-full">
+						<Router history={history}>
+							{!showGraph && (
+								<TasksLists
+									setTasks={setTasks}
 									tasks={tasks}
+									updateDescription={updateDescription}
+									updateName={updateName}
 								/>
-							</Fragment>
-						)}
+							)}
+							{showGraph && (
+								<Fragment>
+									{/* <BruteGraph setTasks={setTasks} tasks={tasks} /> */}
+									<TasksGraph
+										addEdge={addEdge}
+										removeEdge={removeEdge}
+										tasks={tasks}
+									/>
+								</Fragment>
+							)}
 
-						<Switch>
-							<Route path="/" exact />
-						</Switch>
-					</Router>
+							<Switch>
+								<Route path="/" exact />
+							</Switch>
+						</Router>
+					</div>
 				</div>
 			</div>
 		</Fragment>
