@@ -25,11 +25,11 @@ export const Auth0NavBar = () => {
 			)}
 			{isAuthenticated && (
 				<Link
-					className="bg-gray-400 text-lg w-16 text-blue-600 rounded-full p-2 hover:text-blue-400 stroke-2 stroke-current mt-2"
+					className="bg-gray-400 text-lg w-16 text-blue-600 rounded-full p-2 hover:text-blue-400 stroke-2 stroke-current mt-2 mr-2"
 					to="./design"
 				>
 					<svg
-						className="h-12 w-12 bg-gray-400 rounded-full p-2"
+						className="h-12 md:w-12 bg-gray-400  p-2"
 						viewBox="0 0 24 24"
 					>
 						<Home />

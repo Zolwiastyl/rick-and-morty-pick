@@ -22,6 +22,8 @@ import {
 	Trash2,
 	ChevronsRight,
 	ChevronsLeft,
+	ChevronsUp,
+	ChevronsDown,
 } from "react-feather";
 import { Auth0NavBar } from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
@@ -220,20 +222,34 @@ export function App() {
 	//ABSOLUTYSTYCZNA BAZA DANYCH
 	return (
 		<Fragment>
-			<div className="flex flex-row w-full max-w-screen  overflow-hidden h-screen max-h-screen">
+			<div className="md:flex md:flex-row w-full max-w-screen flex flex-col md:overflow-hidden h-screen max-h-screen">
 				<NavigationBar>
-					<div className="flex flex-row w-2/5 fixed opacity-75 z-10">
-						<Button
-							onClick={() => toggleNewTaskForm(!showNewTaskForm)}
-							icon={
-								showNewTaskForm ? <ChevronsLeft /> : <ChevronsRight />
-							}
-						/>
+					<div className="flex flex-col md:flex md:flex-row md:w-2/5 md:fixed opacity-75 md:z-10 z-10">
+						<div className="hidden md:block">
+							<Button
+								onClick={() => toggleNewTaskForm(!showNewTaskForm)}
+								icon={
+									showNewTaskForm ? (
+										<ChevronsLeft />
+									) : (
+										<ChevronsRight />
+									)
+								}
+							/>
+						</div>
+						<div className="block md:hidden">
+							<Button
+								onClick={() => toggleNewTaskForm(!showNewTaskForm)}
+								icon={
+									showNewTaskForm ? <ChevronsUp /> : <ChevronsDown />
+								}
+							/>
+						</div>
 						<div>
 							{showNewTaskForm ? <TaskForm onSubmit={onSubmit} /> : null}
 						</div>
 					</div>
-					<div className="h-20"></div>
+					<div className="md:h-20 h-10"></div>
 					<Button
 						onClick={(evt) => {
 							callApiToFetchData(setTasks);
@@ -265,11 +281,14 @@ export function App() {
 					</Router>
 
 					<Link
-						className="bg-gray-400 text-lg w-16 text-blue-600 rounded-full p-2 hover:text-blue-400 stroke-2 stroke-current mt-2"
+						className="bg-gray-400 text-lg w-16 
+						text-blue-700 rounded-full 
+						p-2 hover:text-blue-400 stroke-2
+						stroke-current mt-2 mr-2"
 						to="./design"
 					>
 						<svg
-							className="h-12 w-12 bg-gray-400 rounded-full p-2"
+							className="h-12 w-12 bg-gray-400 p-2"
 							viewBox="0 0 24 24"
 						>
 							{renderIcon(Image)}
@@ -328,7 +347,7 @@ function TaskForm({
 	generateIdForTask();
 
 	return (
-		<div className=" w-full opacity-75 rounded-r-lg p-3 bg-gray-500  ml-1 h-16 border-gray-900 flex flex-row flex-no-wrap">
+		<div className="opacity-75 rounded-r-lg p-3 bg-gray-500  ml-1 h-16 border-gray-900 flex flex-row flex-no-wrap fixed">
 			<form onSubmit={onSubmit}>
 				<label className="h-14 text-lg w-full">
 					<input

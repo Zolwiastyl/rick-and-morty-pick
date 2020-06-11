@@ -6,7 +6,9 @@ type PropstForEditableText = {
 	placeholder: string;
 	children: React.ReactElement;
 	propsForDiv?: HTMLAttributes<HTMLDivElement> & HTMLDivElement;
-	childRef: React.RefObject<HTMLInputElement>;
+	childRef:
+		| React.RefObject<HTMLInputElement>
+		| React.RefObject<HTMLTextAreaElement>;
 };
 
 export const EditableText: React.FC<PropstForEditableText> = ({

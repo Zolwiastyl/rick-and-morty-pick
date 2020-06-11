@@ -20,6 +20,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 	updateName,
 }) => {
 	const inputRef = useRef<HTMLInputElement>(null);
+	const descriptionRef = useRef<HTMLTextAreaElement>(null);
 	const [descriptionState, setDescription] = useState(
 		task.description ? task.description : ""
 	);
@@ -70,7 +71,26 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 				></div>
 			</header>
 			<div>
-				<form
+				<EditableText
+					type="textarea"
+					text={task.description}
+					placeholder="placeholder"
+					childRef={descriptionRef}
+				>
+					<textarea
+						autoFocus
+						className="w-full h-full bg-gray-200 text-base p-3 mt-1"
+						value={descriptionState}
+						onChange={handleTextareaChange}
+						onBlur={(evt) => {
+							evt.preventDefault();
+							updateDescription(task.frontEndId!, descriptionState!);
+							hideTaskCard();
+						}}
+						ref={descriptionRef}
+					></textarea>
+				</EditableText>
+				{/* <form
 					onSubmit={(evt) => {
 						evt.preventDefault();
 						updateDescription(task.frontEndId!, descriptionState!);
@@ -87,7 +107,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 							<Button onClick={() => {}} icon={<Upload />} />
 						</div>
 					</label>
-				</form>
+				</form> */}
 				<div></div>
 			</div>
 		</div>

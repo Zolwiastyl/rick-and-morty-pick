@@ -43,12 +43,11 @@ export const LandingPage = () => {
 			onRedirectCallback={onRedirectCallback}
 			cacheLocation={"localstorage"}
 		>
-			<div>
-				{" "}
-				landing page and else
+			<div className="flex flex-col md:flex-row md:flex">
 				<NavigationBar>
 					<LogInButton />
 				</NavigationBar>
+				<div> landing page and else</div>
 			</div>
 		</Auth0Provider>
 	);
