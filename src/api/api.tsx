@@ -1,8 +1,7 @@
-import { Task, TasksStateProps } from "../types";
+import { Task } from "../types";
 import React from "react";
 
 import { Auth0Client } from "@auth0/auth0-spa-js";
-import { Button } from "../reusable-ui/Button";
 
 export const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");
@@ -61,13 +60,3 @@ export function removeAllData() {
 		method: "POST",
 	});
 }
-
-export function renderIcon(
-	Icon: React.ComponentClass<{}, any> | React.FunctionComponent<{}> | undefined
-) {
-	if (Icon) {
-		return <Icon />;
-	}
-}
-
-export type IconType = typeof renderIcon;

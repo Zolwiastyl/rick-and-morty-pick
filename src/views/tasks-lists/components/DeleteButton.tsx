@@ -1,6 +1,6 @@
 import React from "react";
 import { Task, TasksStateProps } from "../../../types";
-import { callApi, renderIcon } from "../../../api/api";
+import { callApi } from "../../../api/api";
 import { curriedSendMultipleTasks } from "../../../api/sendMultipleTasks";
 import {
 	removeCrossDependencies,

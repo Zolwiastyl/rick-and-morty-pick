@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Fragment } from "react";
 
 import "./index.css";
@@ -6,15 +6,9 @@ import "./index.css";
 import { Task, TaskId } from "./types";
 import { TasksLists } from "./views/tasks-lists/TasksLists";
 
-import {
-	fetchDataFromServer,
-	removeAllData,
-	callApi,
-	renderIcon,
-} from "./api/api";
+import { fetchDataFromServer, removeAllData, callApi } from "./api/api";
 import { generateIdForTask } from "./api/generateIdForTask";
 import {
-	Plus,
 	GitMerge,
 	RefreshCcw,
 	Image,
@@ -41,8 +35,6 @@ import {
 } from "./api/addDependencies";
 import { Button } from "./reusable-ui/Button";
 import { NavigationBar } from "./reusable-ui/NavigationBar";
-import { TaskCard } from "./reusable-ui/TaskCard";
-import { DesignLook } from "./pages/design";
 
 const tasksArray: Array<Task> = [];
 
@@ -57,7 +49,7 @@ export function App() {
 	const [tasks, setTasks] = useState<Task[]>(tasksArray);
 	const [showNewTaskForm, toggleNewTaskForm] = useState<boolean>(false);
 
-	const callApiToSendTask = async (task: Task) => {
+	const callApiToSendTask = useCallback(async (task: Task) => {
 		try {
 			const token = await client?.getTokenSilently();
 			const response = async () => await sendNewTask(task, token);
@@ -65,7 +57,7 @@ export function App() {
 		} catch (error) {
 			console.error(error);
 		}
-	};
+	}, []);
 
 	const updateDescription = useCallback(
 		(taskId: TaskId, description: string) => {
@@ -83,7 +75,7 @@ export function App() {
 				console.error("couldn't send task");
 			}
 		},
-		[tasks, setTasks, client]
+		[tasks, callApiToSendTask]
 	);
 	const updateName = useCallback(
 		(taskId: TaskId, name: string) => {
@@ -101,7 +93,7 @@ export function App() {
 				console.error("couldn't send task");
 			}
 		},
-		[tasks, setTasks, client]
+		[tasks, callApiToSendTask]
 	);
 
 	const addEdge = useCallback(
@@ -156,25 +148,26 @@ export function App() {
 				);
 			}
 		},
-		[tasks, setTasks]
+		[tasks]
+	);
+
+	const callApiToFetchData = useCallback(
+		async (setTasks: React.Dispatch<React.SetStateAction<Task[]>>) => {
+			try {
+				const token = await client?.getTokenSilently();
+				const response = async () =>
+					await fetchDataFromServer(setTasks, token);
+				response();
+			} catch (error) {
+				console.error(error);
+			}
+		},
+		[]
 	);
 
 	useEffect(() => {
 		callApiToFetchData(setTasks);
 	}, [loading, user, client]);
-
-	const callApiToFetchData = async (
-		setTasks: React.Dispatch<React.SetStateAction<Task[]>>
-	) => {
-		try {
-			const token = await client?.getTokenSilently();
-			const response = async () =>
-				await fetchDataFromServer(setTasks, token);
-			response();
-		} catch (error) {
-			console.error(error);
-		}
-	};
 
 	const onSubmit: (
 		event: React.FormEvent<HTMLFormElement>
@@ -184,7 +177,7 @@ export function App() {
 		event.currentTarget.reset();
 		const ArrayWithTasksToSave = tasks.slice();
 		function generateOrdinalForNewTask(tasks: Task[]) {
-			const tasksToDo = tasks.filter((t) => t.status == "todo");
+			const tasksToDo = tasks.filter((t) => t.status === "todo");
 			if (tasksToDo.length === 0) {
 				return 2.1;
 			} else {
@@ -254,22 +247,22 @@ export function App() {
 						onClick={(evt) => {
 							callApiToFetchData(setTasks);
 						}}
-						icon={renderIcon(RefreshCcw)}
+						icon={<RefreshCcw />}
 					/>
 					<Button
 						onClick={(evt) => {
 							toggleGraph(true);
 						}}
-						icon={renderIcon(GitMerge)}
+						icon={<GitMerge />}
 					/>
 					<Button
 						onClick={(evt) => {
 							toggleGraph(false);
 						}}
-						icon={renderIcon(List)}
+						icon={<List />}
 					/>
 					<Button
-						icon={renderIcon(Trash2)}
+						icon={<Trash2 />}
 						onClick={(evt) => {
 							removeAllData();
 						}}
@@ -291,7 +284,7 @@ export function App() {
 							className="h-12 w-12 bg-gray-400 p-2"
 							viewBox="0 0 24 24"
 						>
-							{renderIcon(Image)}
+							{<Image />}
 						</svg>
 					</Link>
 				</NavigationBar>

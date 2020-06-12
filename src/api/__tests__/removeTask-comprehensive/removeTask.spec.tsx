@@ -17,8 +17,8 @@ const newTaskThree: Task = removeCrossDependencies(
 const newTasksAfter = before
 	.filter(
 		(t) =>
-			t.frontEndId != newTaskThree.frontEndId &&
-			t.frontEndId != before[2].frontEndId
+			t.frontEndId !== newTaskThree.frontEndId &&
+			t.frontEndId !== before[2].frontEndId
 	)
 	.concat([newTaskThree]);
 
@@ -48,14 +48,14 @@ const newTasksAfter2 = before
 		}
 	})
 	.filter((t) => t !== null)
-	.filter((t) => t!.frontEndId != before[2].frontEndId);
+	.filter((t) => t!.frontEndId !== before[2].frontEndId);
 
 const newTasksAfter3 = before
 	.filter(
 		(t) =>
 			!newTaskThreeInArray.map((t) => t.frontEndId).includes(t.frontEndId)
 	)
-	.filter((t) => t.frontEndId != before[2].frontEndId)
+	.filter((t) => t.frontEndId !== before[2].frontEndId)
 	.concat(newTaskThreeInArray);
 console.log(newTasksAfter3);
 
@@ -101,6 +101,6 @@ test("it should return after.json", () => {
 		saveTheDiff(
 			before,
 			removeCrossDependencies(before[2].frontEndId, before)
-		).filter((t) => t.frontEndId != before[2].frontEndId)
+		).filter((t) => t.frontEndId !== before[2].frontEndId)
 	).toStrictEqual(after);
 });

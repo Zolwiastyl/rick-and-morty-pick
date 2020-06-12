@@ -18,7 +18,7 @@ export const PrivateRoute = ({ component: Component, path, ...rest }: any) => {
       });
     };
     fn();
-  }, [loading, isAuthenticated, client?.loginWithRedirect, path]);
+  }, [loading, isAuthenticated, path, client]);
 
   const render = (props: any) =>
     isAuthenticated === true ? <Component {...props} /> : null;

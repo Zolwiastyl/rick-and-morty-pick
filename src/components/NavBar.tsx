@@ -1,24 +1,17 @@
 import React, { Fragment } from "react";
 import { useAuth0 } from "../react-auth0-spa";
 import { Link } from "react-router-dom";
-import { renderIcon } from "../api/api";
-import { LogOut, LogIn, User, Home } from "react-feather";
+import { LogOut, LogIn, Home } from "react-feather";
 import { Button } from "../reusable-ui/Button";
-import { RedirectLoginOptions } from "@auth0/auth0-spa-js/dist/typings/global";
 
 export const Auth0NavBar = () => {
 	const { isAuthenticated, client } = useAuth0();
-
-	const redirectOptions: RedirectLoginOptions = {
-		redirect_uri: window.location.origin + "/app",
-	};
-
 	return (
 		<Fragment>
 			{!isAuthenticated && (
 				<Button
 					onClick={(evt) => client?.loginWithRedirect({})}
-					icon={renderIcon(LogIn)}
+					icon={<LogIn />}
 				/>
 			)}
 
@@ -29,7 +22,7 @@ export const Auth0NavBar = () => {
 							returnTo: window.location.origin + "/",
 						})
 					}
-					icon={renderIcon(LogOut)}
+					icon={<LogOut />}
 				/>
 			)}
 			{isAuthenticated && (

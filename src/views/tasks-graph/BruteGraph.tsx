@@ -97,6 +97,7 @@ function useCytoscape(
 	if (!ref.current) {
 		ref.current = cytoscape({});
 	}
+	const { addEdge, removeEdge } = actionHandlers;
 
 	useEffect(() => {
 		if (container.current) {
@@ -114,9 +115,8 @@ function useCytoscape(
 				ref.current = cytoscape({});
 			};
 		}
-	}, []);
+	}, [addEdge, client, initialTasks, removeEdge]);
 
-	const { addEdge, removeEdge } = actionHandlers;
 	const firstEdgeNodeId = useRef<TaskId | undefined>();
 
 	// register event handlers

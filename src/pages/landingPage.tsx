@@ -1,12 +1,11 @@
 import React, { Fragment } from "react";
 import { NavigationBar } from "../reusable-ui/NavigationBar";
-import { Auth0NavBar } from "../components/NavBar";
+
 import { Auth0Provider, useAuth0 } from "../react-auth0-spa";
 import config from "../auth_config.json";
 import history from "../utils/history";
 import { Button } from "../reusable-ui/Button";
-import { LogIn, Link, LogOut } from "react-feather";
-import { Route } from "react-router-dom";
+import { LogIn, LogOut } from "react-feather";
 import { RedirectLoginOptions } from "@auth0/auth0-spa-js";
 
 const onRedirectCallback = (appState: { targetUrl: string }) => {

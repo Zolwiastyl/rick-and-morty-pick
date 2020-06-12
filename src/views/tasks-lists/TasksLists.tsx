@@ -1,7 +1,7 @@
 import React, { SetStateAction, Dispatch } from "react";
 import { Task, Status } from "../../types";
 
-import { callApi, renderIcon } from "../../api/api";
+import { callApi } from "../../api/api";
 
 import {
 	Layers,
@@ -27,7 +27,7 @@ interface TaskListProps extends React.ComponentProps<"div"> {
 	status: Status;
 }
 const TaskList: React.FC<TaskListProps> = ({
-	status: { statusName, StatusIcon },
+	status: { statusName, icon: StatusIcon },
 	children,
 	...rest
 }) => {
@@ -36,9 +36,9 @@ const TaskList: React.FC<TaskListProps> = ({
 			className="bg-gray-300 max-h-screen h-full flex flex-col hover:bg-gray-200 lg:w-1/5 rounded-lg m-1"
 			{...rest}
 		>
-			<header className="flex flex-col bg-blue-200 w-64">
+			<header className="flex flex-col bg-blue-200 w-full">
 				<svg viewBox="0 0 24 24" className=" h-12 p-2 max-h-sm">
-					{renderIcon(StatusIcon)}
+					<StatusIcon />
 				</svg>
 				<p className="self-center p-6">{statusName}</p>
 			</header>
@@ -56,19 +56,20 @@ type TasksListsProps = {
 	updateName: UpdateFunction;
 };
 
+const statuses: Array<Status> = [
+	{ statusName: "todo", icon: Layers },
+	{ statusName: "working-on-it", icon: Activity },
+	{ statusName: "waiting", icon: Clock },
+	{ statusName: "stuck", icon: AlertTriangle },
+	{ statusName: "done", icon: CheckCircle },
+];
+
 export function TasksLists({
 	tasks,
 	setTasks,
 	updateDescription,
 	updateName,
 }: TasksListsProps) {
-	const statuses: Array<Status> = [
-		{ statusName: "todo", StatusIcon: Layers },
-		{ statusName: "working-on-it", StatusIcon: Activity },
-		{ statusName: "waiting", StatusIcon: Clock },
-		{ statusName: "stuck", StatusIcon: AlertTriangle },
-		{ statusName: "done", StatusIcon: CheckCircle },
-	];
 	const { client } = useAuth0();
 
 	return (

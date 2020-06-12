@@ -24,7 +24,7 @@ export const Auth0Context = React.createContext<AuthContextValue | undefined>(
 );
 export const useAuth0 = () => {
 	const ctxValue = useContext(Auth0Context);
-	if (ctxValue == undefined)
+	if (!ctxValue)
 		throw new Error("useAuth can only be used inside AuthProvider");
 	return ctxValue;
 };

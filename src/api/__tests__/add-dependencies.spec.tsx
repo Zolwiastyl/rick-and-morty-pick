@@ -38,5 +38,3 @@ const targetTaskMockup: Task = {
 	status: "todo",
 	userId: "github|45352717",
 };
-
-const readyTasksMockup: Task[] = [];

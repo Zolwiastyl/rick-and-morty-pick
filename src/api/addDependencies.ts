@@ -25,15 +25,15 @@ export function makeNewTasksWithDependencies(
 	);
 	return [
 		{
-			...tasks.find((t) => t.frontEndId == tasksId[0])!,
+			...tasks.find((t) => t.frontEndId === tasksId[0])!,
 			dependOnThisTask: tasks
-				.find((t) => t.frontEndId == tasksId[0])!
+				.find((t) => t.frontEndId === tasksId[0])!
 				.dependOnThisTask.concat([tasksId[1]]),
 		},
 		{
-			...tasks.find((t) => t.frontEndId == tasksId[1])!,
+			...tasks.find((t) => t.frontEndId === tasksId[1])!,
 			dependencyId: tasks
-				.find((t) => t.frontEndId == tasksId[1])!
+				.find((t) => t.frontEndId === tasksId[1])!
 				.dependencyId.concat([tasksId[0]]),
 		},
 	];
@@ -44,13 +44,13 @@ export function makeNewTasksRemovingDependencies(
 	tasksId: readonly [TaskId, TaskId]
 ): Edge {
 	const sourceTaskToSave: Task = {
-		...tasks.find((t) => t.frontEndId == tasksId[0])!,
+		...tasks.find((t) => t.frontEndId === tasksId[0])!,
 		dependOnThisTask: tasks
-			.find((t) => t.frontEndId == tasksId[0])!
+			.find((t) => t.frontEndId === tasksId[0])!
 			.dependOnThisTask.filter((id) => id !== tasksId[1]),
 	};
 	const targetTaskToSave: Task = {
-		...tasks.find((t) => t.frontEndId == tasksId[1])!,
+		...tasks.find((t) => t.frontEndId === tasksId[1])!,
 		dependencyId: {
 			...copyTaskById(tasks, tasksId[1]),
 		}.dependencyId.filter((id) => id !== tasksId[0]),

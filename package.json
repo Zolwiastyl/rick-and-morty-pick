@@ -72,10 +72,8 @@
 		"choose-canvas": "scripts/choose-canvas.js",
 		"build-for": "run-s \"choose-canvas {1}\" build-dark-assets -- $*",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
-	},
-	"eslintConfig": {
-		"extends": "react-app"
+		"eject": "react-scripts eject",
+		"lint": "eslint src/**/*.{js,jsx,tsx,ts}"
 	},
 	"browserslist": {
 		"production": [

@@ -1,8 +1,9 @@
 import React from "react";
+import { Icon } from "react-feather";
 
 export type ButtonProps = {
 	label?: string;
-	icon?: JSX.Element | undefined;
+	icon?: JSX.Element;
 	onClick: (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 };
 

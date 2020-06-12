@@ -1,7 +1,6 @@
 import React, { FunctionComponent, ChangeEvent, useState, useRef } from "react";
 import { Task } from "../types";
-import { Upload } from "react-feather";
-import { Button } from "./Button";
+
 import { EditableText } from "./EditableText";
 
 export type UpdateFunction = (taskId: string, description: string) => void;

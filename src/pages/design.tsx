@@ -3,7 +3,7 @@ import { NavigationBar } from "../reusable-ui/NavigationBar";
 import { TaskCard } from "../reusable-ui/TaskCard";
 import { Task } from "../types";
 import { Link } from "react-router-dom";
-import { renderIcon } from "../api/api";
+
 import { Trello, Plus } from "react-feather";
 import { Button } from "../reusable-ui/Button";
 import { EditableText } from "../reusable-ui/EditableText";
@@ -22,7 +22,7 @@ export const DesignLook = () => {
 						className="h-12 w-12 bg-gray-400 rounded-full p-2"
 						viewBox="0 0 24 24"
 					>
-						{renderIcon(Trello)}
+						{<Trello />}
 					</svg>
 				</Link>
 			</NavigationBar>
@@ -30,7 +30,7 @@ export const DesignLook = () => {
 				<div className="flex p-10 bg-gray-100 justify-center">
 					<div className="flex flex-col p-2">
 						<TaskCard
-							task={task}
+							task={task1}
 							updateDescription={() => {}}
 							hideTaskCard={() => {}}
 							updateName={() => {}}
