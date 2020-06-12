@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
+
 import { useAuth0 } from "../react-auth0-spa";
 
 export const PrivateRoute = ({ component: Component, path, ...rest }: any) => {

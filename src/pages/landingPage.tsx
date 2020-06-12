@@ -1,12 +1,12 @@
-import React, { Fragment } from "react";
-import { NavigationBar } from "../reusable-ui/NavigationBar";
-
-import { Auth0Provider, useAuth0 } from "../react-auth0-spa";
-import config from "../auth_config.json";
-import history from "../utils/history";
-import { Button } from "../reusable-ui/Button";
-import { LogIn, LogOut } from "react-feather";
 import { RedirectLoginOptions } from "@auth0/auth0-spa-js";
+import React, { Fragment } from "react";
+import { LogIn, LogOut } from "react-feather";
+
+import config from "../auth_config.json";
+import { Auth0Provider, useAuth0 } from "../react-auth0-spa";
+import { Button } from "../reusable-ui/Button";
+import { NavigationBar } from "../reusable-ui/NavigationBar";
+import history from "../utils/history";
 
 const onRedirectCallback = (appState: { targetUrl: string }) => {
 	history.push(

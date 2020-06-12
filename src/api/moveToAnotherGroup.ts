@@ -1,6 +1,6 @@
-import { TasksStateProps, Task } from "../types";
-import { sendNewTask } from "./sendNewTask";
+import { Task,TasksStateProps } from "../types";
 import { curry } from "./api";
+import { sendNewTask } from "./sendNewTask";
 
 /**
  *

@@ -1,10 +1,10 @@
+import { Task } from "../../types";
 import {
-	takeIdsArray,
 	overwriteTask,
 	removeCrossDependencies,
 	saveTheDiff,
+	takeIdsArray,
 } from "../removeTask";
-import { Task } from "../../types";
 
 const tasks: Task[] = require("./remove-task-mockup.json");
 const tasks2: Task[] = require("./mockup-remove-task-2.json");

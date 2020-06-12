@@ -1,13 +1,14 @@
 import React from "react";
-import { Task, TasksStateProps } from "../../../types";
+import { Trash2 } from "react-feather";
+
 import { callApi } from "../../../api/api";
-import { curriedSendMultipleTasks } from "../../../api/sendMultipleTasks";
 import {
-	removeCrossDependencies,
 	curriedRemoveTask,
+	removeCrossDependencies,
 	saveTheDiff,
 } from "../../../api/removeTask";
-import { Trash2 } from "react-feather";
+import { curriedSendMultipleTasks } from "../../../api/sendMultipleTasks";
+import { Task, TasksStateProps } from "../../../types";
 export const DeleteButton = (
 	task: Task,
 	{ tasks, setTasks }: TasksStateProps,

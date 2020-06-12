@@ -1,8 +1,8 @@
 import { Task } from "../../types";
 import {
-	TaskPlacement,
-	takeOrdinalNumbers,
 	ensureThatOrdinalIsFloat,
+	takeOrdinalNumbers,
+	TaskPlacement,
 } from "../generateOrdinalNumber";
 
 const mockUpTasks = require("./mockup-takeOrdinalNumbers.json");

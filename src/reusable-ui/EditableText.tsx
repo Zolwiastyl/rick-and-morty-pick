@@ -1,4 +1,4 @@
-import React, { useState, HTMLAttributes } from "react";
+import React, { HTMLAttributes,useState } from "react";
 
 type PropstForEditableText = {
 	text: string | undefined;

@@ -1,40 +1,38 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Fragment } from "react";
-
 import "./index.css";
 
-import { Task, TaskId } from "./types";
-import { TasksLists } from "./views/tasks-lists/TasksLists";
-
-import { fetchDataFromServer, removeAllData, callApi } from "./api/api";
-import { generateIdForTask } from "./api/generateIdForTask";
+import React, { useCallback,useEffect, useState } from "react";
+import { Fragment } from "react";
 import {
+	ChevronsDown,
+	ChevronsLeft,
+	ChevronsRight,
+	ChevronsUp,
 	GitMerge,
-	RefreshCcw,
 	Image,
 	List,
+	RefreshCcw,
 	Trash2,
-	ChevronsRight,
-	ChevronsLeft,
-	ChevronsUp,
-	ChevronsDown,
 } from "react-feather";
-import { Auth0NavBar } from "./components/NavBar";
-import { useAuth0 } from "./react-auth0-spa";
-import { Profile } from "./components/Profile";
-import { Router, Route, Switch, Link } from "react-router-dom";
-import history from "./utils/history";
-import { PrivateRoute } from "./components/PrivateRoute";
+import { Link,Route, Router, Switch } from "react-router-dom";
 
-import { TasksGraph } from "./views/tasks-graph/BruteGraph";
-import { sendNewTask, curriedSendNewTask } from "./api/sendNewTask";
 import {
+	makeNewTasksRemovingDependencies,
 	makeNewTasksWithDependencies,
 	sendSourceAndTargetTasks,
-	makeNewTasksRemovingDependencies,
 } from "./api/addDependencies";
+import { callApi,fetchDataFromServer, removeAllData } from "./api/api";
+import { generateIdForTask } from "./api/generateIdForTask";
+import { curriedSendNewTask,sendNewTask } from "./api/sendNewTask";
+import { Auth0NavBar } from "./components/NavBar";
+import { PrivateRoute } from "./components/PrivateRoute";
+import { Profile } from "./components/Profile";
+import { useAuth0 } from "./react-auth0-spa";
 import { Button } from "./reusable-ui/Button";
 import { NavigationBar } from "./reusable-ui/NavigationBar";
+import { Task, TaskId } from "./types";
+import history from "./utils/history";
+import { TasksGraph } from "./views/tasks-graph/BruteGraph";
+import { TasksLists } from "./views/tasks-lists/TasksLists";
 
 const tasksArray: Array<Task> = [];
 

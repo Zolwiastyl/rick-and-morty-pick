@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 
-// src/views/ExternalApi.js
-
-import { useAuth0 } from "../../../react-auth0-spa";
-
 import { HOST } from "../../../api/api";
+// src/views/ExternalApi.js
+import { useAuth0 } from "../../../react-auth0-spa";
 
 const ExternalApi = () => {
 	const [showResult, setShowResult] = useState(false);

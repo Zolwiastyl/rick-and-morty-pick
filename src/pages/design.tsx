@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
+import { Plus,Trello } from "react-feather";
+import { Link } from "react-router-dom";
+
+import { Button } from "../reusable-ui/Button";
+import { EditableText } from "../reusable-ui/EditableText";
 import { NavigationBar } from "../reusable-ui/NavigationBar";
 import { TaskCard } from "../reusable-ui/TaskCard";
 import { Task } from "../types";
-import { Link } from "react-router-dom";
-
-import { Trello, Plus } from "react-feather";
-import { Button } from "../reusable-ui/Button";
-import { EditableText } from "../reusable-ui/EditableText";
 
 export const DesignLook = () => {
 	const sampleRef = useRef<HTMLInputElement>(null);

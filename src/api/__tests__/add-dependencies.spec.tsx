@@ -1,5 +1,5 @@
-import { makeNewTasksWithDependencies } from "../../views/tasks-graph/GraphAPI";
 import { Task } from "../../types";
+import { makeNewTasksWithDependencies } from "../../views/tasks-graph/GraphAPI";
 
 const tasks: Task[] = require("./mockup-addDependencies.json");
 

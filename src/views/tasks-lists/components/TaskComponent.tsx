@@ -1,7 +1,8 @@
 import React, { FunctionComponent, useState } from "react";
-import { Task } from "../../../types";
-import { TaskCard, UpdateFunction } from "../../../reusable-ui/TaskCard";
 import { ChevronsDown, ChevronsUp } from "react-feather";
+
+import { TaskCard, UpdateFunction } from "../../../reusable-ui/TaskCard";
+import { Task } from "../../../types";
 
 type TaskComponentProps = {
 	task: Task;

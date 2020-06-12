@@ -1,6 +1,6 @@
-import React, { FunctionComponent, ChangeEvent, useState, useRef } from "react";
-import { Task } from "../types";
+import React, { ChangeEvent, FunctionComponent, useRef,useState } from "react";
 
+import { Task } from "../types";
 import { EditableText } from "./EditableText";
 
 export type UpdateFunction = (taskId: string, description: string) => void;

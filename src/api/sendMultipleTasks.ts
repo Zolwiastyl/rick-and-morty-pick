@@ -1,5 +1,5 @@
 import { Task } from "../types";
-import { HOST, curry } from "./api";
+import { curry,HOST } from "./api";
 
 export const curriedSendMultipleTasks: Function = curry(sendMultipleTasks);
 const sendMultipleTasksURL = new Request(HOST + "/multiple-tasks");

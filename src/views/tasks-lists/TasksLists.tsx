@@ -1,22 +1,21 @@
-import React, { SetStateAction, Dispatch } from "react";
-import { Task, Status } from "../../types";
-
-import { callApi } from "../../api/api";
-
+import React, { Dispatch,SetStateAction } from "react";
 import {
-	Layers,
+	Activity,
 	AlertTriangle,
 	CheckCircle,
 	Clock,
-	Activity,
+	Layers,
 } from "react-feather";
-import { useAuth0 } from "../../react-auth0-spa";
+
+import { callApi } from "../../api/api";
 import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
-import { DeleteButton } from "./components/DeleteButton";
-import { handleDrop } from "./dragAndDrop";
-import { TaskComponent } from "./components/TaskComponent";
 import { curriedSendNewTask } from "../../api/sendNewTask";
+import { useAuth0 } from "../../react-auth0-spa";
 import { UpdateFunction } from "../../reusable-ui/TaskCard";
+import { Status,Task } from "../../types";
+import { DeleteButton } from "./components/DeleteButton";
+import { TaskComponent } from "./components/TaskComponent";
+import { handleDrop } from "./dragAndDrop";
 
 interface TaskButtonProps {
 	onClick: () => void;

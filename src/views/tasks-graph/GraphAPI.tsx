@@ -1,5 +1,6 @@
+import { EdgeDefinition, ElementDefinition,NodeDefinition } from "cytoscape";
+
 import { Task } from "../../types";
-import { NodeDefinition, EdgeDefinition, ElementDefinition } from "cytoscape";
 
 export function prepareElementsForGraph(tasks: Task[]) {
 	const nodes: NodeDefinition[] = tasks.map((t) => {

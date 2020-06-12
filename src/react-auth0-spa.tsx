@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
 import createAuth0Client, {
-	PopupLoginOptions,
-	PopupConfigOptions,
 	Auth0ClientOptions,
+	PopupConfigOptions,
+	PopupLoginOptions,
 } from "@auth0/auth0-spa-js";
 import Auth0Client from "@auth0/auth0-spa-js/dist/typings/Auth0Client";
+import React, { useContext,useEffect, useState } from "react";
 
 interface AuthContextValue {
 	client: Auth0Client | undefined;
@@ -73,7 +73,7 @@ export const Auth0Provider = ({
 			setLoading(false);
 		};
 		initAuth0();
-	}, [onRedirectCallback]);
+	}, [initOptions, onRedirectCallback]);
 
 	const loginWithPopup = async (
 		params?: PopupLoginOptions,

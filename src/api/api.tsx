@@ -1,7 +1,7 @@
-import { Task } from "../types";
+import { Auth0Client } from "@auth0/auth0-spa-js";
 import React from "react";
 
-import { Auth0Client } from "@auth0/auth0-spa-js";
+import { Task } from "../types";
 
 export const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");

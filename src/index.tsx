@@ -1,15 +1,17 @@
+import "./index.css";
+
 import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import * as serviceWorker from "./serviceWorker";
-import { Auth0Provider } from "./react-auth0-spa";
-import config from "./auth_config.json";
-import history from "./utils/history";
 import { Router } from "react-router";
-import { App } from "./App";
 import { Route } from "react-router-dom";
+
+import { App } from "./App";
+import config from "./auth_config.json";
 import { DesignLook } from "./pages/design";
 import { LandingPage } from "./pages/landingPage";
+import { Auth0Provider } from "./react-auth0-spa";
+import * as serviceWorker from "./serviceWorker";
+import history from "./utils/history";
 
 const onRedirectCallback = (appState: { targetUrl: string }) => {
 	history.push(

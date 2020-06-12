@@ -1,6 +1,7 @@
+import { Auth0Client } from "@auth0/auth0-spa-js";
+
 import { Task } from "../types";
 import { copyTaskById } from "../views/tasks-graph/GraphAPI";
-import { Auth0Client } from "@auth0/auth0-spa-js";
 import { callApi } from "./api";
 
 type Source = Task;

@@ -1,7 +1,8 @@
 import React, { Fragment } from "react";
-import { useAuth0 } from "../react-auth0-spa";
+import { Home,LogIn, LogOut } from "react-feather";
 import { Link } from "react-router-dom";
-import { LogOut, LogIn, Home } from "react-feather";
+
+import { useAuth0 } from "../react-auth0-spa";
 import { Button } from "../reusable-ui/Button";
 
 export const Auth0NavBar = () => {
