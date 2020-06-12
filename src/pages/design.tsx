@@ -16,7 +16,7 @@ export const DesignLook = () => {
 			<NavigationBar>
 				<Link
 					className="bg-gray-400 text-lg w-16 text-blue-600 rounded-full p-2 hover:text-blue-400 stroke-2 stroke-current mt-2"
-					to="./"
+					to="./app"
 				>
 					<svg
 						className="h-12 w-12 bg-gray-400 rounded-full p-2"
