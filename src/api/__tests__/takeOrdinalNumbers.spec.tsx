@@ -3,7 +3,6 @@ import {
 	TaskPlacement,
 	takeOrdinalNumbers,
 	ensureThatOrdinalIsFloat,
-	putItBelow,
 } from "../generateOrdinalNumber";
 
 const mockUpTasks = require("./mockup-takeOrdinalNumbers.json");
@@ -43,6 +42,7 @@ const placeItBelow = (idOfEventTarget: string) =>
 		idOfEventTarget,
 		TaskPlacement.Below
 	);
+
 test.each`
 	a      | expected
 	${"1"} | ${[0.1, 1.0]}
@@ -64,5 +64,3 @@ test.each`
 `("below for $a ordinals to be $expected", ({ a, expected }) => {
 	expect(placeItBelow(a)).toStrictEqual(expected);
 });
-
-const putItBelowInSortedTasks = putItBelow(mockUpTasks);

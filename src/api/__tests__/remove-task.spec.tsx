@@ -9,18 +9,8 @@ import { Task } from "../../types";
 const tasks: Task[] = require("./remove-task-mockup.json");
 const tasks2: Task[] = require("./mockup-remove-task-2.json");
 
-const newArray = ["Task1Id", "Task5Id"];
-
 test("how much  is it", () =>
 	console.log(removeCrossDependencies("1120200852290200", tasks2)));
-
-test("this should be equal", () => {
-	expect(newArray[newArray.length - 1] == newArray.pop()).toBe(true);
-});
-
-test("5 should be", () => {
-	expect(5).toBe(5);
-});
 
 test("expect new tasks to be equal to readyTasks", () => {
 	expect(removeCrossDependencies("Task5Id", tasks)).toStrictEqual(readyTasks);

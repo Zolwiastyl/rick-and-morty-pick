@@ -24,8 +24,10 @@ export const Auth0Context = React.createContext<AuthContextValue | undefined>(
 );
 export const useAuth0 = () => {
 	const ctxValue = useContext(Auth0Context);
+	console.log({ ctxValue });
 	if (!ctxValue)
 		throw new Error("useAuth can only be used inside AuthProvider");
+
 	return ctxValue;
 };
 interface Auth0ProviderProps extends Auth0ClientOptions {
@@ -45,6 +47,7 @@ export const Auth0Provider = ({
 	const [popupOpen, setPopupOpen] = useState<boolean>(false);
 
 	useEffect(() => {
+		console.log(onRedirectCallback);
 		const initAuth0 = async () => {
 			setLoading(true);
 			const auth0Instance = await createAuth0Client(initOptions);
@@ -54,6 +57,7 @@ export const Auth0Provider = ({
 				window.location.search.includes("state=")
 			) {
 				const { appState } = await auth0Instance.handleRedirectCallback();
+
 				onRedirectCallback(appState);
 			}
 
@@ -69,7 +73,7 @@ export const Auth0Provider = ({
 			setLoading(false);
 		};
 		initAuth0();
-	}, []);
+	}, [onRedirectCallback]);
 
 	const loginWithPopup = async (
 		params?: PopupLoginOptions,

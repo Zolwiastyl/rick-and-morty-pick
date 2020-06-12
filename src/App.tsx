@@ -49,15 +49,18 @@ export function App() {
 	const [tasks, setTasks] = useState<Task[]>(tasksArray);
 	const [showNewTaskForm, toggleNewTaskForm] = useState<boolean>(false);
 
-	const callApiToSendTask = useCallback(async (task: Task) => {
-		try {
-			const token = await client?.getTokenSilently();
-			const response = async () => await sendNewTask(task, token);
-			response();
-		} catch (error) {
-			console.error(error);
-		}
-	}, []);
+	const callApiToSendTask = useCallback(
+		async (task: Task) => {
+			try {
+				const token = await client?.getTokenSilently();
+				const response = async () => await sendNewTask(task, token);
+				response();
+			} catch (error) {
+				console.error(error);
+			}
+		},
+		[client]
+	);
 
 	const updateDescription = useCallback(
 		(taskId: TaskId, description: string) => {
@@ -148,26 +151,25 @@ export function App() {
 				);
 			}
 		},
-		[tasks]
+		[tasks, client]
 	);
 
 	const callApiToFetchData = useCallback(
 		async (setTasks: React.Dispatch<React.SetStateAction<Task[]>>) => {
-			try {
-				const token = await client?.getTokenSilently();
-				const response = async () =>
-					await fetchDataFromServer(setTasks, token);
-				response();
-			} catch (error) {
-				console.error(error);
+			if (!client) {
+				throw Error("no client from auth0");
 			}
+			const token = await client.getTokenSilently();
+			await fetchDataFromServer(setTasks, token);
 		},
-		[]
+		[client]
 	);
 
 	useEffect(() => {
-		callApiToFetchData(setTasks);
-	}, [loading, user, client]);
+		if (client) {
+			callApiToFetchData(setTasks);
+		}
+	}, [callApiToFetchData, client]);
 
 	const onSubmit: (
 		event: React.FormEvent<HTMLFormElement>

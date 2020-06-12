@@ -1,5 +1,4 @@
 import React from "react";
-import { Icon } from "react-feather";
 
 export type ButtonProps = {
 	label?: string;
@@ -12,9 +11,8 @@ export const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
 		return (
 			<button
 				className="bg-gray-400 text-lg w-16
-				text-blue-700 rounded-full 
-				p-2 hover:text-blue-400 stroke-2 
-				stroke-current mt-2
+				text-blue-700 hover:text-blue-400 rounded-full 
+				p-2 mt-2 stroke-2 stroke-current 
 				focus:outline-none focus:shadow-outline"
 				onClick={props.onClick}
 			>
