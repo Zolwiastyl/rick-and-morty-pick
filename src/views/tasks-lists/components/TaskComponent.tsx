@@ -19,7 +19,7 @@ export const TaskComponent: FunctionComponent<TaskComponentProps> = ({
 	const [showTaskCard, toggleTaskCard] = useState<boolean>(false);
 	const hideCard = () => toggleTaskCard(false);
 	return (
-		<div className="bg-gray-100 flex flex-col p-1 m-1 cursor-move align-middle">
+		<div className="bg-gray-100 flex flex-col p-1 m-1 cursor-move align-middle min-w-full">
 			<div className="flex flex-row w-10/12 content-around">
 				{children}
 				<button

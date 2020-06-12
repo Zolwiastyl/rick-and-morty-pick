@@ -7,6 +7,7 @@ import history from "../utils/history";
 import { Button } from "../reusable-ui/Button";
 import { LogIn, Link, LogOut } from "react-feather";
 import { Route } from "react-router-dom";
+import { RedirectLoginOptions } from "@auth0/auth0-spa-js";
 
 const onRedirectCallback = (appState: { targetUrl: string }) => {
 	history.push(
@@ -16,6 +17,10 @@ const onRedirectCallback = (appState: { targetUrl: string }) => {
 	);
 };
 
+const redirectOption: RedirectLoginOptions = {
+	redirect_uri: window.location.origin + "/app",
+};
+
 export const LandingPage = () => {
 	const LogInButton = ({ ...children }) => {
 		const { isAuthenticated, client } = useAuth0();
@@ -23,7 +28,7 @@ export const LandingPage = () => {
 			<Fragment>
 				{!isAuthenticated && (
 					<Button
-						onClick={(evt) => client?.loginWithRedirect({})}
+						onClick={(evt) => client?.loginWithRedirect(redirectOption)}
 						icon={<LogIn />}
 					/>
 				)}

@@ -222,7 +222,7 @@ export function App() {
 	//ABSOLUTYSTYCZNA BAZA DANYCH
 	return (
 		<Fragment>
-			<div className="md:flex md:flex-row w-full max-w-screen flex flex-col md:overflow-hidden h-screen max-h-screen">
+			<div className="md:flex md:flex-row w-full max-w-screen flex flex-col lg:overflow-hidden h-screen max-h-screen">
 				<NavigationBar>
 					<div className="flex flex-col md:flex md:flex-row md:w-2/5 md:fixed opacity-75 md:z-10 z-10">
 						<div className="hidden md:block">
