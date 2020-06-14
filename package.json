@@ -49,6 +49,7 @@
 		"react-dom": "^16.12.0",
 		"react-feather": "^2.0.3",
 		"react-graph-vis": "^1.0.5",
+		"react-onclickoutside": "^6.9.0",
 		"react-router-dom": "^5.1.2",
 		"react-scripts": "^3.4.0",
 		"react-search": "^2.1.1",
@@ -59,17 +60,13 @@
 		"styled-components": "^5.0.1",
 		"tailwindcss": "^1.4.6",
 		"theme-ui": "^0.3.1",
-		"typescript": "^3.7.5",
-		"yarn": "^1.22.0"
+		"typescript": "^3.7.5"
 	},
 	"scripts": {
-		"get-dark-cli": "curl https://dark-cli.storage.googleapis.com/latest/dark-cli-linux --output dark-cli-linux && chmod +x dark-cli-linux",
 		"start": "react-scripts start && tailwind:css --watch",
 		"tailwind:css": "postcss ./src/tailwind.css -c tailwind.config.js -o src/index.css --watch",
 		"tailwind:build": "postcss src/tailwind.css -o src/index.css",
-		"build": "npm run tailwind:build && react-scripts build",
-		"build-dark-assets": "PUBLIC_URL=DARK_STATIC_ASSETS_BASE_URL || react-scripts build",
-		"choose-canvas": "scripts/choose-canvas.js",
+		"build": "npm run tailwind:css && react-scripts build",
 		"build-for": "run-s \"choose-canvas {1}\" build-dark-assets -- $*",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
@@ -88,8 +85,10 @@
 		]
 	},
 	"devDependencies": {
+		"@fullhuman/postcss-purgecss": "^2.2.0",
 		"@types/react": "^16.9.34",
 		"@types/react-dom": "^16.9.6",
+		"@types/react-onclickoutside": "^6.7.3",
 		"autoprefixer": "^9.8.0",
 		"eslint-plugin-simple-import-sort": "^5.0.3",
 		"postcss-cli": "^7.1.1"

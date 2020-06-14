@@ -2,7 +2,7 @@ import React from "react";
 import { Route } from "react-router";
 
 import { App } from "../App";
-import { DesignLook } from "../pages/design";
+import { DesignLook } from "../views/design";
 
 export default (
 	<Route>

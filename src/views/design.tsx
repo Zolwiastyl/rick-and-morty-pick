@@ -1,15 +1,13 @@
-import React, { useRef, useState } from "react";
-import { Plus,Trello } from "react-feather";
+import React, { useState } from "react";
+import { Plus, Trello } from "react-feather";
 import { Link } from "react-router-dom";
 
 import { Button } from "../reusable-ui/Button";
-import { EditableText } from "../reusable-ui/EditableText";
 import { NavigationBar } from "../reusable-ui/NavigationBar";
 import { TaskCard } from "../reusable-ui/TaskCard";
 import { Task } from "../types";
 
 export const DesignLook = () => {
-	const sampleRef = useRef<HTMLInputElement>(null);
 	const [task1, setTasks] = useState<Task>(task);
 	return (
 		<div className="flex flex-row w-screen">
@@ -46,20 +44,6 @@ export const DesignLook = () => {
 						<div className="flex flex-row justify-center p-4">
 							<Button icon={<Plus />} onClick={() => {}}></Button>{" "}
 						</div>
-						<EditableText
-							text={task.name!}
-							type={"input"}
-							placeholder={task.name!}
-							childRef={sampleRef}
-						>
-							<input
-								ref={sampleRef}
-								type="textarea"
-								placeholder={task.name}
-								value={task.name}
-								onChange={(e) => e.target.value}
-							/>
-						</EditableText>
 					</div>
 				</div>
 			</div>
@@ -79,7 +63,7 @@ const task: Task = {
 	description: "description of the task",
 };
 
-const task2: Partial<Task> = {
+const task2: Task = {
 	name: "really long name of task",
 	status: "todo",
 	frontEndId: "1",

@@ -4,7 +4,7 @@ import createAuth0Client, {
 	PopupLoginOptions,
 } from "@auth0/auth0-spa-js";
 import Auth0Client from "@auth0/auth0-spa-js/dist/typings/Auth0Client";
-import React, { useContext,useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 interface AuthContextValue {
 	client: Auth0Client | undefined;
@@ -30,15 +30,16 @@ export const useAuth0 = () => {
 
 	return ctxValue;
 };
-interface Auth0ProviderProps extends Auth0ClientOptions {
+interface Auth0ProviderProps {
 	children: React.ReactNode;
 	onRedirectCallback: (appState: { targetUrl: string }) => void;
+	options: Auth0ClientOptions;
 }
 
 export const Auth0Provider = ({
 	children,
 	onRedirectCallback = DEFAULT_REDIRECT_CALLBACK,
-	...initOptions
+	options,
 }: Auth0ProviderProps) => {
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 	const [user, setUser] = useState();
@@ -47,10 +48,9 @@ export const Auth0Provider = ({
 	const [popupOpen, setPopupOpen] = useState<boolean>(false);
 
 	useEffect(() => {
-		console.log(onRedirectCallback);
 		const initAuth0 = async () => {
 			setLoading(true);
-			const auth0Instance = await createAuth0Client(initOptions);
+			const auth0Instance = await createAuth0Client(options);
 			setAuth0(auth0Instance);
 			if (
 				window.location.search.includes("code=") &&
@@ -73,7 +73,7 @@ export const Auth0Provider = ({
 			setLoading(false);
 		};
 		initAuth0();
-	}, [initOptions, onRedirectCallback]);
+	}, [options, onRedirectCallback]);
 
 	const loginWithPopup = async (
 		params?: PopupLoginOptions,

@@ -1,6 +1,6 @@
 import "./index.css";
 
-import React, { useCallback,useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Fragment } from "react";
 import {
 	ChevronsDown,
@@ -13,16 +13,16 @@ import {
 	RefreshCcw,
 	Trash2,
 } from "react-feather";
-import { Link,Route, Router, Switch } from "react-router-dom";
+import { Link, Route, Router, Switch } from "react-router-dom";
 
 import {
 	makeNewTasksRemovingDependencies,
 	makeNewTasksWithDependencies,
 	sendSourceAndTargetTasks,
 } from "./api/addDependencies";
-import { callApi,fetchDataFromServer, removeAllData } from "./api/api";
+import { callApi, fetchDataFromServer, removeAllData } from "./api/api";
 import { generateIdForTask } from "./api/generateIdForTask";
-import { curriedSendNewTask,sendNewTask } from "./api/sendNewTask";
+import { curriedSendNewTask, sendNewTask } from "./api/sendNewTask";
 import { Auth0NavBar } from "./components/NavBar";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { Profile } from "./components/Profile";
@@ -168,7 +168,7 @@ export function App() {
 			callApiToFetchData(setTasks);
 		}
 	}, [callApiToFetchData, client]);
-
+	console.log("diffrent conolssadas");
 	const onSubmit: (
 		event: React.FormEvent<HTMLFormElement>
 	) => Promise<void> = async (event) => {
@@ -210,9 +210,7 @@ export function App() {
 	if (loading) {
 		return <div>///loading</div>;
 	}
-	//RELACJONALNA DAZA BANYCH
-	//RELATYWNA BAZA DANYCH
-	//ABSOLUTYSTYCZNA BAZA DANYCH
+
 	return (
 		<Fragment>
 			<div className="md:flex md:flex-row w-full max-w-screen flex flex-col lg:overflow-hidden h-screen max-h-screen">
@@ -344,6 +342,7 @@ function TaskForm({
 			<form onSubmit={onSubmit}>
 				<label className="h-14 text-lg w-full">
 					<input
+						// eslint-disable-next-line jsx-a11y/no-autofocus
 						autoFocus
 						name="taskName"
 						className="w-64"

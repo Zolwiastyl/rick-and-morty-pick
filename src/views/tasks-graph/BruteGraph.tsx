@@ -1,11 +1,11 @@
 import { Auth0Client } from "@auth0/auth0-spa-js";
 import cytoscape, { Core, ElementDefinition, LayoutOptions } from "cytoscape";
 import cola from "cytoscape-cola";
-import React, { MutableRefObject,useEffect, useRef } from "react";
+import React, { MutableRefObject, useEffect, useRef } from "react";
 
 import { useAuth0 } from "../../react-auth0-spa";
 import { Task, TaskId } from "../../types";
-import { graphStyle,prepareElementsForGraph } from "./GraphAPI";
+import { graphStyle, prepareElementsForGraph } from "./GraphAPI";
 
 cytoscape.use(cola);
 
