@@ -5,5 +5,15 @@
 edit {
 	@apply stroke-current;
 }
+inline {
+	@apply border;
+	@apply border-dashed;
+}
+inline:hover {
+	@apply border-gray-700;
+}
+inline:focus {
+	@apply outline-none border-gray-700;
+}
 
 @tailwind utilities;

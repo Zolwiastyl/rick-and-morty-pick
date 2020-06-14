@@ -6,14 +6,12 @@ import React, {
 	useState,
 } from "react";
 import { Edit2 } from "react-feather";
-import { Textarea } from "theme-ui";
 
 import { Task } from "../types";
-import { Button } from "./Button";
 
 const TaskCardContainer = (props: ComponentProps<"div">) => (
 	<div
-		className="bg-gray-300 rounded-lg max-w-6xl w-full text-lg h-64 p-3 mt-2"
+		className="bg-gray-300 rounded-lg max-w-6xl w-full text-lg h-64 p-3 mt-2 space-y-1"
 		{...props}
 	/>
 );
@@ -91,6 +89,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 							ref={inputRef}
 							type="text"
 							placeholder={nameState}
+							className="bg-gray-100 py-2 px-4 rounded inline-flex items-center"
 							value={nameState}
 							onChange={handleNameChange}
 							onKeyDown={(e) => handleKeyDown(e, "input")}
@@ -104,11 +103,12 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 					) : (
 						<button
 							onClick={() => setEditing(true)}
-							className=" text-gray-800 py-2 px-4 rounded inline-flex items-center hover:text-blue-400"
+							className="text-gray-800 py-2 px-4 rounded inline-flex items-center 
+							border border-dashed hover:border-gray-700 focus:outline-none focus:border-gray-700"
 						>
 							<span>{task.name}</span>
 							<Edit2
-								className="text-green-500 hover:text-gray-200 w-1/2"
+								className="text-gray-300 hover:text-gray-800"
 								viewBox="-10 -4 54 24"
 							/>
 						</button>
@@ -121,7 +121,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 					<textarea
 						// eslint-disable-next-line jsx-a11y/no-autofocus
 						onKeyDown={(e) => handleKeyDown(e, "textarea")}
-						className="w-full h-full bg-gray-200 text-base p-3 mt-1"
+						className="h-40 w-full bg-gray-100 text-base p-3 mt-1 rounded"
 						ref={textareaRef}
 						value={descriptionState}
 						onChange={handleDescriptionChange}
@@ -133,16 +133,18 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 					/>
 				) : (
 					<div>
-						<div className="flex flex-row space-x-2">
-							<button
-								onClick={() => setEditing(true)}
-								className="items-center inline-flex hover:text-green-400"
-							>
-								{task.description}
-
-								<Edit2 className=" h-4 w-4 " />
-							</button>
-						</div>
+						<button
+							onClick={() => setEditing(true)}
+							className=" inline-flex hover:text-gray-700 p-3
+							border border-dashed hover:border-gray-700 focus:outline-none focus:border-gray-700
+							 h-40 w-full"
+						>
+							<span className="  w-54 h-full"> {task.description}</span>
+							<Edit2
+								className="text-gray-300 hover:text-gray-800"
+								viewBox="-10 -4 54 24"
+							/>
+						</button>
 					</div>
 				)}
 			</div>
