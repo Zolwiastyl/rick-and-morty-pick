@@ -2,4 +2,8 @@
 
 @tailwind components;
 
+edit {
+	@apply stroke-current;
+}
+
 @tailwind utilities;

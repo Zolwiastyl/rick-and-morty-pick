@@ -84,38 +84,35 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 			}}
 		>
 			<header className="flex flex-row mt-1 justify-center border-b border-gray-900 py-1">
-				<div className="self-start text-xl mr-5 overflow-auto h-full w-full">
-					<div>
-						{isEditing ? (
-							<input
-								// eslint-disable-next-line jsx-a11y/no-autofocus
-								ref={inputRef}
-								type="text"
-								placeholder={nameState}
-								value={nameState}
-								onChange={handleNameChange}
-								onKeyDown={(e) => handleKeyDown(e, "input")}
-								onBlur={() => {
-									console.log("blurred");
-									return task.name !== nameState
-										? updateName(task.frontEndId, nameState)
-										: undefined;
-								}}
+				<div className="text-xl h-full w-full">
+					{isEditing ? (
+						<input
+							// eslint-disable-next-line jsx-a11y/no-autofocus
+							ref={inputRef}
+							type="text"
+							placeholder={nameState}
+							value={nameState}
+							onChange={handleNameChange}
+							onKeyDown={(e) => handleKeyDown(e, "input")}
+							onBlur={() => {
+								console.log("blurred");
+								return task.name !== nameState
+									? updateName(task.frontEndId, nameState)
+									: undefined;
+							}}
+						/>
+					) : (
+						<button
+							onClick={() => setEditing(true)}
+							className=" text-gray-800 py-2 px-4 rounded inline-flex items-center hover:text-blue-400"
+						>
+							<span>{task.name}</span>
+							<Edit2
+								className="text-green-500 hover:text-gray-200 w-1/2"
+								viewBox="-10 -4 54 24"
 							/>
-						) : (
-							<div>
-								<button onClick={() => setEditing(true)}>
-									{task.name}
-									<Edit2 className=" h-4 w-4" />
-								</button>
-								<Button
-									onClick={() => setEditing(true)}
-									icon={<Edit2 />}
-								/>
-								<span>{task.name || "Editable content"}</span>
-							</div>
-						)}
-					</div>
+						</button>
+					)}
 				</div>
 				<TaskReadyIndicator isReady={task.isReady} />
 			</header>
@@ -136,14 +133,16 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 					/>
 				) : (
 					<div>
-						<span>{task.description || "Editable content"}</span>
-						<Button
-							onClick={() => {
-								textareaRef.current?.blur();
-								setEditing(true);
-							}}
-							icon={<Edit2 />}
-						/>
+						<div className="flex flex-row space-x-2">
+							<button
+								onClick={() => setEditing(true)}
+								className="items-center inline-flex hover:text-green-400"
+							>
+								{task.description}
+
+								<Edit2 className=" h-4 w-4 " />
+							</button>
+						</div>
 					</div>
 				)}
 			</div>

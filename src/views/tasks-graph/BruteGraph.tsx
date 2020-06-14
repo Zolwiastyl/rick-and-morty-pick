@@ -116,7 +116,8 @@ function useCytoscape(
 				ref.current = cytoscape({});
 			};
 		}
-	}, [addEdge, client, initialTasks, removeEdge]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const firstEdgeNodeId = useRef<TaskId | undefined>();
 

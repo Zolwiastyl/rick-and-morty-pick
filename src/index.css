@@ -15,6 +15,10 @@
  * Remove the margin in all browsers.
  */
 
+body {
+  margin: 0;
+}
+
 /**
  * Render the `main` element consistently in IE.
  */
@@ -474,6 +478,12 @@ img {
   }
 }
 
+.space-x-2 > :not(template) ~ :not(template) {
+  --space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--space-x-reverse)));
+}
+
 .bg-gray-100 {
   --bg-opacity: 1;
   background-color: #f7fafc;
@@ -534,6 +544,10 @@ img {
   border-color: rgba(26, 32, 44, var(--border-opacity));
 }
 
+.rounded {
+  border-radius: 0.25rem;
+}
+
 .rounded-lg {
   border-radius: 0.5rem;
 }
@@ -563,6 +577,10 @@ img {
   display: flex;
 }
 
+.inline-flex {
+  display: inline-flex;
+}
+
 .hidden {
   display: none;
 }
@@ -579,8 +597,8 @@ img {
   flex-wrap: nowrap;
 }
 
-.self-start {
-  align-self: flex-start;
+.items-center {
+  align-items: center;
 }
 
 .self-center {
@@ -671,10 +689,6 @@ img {
   margin-top: 1rem;
 }
 
-.mr-5 {
-  margin-right: 1.25rem;
-}
-
 .max-h-full {
   max-height: 100%;
 }
@@ -705,10 +719,6 @@ img {
 
 .focus\:outline-none:focus {
   outline: 0;
-}
-
-.overflow-auto {
-  overflow: auto;
 }
 
 .overflow-y-scroll {
@@ -749,6 +759,16 @@ img {
   padding-right: 0.25rem;
 }
 
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 .fixed {
   position: fixed;
 }
@@ -765,6 +785,18 @@ img {
   stroke-width: 2;
 }
 
+.text-gray-800 {
+  --text-opacity: 1;
+  color: #2d3748;
+  color: rgba(45, 55, 72, var(--text-opacity));
+}
+
+.text-green-400 {
+  --text-opacity: 1;
+  color: #68d391;
+  color: rgba(104, 211, 145, var(--text-opacity));
+}
+
 .text-blue-600 {
   --text-opacity: 1;
   color: #3182ce;
@@ -775,6 +807,18 @@ img {
   --text-opacity: 1;
   color: #2b6cb0;
   color: rgba(43, 108, 176, var(--text-opacity));
+}
+
+.hover\:text-gray-200:hover {
+  --text-opacity: 1;
+  color: #edf2f7;
+  color: rgba(237, 242, 247, var(--text-opacity));
+}
+
+.hover\:text-green-400:hover {
+  --text-opacity: 1;
+  color: #68d391;
+  color: rgba(104, 211, 145, var(--text-opacity));
 }
 
 .hover\:text-blue-400:hover {
@@ -809,6 +853,10 @@ img {
 
 .w-auto {
   width: auto;
+}
+
+.w-1\/2 {
+  width: 50%;
 }
 
 .w-10\/12 {
