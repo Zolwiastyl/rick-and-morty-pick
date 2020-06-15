@@ -2,7 +2,6 @@ import React, {
 	ChangeEvent,
 	ComponentProps,
 	FunctionComponent,
-	MutableRefObject,
 	useEffect,
 	useRef,
 	useState,
@@ -97,7 +96,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 							ref={inputRef}
 							type="text"
 							placeholder={nameState}
-							className="bg-gray-100 py-2 px-4 w-64 rounded inline-flex items-center"
+							className="bg-gray-100 py-2 px-4 w-64 rounded inline-flex items-center min-w-full"
 							value={nameState}
 							onChange={handleNameChange}
 							onKeyDown={(e) => handleKeyDown(e, "input")}
@@ -115,7 +114,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 								setClicked(inputRef);
 							}}
 							className="text-gray-800 py-2 px-4 w-64 rounded inline-flex items-center 
-							 
+							min-w-full
 							border border-dashed hover:border-gray-700 focus:outline-none focus:border-gray-700"
 						>
 							<span className="overflow-hidden whitespace-no-wrap h-10">
@@ -135,7 +134,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 					<textarea
 						// eslint-disable-next-line jsx-a11y/no-autofocus
 						onKeyDown={(e) => handleKeyDown(e, "textarea")}
-						className="h-40 w-54 bg-gray-100 text-base p-3 mt-1 rounded"
+						className="h-40 w-64 min-w-full bg-gray-100 text-base p-3 mt-1 rounded"
 						ref={textareaRef}
 						value={descriptionState}
 						onChange={handleDescriptionChange}
@@ -148,15 +147,19 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 				) : (
 					<div>
 						<button
-							onClick={() => {
+							onClick={(e) => {
+								e.preventDefault();
 								setEditing(true);
 								setClicked(textareaRef);
 							}}
 							className=" inline-flex hover:text-gray-700 p-3
 							border border-dashed hover:border-gray-700 focus:outline-none focus:border-gray-700
-							 h-40 w-full"
+							 h-40 w-full "
 						>
-							<span className="  w-54 h-full"> {task.description}</span>
+							<span className="min-w-full w-54 h-full">
+								{" "}
+								{task.description}
+							</span>
 							<Edit2
 								className="text-gray-300 hover:text-gray-800"
 								viewBox="-10 -4 54 24"
