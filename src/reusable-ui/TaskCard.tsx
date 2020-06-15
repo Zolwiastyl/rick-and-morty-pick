@@ -2,6 +2,8 @@ import React, {
 	ChangeEvent,
 	ComponentProps,
 	FunctionComponent,
+	MutableRefObject,
+	useEffect,
 	useRef,
 	useState,
 } from "react";
@@ -47,7 +49,9 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 		task.description ? task.description : ""
 	);
 	const [nameState, setName] = useState<string>(task.name!);
-
+	const [clicked, setClicked] = useState<
+		React.RefObject<HTMLInputElement | HTMLTextAreaElement>
+	>(inputRef);
 	const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setName(event.target.value);
 	};
@@ -66,9 +70,13 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 				? key === "Escape"
 				: ["Escape", "Enter"].includes(key)
 		) {
+			textareaRef.current?.blur();
 			setEditing(false);
 		}
 	};
+	useEffect(() => {
+		clicked.current?.focus();
+	}, [isEditing, clicked]);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -89,7 +97,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 							ref={inputRef}
 							type="text"
 							placeholder={nameState}
-							className="bg-gray-100 py-2 px-4 rounded inline-flex items-center"
+							className="bg-gray-100 py-2 px-4 w-64 rounded inline-flex items-center"
 							value={nameState}
 							onChange={handleNameChange}
 							onKeyDown={(e) => handleKeyDown(e, "input")}
@@ -102,11 +110,17 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 						/>
 					) : (
 						<button
-							onClick={() => setEditing(true)}
-							className="text-gray-800 py-2 px-4 rounded inline-flex items-center 
+							onClick={() => {
+								setEditing(true);
+								setClicked(inputRef);
+							}}
+							className="text-gray-800 py-2 px-4 w-64 rounded inline-flex items-center 
+							 
 							border border-dashed hover:border-gray-700 focus:outline-none focus:border-gray-700"
 						>
-							<span>{task.name}</span>
+							<span className="overflow-hidden whitespace-no-wrap h-10">
+								{task.name}
+							</span>
 							<Edit2
 								className="text-gray-300 hover:text-gray-800"
 								viewBox="-10 -4 54 24"
@@ -121,7 +135,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 					<textarea
 						// eslint-disable-next-line jsx-a11y/no-autofocus
 						onKeyDown={(e) => handleKeyDown(e, "textarea")}
-						className="h-40 w-full bg-gray-100 text-base p-3 mt-1 rounded"
+						className="h-40 w-54 bg-gray-100 text-base p-3 mt-1 rounded"
 						ref={textareaRef}
 						value={descriptionState}
 						onChange={handleDescriptionChange}
@@ -134,7 +148,10 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 				) : (
 					<div>
 						<button
-							onClick={() => setEditing(true)}
+							onClick={() => {
+								setEditing(true);
+								setClicked(textareaRef);
+							}}
 							className=" inline-flex hover:text-gray-700 p-3
 							border border-dashed hover:border-gray-700 focus:outline-none focus:border-gray-700
 							 h-40 w-full"

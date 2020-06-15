@@ -1,4 +1,4 @@
-import "./index.css";
+import "./tailwind.generated.css";
 
 import { Auth0ClientOptions } from "@auth0/auth0-spa-js";
 import React, { Fragment } from "react";

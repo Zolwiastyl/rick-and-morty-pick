@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Plus, Trello } from "react-feather";
 import { Link } from "react-router-dom";
 
 import { Button } from "../reusable-ui/Button";
 import { NavigationBar } from "../reusable-ui/NavigationBar";
-import { TaskCard } from "../reusable-ui/TaskCard";
+import { TaskCard, UpdateFunction } from "../reusable-ui/TaskCard";
 import { Task } from "../types";
 
 export const DesignLook = () => {
 	const [task1, setTasks] = useState<Task>(task);
+
+	const updateLocal: UpdateFunction = (id: string, descr: string) => {
+		console.log("desc updated");
+		setTasks({ ...task1, description: descr });
+	};
+	useEffect(() => {}, []);
+
 	return (
 		<div className="flex flex-row w-screen">
 			<NavigationBar>
@@ -29,7 +36,7 @@ export const DesignLook = () => {
 					<div className="flex flex-col p-2">
 						<TaskCard
 							task={task1}
-							updateDescription={() => {}}
+							updateDescription={updateLocal}
 							hideTaskCard={() => {}}
 							updateName={() => {}}
 						/>
@@ -64,7 +71,7 @@ const task: Task = {
 };
 
 const task2: Task = {
-	name: "really long name of task",
+	name: "really long name of task that could be shorter",
 	status: "todo",
 	frontEndId: "1",
 	dependencyId: [],
