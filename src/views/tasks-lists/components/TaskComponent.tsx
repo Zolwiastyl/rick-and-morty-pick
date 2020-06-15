@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useRef, useState } from "react";
 import { ChevronsDown, ChevronsUp } from "react-feather";
 
 import { TaskCard, UpdateFunction } from "../../../reusable-ui/TaskCard";
@@ -21,13 +21,17 @@ export const TaskComponent: FunctionComponent<TaskComponentProps> = ({
 	const hideCard = () => toggleTaskCard(false);
 	return (
 		<div className="bg-gray-100 flex flex-col p-1 m-1 cursor-move align-middle min-w-full">
-			<div className="flex flex-row w-10/12 content-around">
+			<div className="flex flex-row w-10/12 content-around items-center">
 				{children}
 				<button
-					className="bg-gray-100 focus:outline-none"
+					className="focus:outline-none on-task-btn"
 					onClick={() => toggleTaskCard(!showTaskCard)}
 				>
-					{showTaskCard ? <ChevronsUp /> : <ChevronsDown />}
+					{showTaskCard ? (
+						<ChevronsUp />
+					) : (
+						<ChevronsDown className="on-task-btn" />
+					)}
 				</button>
 			</div>
 

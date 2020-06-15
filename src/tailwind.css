@@ -16,4 +16,11 @@ inline:focus {
 	@apply outline-none border-gray-700;
 }
 
+.on-task-btn {
+	@apply text-gray-400;
+}
+.on-task-btn:hover {
+	@apply text-blue-600;
+}
+
 @tailwind utilities;

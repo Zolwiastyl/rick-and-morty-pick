@@ -23,6 +23,7 @@ module.exports = {
 	variants: {
 		appearance: ["group-hover", "hover"],
 		backgroundColor: ["responsive", "hover", "focus", "active"],
+		zIndex: ["hover", "focus", "responsive"],
 	},
 	plugins: [],
 };

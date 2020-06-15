@@ -1,4 +1,4 @@
-import React, { Dispatch,SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import {
 	Activity,
 	AlertTriangle,
@@ -12,7 +12,7 @@ import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
 import { curriedSendNewTask } from "../../api/sendNewTask";
 import { useAuth0 } from "../../react-auth0-spa";
 import { UpdateFunction } from "../../reusable-ui/TaskCard";
-import { Status,Task } from "../../types";
+import { Status, Task } from "../../types";
 import { DeleteButton } from "./components/DeleteButton";
 import { TaskComponent } from "./components/TaskComponent";
 import { handleDrop } from "./dragAndDrop";
@@ -35,7 +35,7 @@ const TaskList: React.FC<TaskListProps> = ({
 			className="bg-gray-300 max-h-screen h-full flex flex-col hover:bg-gray-200 lg:w-1/5 rounded-lg m-1"
 			{...rest}
 		>
-			<header className="flex flex-col bg-blue-200 w-full">
+			<header className="flex flex-row items-center justify-center bg-blue-200 w-full">
 				<svg viewBox="0 0 24 24" className=" h-12 p-2 max-h-sm">
 					<StatusIcon />
 				</svg>

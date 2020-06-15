@@ -16,6 +16,7 @@ export const DeleteButton = (
 ) => {
 	return (
 		<button
+			className="on-task-btn"
 			onClick={() => {
 				if (
 					callApi(
