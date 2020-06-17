@@ -19,7 +19,6 @@ import {
 	sendSourceAndTargetTasks,
 } from "./api/addDependencies";
 import {
-	callApi,
 	fetchGroupsFromServer,
 	fetchTasksFromServer,
 	removeAllData,
@@ -49,6 +48,7 @@ export function App() {
 
 	// core domain state
 	const [tasks, setTasks] = useState<Task[]>(tasksArray);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [groups, setGroups] = useState<GroupOfTasks[]>(groupsArray);
 	const [showNewTaskForm, toggleNewTaskForm] = useState<boolean>(false);
 
