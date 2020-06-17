@@ -1,10 +1,11 @@
 import { Auth0Client } from "@auth0/auth0-spa-js";
 import React from "react";
 
-import { Task } from "../types";
+import { GroupOfTasks, Task } from "../types";
 
 export const HOST: string = "https://zolwiastyl-todoapp.builtwithdark.com";
 const tasksRequest = new Request(HOST + "/tasks");
+const groupsRequest = new Request(HOST + "/groups");
 
 export async function callApi(
 	client: Auth0Client | undefined,
@@ -30,11 +31,40 @@ export function curry(fn: Function): Function {
 	};
 }
 
-export function fetchDataFromServer(
-	setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
-	token: any
-) {
-	fetch(tasksRequest, {
+type FetchingDataArguments = {
+	setState:
+		| React.Dispatch<React.SetStateAction<Task[]>>
+		| React.Dispatch<React.SetStateAction<GroupOfTasks[]>>;
+	token: any;
+	url: Request;
+};
+export const fetchTasksFromServer = ({
+	setState,
+	token,
+}: Partial<FetchingDataArguments>) => {
+	return setState
+		? fetchDataFromServer({
+				setState: setState,
+				token: token,
+				url: tasksRequest,
+		  })
+		: null;
+};
+export const fetchGroupsFromServer = ({
+	setState,
+	token,
+}: Partial<FetchingDataArguments>) => {
+	return setState
+		? fetchDataFromServer({
+				setState: setState,
+				token: token,
+				url: tasksRequest,
+		  })
+		: null;
+};
+
+function fetchDataFromServer({ setState, token, url }: FetchingDataArguments) {
+	fetch(url, {
 		method: "GET",
 		headers: {
 			authorization: `Bearer ${token}`,
@@ -46,7 +76,7 @@ export function fetchDataFromServer(
 		.then((data) => {
 			const newArray = { data };
 			const newData = newArray.data;
-			setTasks(newData);
+			setState(newData);
 		})
 		.catch((error) => console.log("We had en error" + error));
 }

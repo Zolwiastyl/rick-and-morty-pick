@@ -18,7 +18,12 @@ import {
 	makeNewTasksWithDependencies,
 	sendSourceAndTargetTasks,
 } from "./api/addDependencies";
-import { callApi, fetchDataFromServer, removeAllData } from "./api/api";
+import {
+	callApi,
+	fetchGroupsFromServer,
+	fetchTasksFromServer,
+	removeAllData,
+} from "./api/api";
 import { generateIdForTask } from "./api/generateIdForTask";
 import { curriedSendNewTask, sendNewTask } from "./api/sendNewTask";
 import { Auth0NavBar } from "./components/NavBar";
@@ -152,19 +157,25 @@ export function App() {
 	);
 
 	const callApiToFetchData = useCallback(
-		async (setTasks: React.Dispatch<React.SetStateAction<Task[]>>) => {
+		async (
+			setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
+			setGroups: React.Dispatch<React.SetStateAction<GroupOfTasks[]>>
+		) => {
 			if (!client) {
 				throw Error("no client from auth0");
 			}
 			const token = await client.getTokenSilently();
-			await fetchDataFromServer(setTasks, token);
+			await function () {
+				fetchGroupsFromServer({ setState: setGroups, token: token });
+				fetchTasksFromServer({ setState: setTasks, token: token });
+			};
 		},
 		[client]
 	);
 
 	useEffect(() => {
 		if (client) {
-			callApiToFetchData(setTasks);
+			callApiToFetchData(setTasks, setGroups);
 		}
 	}, [callApiToFetchData, client]);
 	console.log("diffrent conolssadas");
@@ -242,7 +253,7 @@ export function App() {
 					<div className="md:h-20 h-10"></div>
 					<Button
 						onClick={(evt) => {
-							callApiToFetchData(setTasks);
+							callApiToFetchData(setTasks, setGroups);
 						}}
 						icon={<RefreshCcw />}
 					/>
