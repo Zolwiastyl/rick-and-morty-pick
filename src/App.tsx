@@ -24,7 +24,7 @@ import {
 	fetchTasksFromServer,
 	removeAllData,
 } from "./api/api";
-import { generateIdForTask } from "./api/generateIdForTask";
+import { onSubmit } from "./api/onSubmit";
 import { curriedSendNewTask, sendNewTask } from "./api/sendNewTask";
 import { Auth0NavBar } from "./components/NavBar";
 import { PrivateRoute } from "./components/PrivateRoute";
@@ -35,6 +35,7 @@ import { NavigationBar } from "./reusable-ui/NavigationBar";
 import { GroupOfTasks, Task, TaskId } from "./types";
 import history from "./utils/history";
 import { TasksGraph } from "./views/tasks-graph/BruteGraph";
+import { TaskForm } from "./views/tasks-lists/components/TaskFrom";
 import { TasksLists } from "./views/tasks-lists/TasksLists";
 
 const tasksArray: Array<Task> = [];
@@ -165,10 +166,8 @@ export function App() {
 				throw Error("no client from auth0");
 			}
 			const token = await client.getTokenSilently();
-			await function () {
-				fetchGroupsFromServer({ setState: setGroups, token: token });
-				fetchTasksFromServer({ setState: setTasks, token: token });
-			};
+			await fetchGroupsFromServer({ setState: setGroups, token: token });
+			await fetchTasksFromServer({ setState: setTasks, token: token });
 		},
 		[client]
 	);
@@ -178,45 +177,6 @@ export function App() {
 			callApiToFetchData(setTasks, setGroups);
 		}
 	}, [callApiToFetchData, client]);
-	console.log("diffrent conolssadas");
-	const onSubmit: (
-		event: React.FormEvent<HTMLFormElement>
-	) => Promise<void> = async (event) => {
-		event.preventDefault();
-		const { name } = readFormValues(event.currentTarget);
-		event.currentTarget.reset();
-		const ArrayWithTasksToSave = tasks.slice();
-		function generateOrdinalForNewTask(tasks: Task[]) {
-			const tasksToDo = tasks.filter((t) => t.status === "todo");
-			if (tasksToDo.length === 0) {
-				return 2.1;
-			} else {
-				return tasksToDo.sort(
-					(x, y) => x.ordinalNumber - y.ordinalNumber
-				)[0].ordinalNumber;
-			}
-		}
-		const newOrdinal = (0 + generateOrdinalForNewTask(tasks)) / 2;
-
-		const newTask: Task = {
-			name: name,
-			status: "todo",
-			frontEndId: generateIdForTask(),
-			dependencyId: [],
-			isReady: false,
-			userId: user.sub,
-			ordinalNumber: newOrdinal,
-			dependOnThisTask: [],
-		};
-		ArrayWithTasksToSave.unshift(newTask);
-		setTasks(ArrayWithTasksToSave);
-		if (!(await callApi(client, curriedSendNewTask(newTask)))) {
-			setTasks(tasks.filter((t) => t.frontEndId !== newTask.frontEndId));
-			console.log("couldn't send task");
-		} else {
-			console.log("sent task");
-		}
-	};
 	if (loading) {
 		return <div>///loading</div>;
 	}
@@ -247,7 +207,17 @@ export function App() {
 							/>
 						</div>
 						<div>
-							{showNewTaskForm ? <TaskForm onSubmit={onSubmit} /> : null}
+							{showNewTaskForm ? (
+								<TaskForm
+									onSubmit={(evt) =>
+										onSubmit(
+											evt,
+											{ tasks, setTasks },
+											{ user, client }
+										)
+									}
+								/>
+							) : null}
 						</div>
 					</div>
 					<div className="md:h-20 h-10"></div>
@@ -326,43 +296,5 @@ export function App() {
 				</div>
 			</div>
 		</Fragment>
-	);
-}
-
-function readFormValues(form: HTMLFormElement) {
-	const { taskName } = (form.elements as any) as Record<
-		string,
-		HTMLInputElement | undefined
-	>;
-	if (!taskName) {
-		throw new Error("something is missing");
-	}
-	return { name: taskName.value };
-}
-
-function TaskForm({
-	onSubmit,
-}: {
-	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-}) {
-	generateIdForTask();
-
-	return (
-		<div className="opacity-75 rounded-r-lg p-3 bg-gray-500  ml-1 h-16 border-gray-900 flex flex-row flex-no-wrap fixed">
-			<form onSubmit={onSubmit}>
-				<label className="h-14 text-lg w-full">
-					<input
-						// eslint-disable-next-line jsx-a11y/no-autofocus
-						autoFocus
-						name="taskName"
-						className="w-64"
-						type="text"
-						placeholder="task name"
-						minLength={1}
-					/>
-					<i data-feather="align-center"></i>
-				</label>
-			</form>
-		</div>
 	);
 }

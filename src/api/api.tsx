@@ -58,7 +58,7 @@ export const fetchGroupsFromServer = ({
 		? fetchDataFromServer({
 				setState: setState,
 				token: token,
-				url: tasksRequest,
+				url: groupsRequest,
 		  })
 		: null;
 };

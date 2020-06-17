@@ -6,7 +6,7 @@ import createAuth0Client, {
 import Auth0Client from "@auth0/auth0-spa-js/dist/typings/Auth0Client";
 import React, { useContext, useEffect, useState } from "react";
 
-interface AuthContextValue {
+export interface AuthContextValue {
 	client: Auth0Client | undefined;
 	isAuthenticated: boolean;
 	user: any;
