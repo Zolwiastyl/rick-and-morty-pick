@@ -22,5 +22,14 @@ inline:focus {
 .on-task-btn:hover {
 	@apply text-blue-600;
 }
+.on-task-btn:focus {
+	@apply outline-none;
+}
+.on-task-btn:active {
+	@apply outline-none;
+}
 
+.task-column {
+	@apply w-full max-w-lg;
+}
 @tailwind utilities;

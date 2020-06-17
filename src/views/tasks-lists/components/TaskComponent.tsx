@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef, useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { ChevronsDown, ChevronsUp } from "react-feather";
 
 import { TaskCard, UpdateFunction } from "../../../reusable-ui/TaskCard";
@@ -20,7 +20,7 @@ export const TaskComponent: FunctionComponent<TaskComponentProps> = ({
 	const [showTaskCard, toggleTaskCard] = useState<boolean>(false);
 	const hideCard = () => toggleTaskCard(false);
 	return (
-		<div className="bg-gray-100 flex flex-col p-1 m-1 cursor-move align-middle min-w-full">
+		<div className="bg-gray-100 flex flex-col p-1 cursor-move ">
 			<div className="flex flex-row w-10/12 content-around items-center">
 				{children}
 				<button

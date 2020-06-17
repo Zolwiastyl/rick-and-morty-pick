@@ -35,13 +35,13 @@ const TaskList: React.FC<TaskListProps> = ({
 			className="bg-gray-300 max-h-screen h-full flex flex-col hover:bg-gray-200 lg:w-1/5 rounded-lg m-1"
 			{...rest}
 		>
-			<header className="flex flex-row items-center justify-center bg-blue-200 w-full">
+			<header className="flex flex-row items-center justify-center bg-blue-200 w-full rounded-t-md">
 				<svg viewBox="0 0 24 24" className=" h-12 p-2 max-h-sm">
 					<StatusIcon />
 				</svg>
 				<p className="self-center p-6">{statusName}</p>
 			</header>
-			<div className=" overflow-y-scroll max-h-full h-full w-full max-w-full flex flex-col">
+			<div className=" overflow-y-scroll max-h-full h-full w-full max-w-full flex flex-col space-y-1 p-1">
 				{children}
 			</div>
 		</div>
@@ -149,8 +149,10 @@ export function TasksLists({
 											);
 										}}
 									>
-										<div className="flex flex-row align-middle justify-between px-1">
-											<p className="w-40">{task.name}</p>
+										<div className="flex flex-row align-middle items-center justify-between px-1">
+											<p className="w-54 overflow-x-hidden">
+												{task.name}
+											</p>
 											<div>
 												{DeleteButton(
 													task,

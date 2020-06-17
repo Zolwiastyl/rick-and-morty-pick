@@ -9,7 +9,7 @@ export type Task = {
 	userId: string;
 	ordinalNumber: number;
 	dependOnThisTask: string[];
-	description?: string;
+	description?: string | null;
 };
 
 export type TasksStateProps = {
@@ -22,6 +22,11 @@ export type Status = {
 	icon: React.ComponentClass<{}, any> | React.FunctionComponent<{}>;
 };
 
-interface GroupTask extends Task {
-	Task: Task[];
-}
+export type GroupOfTasks = {
+	groupId: String;
+	groupName: String;
+	ordinalNumber: Number;
+	TasksIds: TaskId[];
+	userId: string;
+	status: string;
+};

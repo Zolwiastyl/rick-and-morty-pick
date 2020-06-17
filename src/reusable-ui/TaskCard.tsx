@@ -12,7 +12,7 @@ import { Task } from "../types";
 
 const TaskCardContainer = (props: ComponentProps<"div">) => (
 	<div
-		className="bg-gray-300 rounded-lg max-w-6xl w-full text-lg h-64 p-3 mt-2 space-y-1"
+		className="bg-gray-300 rounded-lg task-column text-lg h-64 p-3 mt-2 space-y-1"
 		{...props}
 	/>
 );

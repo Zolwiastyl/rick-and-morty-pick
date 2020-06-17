@@ -27,13 +27,13 @@ import { Profile } from "./components/Profile";
 import { useAuth0 } from "./react-auth0-spa";
 import { Button } from "./reusable-ui/Button";
 import { NavigationBar } from "./reusable-ui/NavigationBar";
-import { Task, TaskId } from "./types";
+import { GroupOfTasks, Task, TaskId } from "./types";
 import history from "./utils/history";
 import { TasksGraph } from "./views/tasks-graph/BruteGraph";
 import { TasksLists } from "./views/tasks-lists/TasksLists";
 
 const tasksArray: Array<Task> = [];
-
+const groupsArray: Array<GroupOfTasks> = [];
 export function App() {
 	// secondary boring state
 	const { loading, client, user } = useAuth0();
@@ -43,6 +43,7 @@ export function App() {
 
 	// core domain state
 	const [tasks, setTasks] = useState<Task[]>(tasksArray);
+	const [groups, setGroups] = useState<GroupOfTasks[]>(groupsArray);
 	const [showNewTaskForm, toggleNewTaskForm] = useState<boolean>(false);
 
 	const callApiToSendTask = useCallback(

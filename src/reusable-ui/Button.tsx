@@ -23,10 +23,11 @@ export const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
 		return (
 			<button
 				className="bg-gray-400 text-lg w-16
-			text-blue-700 rounded-full 
+			text-blue-800 rounded-full 
 			p-2 hover:text-blue-400 stroke-2 mr-2
 			stroke-current mt-2
-			focus:outline-none focus:shadow-outline"
+			focus:outline-none active:shadow-outline
+			active:outline-none "
 				onClick={props.onClick}
 			>
 				<svg className="h-12 w-12 bg-gray-400 p-2" viewBox="0 0 24 24">
