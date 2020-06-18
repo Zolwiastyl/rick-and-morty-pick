@@ -1,5 +1,5 @@
 import { RedirectLoginOptions } from "@auth0/auth0-spa-js";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { LogIn, LogOut } from "react-feather";
 
 import { useAuth0 } from "../react-auth0-spa";
@@ -13,6 +13,9 @@ const redirectOption: RedirectLoginOptions = {
 export const LandingPage = () => {
 	const LogInButton = ({ ...children }) => {
 		const { isAuthenticated, client } = useAuth0();
+		useEffect(() => {
+			client?.isAuthenticated();
+		}, [client]);
 		return (
 			<Fragment>
 				{!isAuthenticated && (
