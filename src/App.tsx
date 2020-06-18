@@ -165,8 +165,8 @@ export function App() {
 		if (client) {
 			callApiToFetchData(setTasks);
 		}
-	}, [callApiToFetchData, client]);
-	console.log("diffrent conolssadas");
+	}, [loading, user, client, callApiToFetchData]);
+
 	const onSubmit: (
 		event: React.FormEvent<HTMLFormElement>
 	) => Promise<void> = async (event) => {
