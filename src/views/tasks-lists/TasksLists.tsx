@@ -8,13 +8,14 @@ import {
 } from "react-feather";
 
 import { callApi } from "../../api/api";
-import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
+import { curriedMoveToAnotherColumn } from "../../api/moveToAnotherGroup";
 import { curriedSendNewTask } from "../../api/sendNewTask";
 import { useAuth0 } from "../../react-auth0-spa";
 import { UpdateFunction } from "../../reusable-ui/TaskCard";
-import { Status, Task } from "../../types";
+import { GroupOfTasks, Status, Task } from "../../types";
 import { DeleteButton } from "./components/DeleteButton";
 import { TaskComponent } from "./components/TaskComponent";
+import { TaskGroup } from "./components/TaskGroup";
 import { handleDrop } from "./dragAndDrop";
 
 interface TaskButtonProps {
@@ -53,6 +54,8 @@ type TasksListsProps = {
 	setTasks: Dispatch<SetStateAction<Task[]>>;
 	updateDescription: UpdateFunction;
 	updateName: UpdateFunction;
+	groups: GroupOfTasks[];
+	setGroups: Dispatch<SetStateAction<GroupOfTasks[]>>;
 };
 
 const statuses: Array<Status> = [
@@ -68,6 +71,8 @@ export function TasksLists({
 	setTasks,
 	updateDescription,
 	updateName,
+	groups,
+	setGroups,
 }: TasksListsProps) {
 	const { client } = useAuth0();
 
@@ -112,7 +117,7 @@ export function TasksLists({
 						} else {
 							return callApi(
 								client,
-								curriedMoveToAnotherGroup({ tasks, setTasks })(
+								curriedMoveToAnotherColumn({ tasks, setTasks })(
 									status.statusName
 								)(tasks.find((t) => t.frontEndId === taskId))
 							);
@@ -120,6 +125,66 @@ export function TasksLists({
 					}}
 					onDragEnter={(event) => event.preventDefault()}
 				>
+					{groups
+						.sort((x, y) => x.ordinalNumber - y.ordinalNumber)
+						.filter((t) => t.status === status.statusName)
+						.map((group) => {
+							console.log(group.groupName);
+							return (
+								<TaskGroup group={group}>
+									{group.TasksIds.map((id) => {
+										const task = tasks.find(
+											(task) => task.frontEndId === id
+										);
+										return task ? (
+											<TaskComponent
+												task={
+													tasks.find(
+														(task) => task.frontEndId === id
+													)!
+												}
+												updateDescription={updateDescription}
+												updateName={updateName}
+											>
+												<article
+													id={task.frontEndId}
+													className="flex flex-col bg-gray-100 m-2 max-h-full h-14 w-11/12 max-w-full min-w-full object-center"
+													draggable="true"
+													onDragStart={(event) => {
+														event.dataTransfer.setData(
+															"text/plain",
+															task.frontEndId
+														);
+													}}
+													onDrop={(event) => {
+														handleDrop(
+															event,
+															{ tasks, setTasks },
+															{ groups, setGroups },
+															client,
+															status
+														);
+													}}
+												>
+													<div className="flex flex-row align-middle items-center justify-between px-1">
+														<p className="w-54 overflow-x-hidden">
+															{task.name}
+														</p>
+														<div>
+															{DeleteButton(
+																task,
+																{ tasks, setTasks },
+																client
+															)}
+														</div>
+													</div>
+												</article>
+											</TaskComponent>
+										) : null;
+									})}
+								</TaskGroup>
+							);
+						})}
 					{tasks
 						.sort((x, y) => x.ordinalNumber - y.ordinalNumber)
 						.filter((task) => task.status === status.statusName)
@@ -144,6 +209,7 @@ export function TasksLists({
 											handleDrop(
 												event,
 												{ tasks, setTasks },
+												{ groups, setGroups },
 												client,
 												status
 											);

@@ -16,6 +16,10 @@ export type TasksStateProps = {
 	tasks: Array<Task>;
 	setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 };
+export type GroupStateProps = {
+	groups: Array<GroupOfTasks>;
+	setGroups: React.Dispatch<React.SetStateAction<GroupOfTasks[]>>;
+};
 
 export type Status = {
 	statusName: string;
@@ -23,9 +27,9 @@ export type Status = {
 };
 
 export type GroupOfTasks = {
-	groupId: String;
-	groupName: String;
-	ordinalNumber: Number;
+	groupId: string;
+	groupName: string;
+	ordinalNumber: number;
 	TasksIds: TaskId[];
 	userId: string;
 	status: string;

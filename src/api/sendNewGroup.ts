@@ -3,7 +3,7 @@ import { curry, HOST } from "./api";
 
 const newGroupPostUrl = new Request(HOST + "/group");
 
-function sendNewGroup(group: GroupOfTasks, token: string) {
+export function sendNewGroup(group: GroupOfTasks, token: string) {
 	return plainSendNewGroup(group, token, newGroupPostUrl);
 }
 

@@ -273,6 +273,8 @@ export function App() {
 								<TasksLists
 									setTasks={setTasks}
 									tasks={tasks}
+									setGroups={setGroups}
+									groups={groups}
 									updateDescription={updateDescription}
 									updateName={updateName}
 								/>

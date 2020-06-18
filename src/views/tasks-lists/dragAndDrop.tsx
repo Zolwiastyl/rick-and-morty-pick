@@ -1,7 +1,9 @@
+import { group } from "console";
+
 import { callApi } from "../../api/api";
-import { putItAbove,putItBelow } from "../../api/generateOrdinalNumber";
-import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
-import { Status,TasksStateProps } from "../../types";
+import { putItAbove, putItBelow } from "../../api/generateOrdinalNumber";
+import { curriedMoveToAnotherColumn } from "../../api/moveToAnotherGroup";
+import { GroupStateProps, Status, TasksStateProps } from "../../types";
 
 /**
  *
@@ -14,29 +16,37 @@ import { Status,TasksStateProps } from "../../types";
 export function handleDrop(
 	event: React.DragEvent<HTMLElement>,
 	{ tasks, setTasks }: TasksStateProps,
+	{ groups, setGroups }: GroupStateProps,
 	client: any,
 	status: Status
 ) {
 	event.preventDefault();
-	const taskId = event.dataTransfer.getData("text/plain");
+	const itemId = event.dataTransfer.getData("text/plain");
 	if (
 		event.pageY - event.currentTarget.offsetTop >
 		event.currentTarget.offsetHeight / 2
 	) {
-		const ordinals = putItBelow(taskId)(event.currentTarget.id)(tasks);
+		const ordinals = putItBelow(itemId)(event.currentTarget.id)(tasks);
 		console.log(ordinals[0]);
-		const taskToSave = {
-			...tasks.filter((task) => task.frontEndId === taskId)[0],
-			ordinalNumber: (ordinals[0] + ordinals[1]) / 2,
+		const itemToSave = () => {
+			return tasks.filter((task) => task.frontEndId === itemId)[0]
+				? {
+						...tasks.filter((task) => task.frontEndId === itemId)[0],
+						ordinalNumber: (ordinals[0] + ordinals[1]) / 2,
+				  }
+				: {
+						...groups.filter((group) => group.groupId === itemId)[0],
+						ordinalNumber: ordinals[0] + ordinals[1] / 2,
+				  };
 		};
 		callApi(
 			client,
-			curriedMoveToAnotherGroup({ tasks, setTasks })(status.statusName)(
-				taskToSave
-			)
+			curriedMoveToAnotherColumn({ tasks, setTasks, groups, setGroups })(
+				status.statusName
+			)(itemToSave)
 		);
 	} else {
-		const ordinals = putItAbove(taskId)(event.currentTarget.id)(tasks);
+		const ordinals = putItAbove(itemId)(event.currentTarget.id)(tasks);
 		console.log(ordinals[0]);
 
 		const newOrdinal = () => {
@@ -44,17 +54,24 @@ export function handleDrop(
 				return ordinals[0] + ordinals[1];
 			}
 		};
-		const taskToSave = {
-			...tasks.filter((task) => task.frontEndId === taskId)[0],
-			ordinalNumber: newOrdinal(),
+		const itemToSave = () => {
+			return tasks.filter((task) => task.frontEndId === itemId)[0]
+				? {
+						...tasks.filter((task) => task.frontEndId === itemId)[0],
+						ordinalNumber: newOrdinal(),
+				  }
+				: {
+						...groups.filter((group) => group.groupId === itemId)[0],
+						ordinalNumber: newOrdinal(),
+				  };
 		};
 		callApi(
 			client,
-			curriedMoveToAnotherGroup({ tasks, setTasks })(status.statusName)(
-				taskToSave
-			)
+			curriedMoveToAnotherColumn({ tasks, setTasks, groups, setGroups })(
+				status.statusName
+			)(itemToSave)
 		);
-		console.log(taskToSave);
+		console.log(itemToSave);
 	}
 	console.log("dragged");
 }

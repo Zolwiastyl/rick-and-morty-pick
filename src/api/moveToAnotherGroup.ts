@@ -1,5 +1,6 @@
-import { Task,TasksStateProps } from "../types";
+import { GroupOfTasks, GroupStateProps, Task, TasksStateProps } from "../types";
 import { curry } from "./api";
+import { sendNewGroup } from "./sendNewGroup";
 import { sendNewTask } from "./sendNewTask";
 
 /**
@@ -10,7 +11,7 @@ import { sendNewTask } from "./sendNewTask";
  * @param token token from auth0 to send to backend
  */
 
-export const curriedMoveToAnotherGroup = curry(moveToAnotherGroup);
+export const curriedMoveToAnotherColumn = curry(moveToAnotherColumn);
 
 /**
  *
@@ -20,33 +21,53 @@ export const curriedMoveToAnotherGroup = curry(moveToAnotherGroup);
  * @param token token from auth0 to send to backend
  */
 
-export function moveToAnotherGroup(
-	state: TasksStateProps,
+export function moveToAnotherColumn(
+	state: TasksStateProps | GroupStateProps,
 	status: string,
-	task: Task,
+	item: Task | GroupOfTasks,
 	token: any
 ) {
-	if (
-		sendNewTask(
-			{
-				...task,
+	if ((item as Task).dependOnThisTask) {
+		const stateAsserted = state as TasksStateProps;
+		if (
+			sendNewTask(
+				{
+					...item,
 
-				status: status,
-			},
-			token
-		)
-	) {
-		// UPDATE LOCAL COPY
-		console.log("submitted");
+					status: status,
+				},
+				token
+			)
+		) {
+			// UPDATE LOCAL COPY
+			console.log("submitted");
 
-		console.log(task);
-		console.log(task.frontEndId);
-		state.setTasks(
-			state.tasks
-				.filter((t) => t.frontEndId !== task.frontEndId)
-				.concat([{ ...task, status: status }])
-		);
+			console.log(item);
+
+			return stateAsserted.setTasks(
+				stateAsserted.tasks
+					.filter((t) => t.frontEndId !== (item as Task).frontEndId)
+					.concat([{ ...(item as Task), status: status }])
+			);
+		} else {
+			return console.error("couldn't sent the task to server");
+		}
 	} else {
-		return console.error("couldn't sent the task to server");
+		if (
+			sendNewGroup(
+				{
+					...(item as GroupOfTasks),
+					status: status,
+				},
+				token
+			)
+		) {
+			const stateAsserted = state as GroupStateProps;
+			return stateAsserted.setGroups(
+				stateAsserted.groups
+					.filter((g) => g.groupId !== (item as GroupOfTasks).groupId)
+					.concat([{ ...(item as GroupOfTasks), status: status }])
+			);
+		}
 	}
 }
