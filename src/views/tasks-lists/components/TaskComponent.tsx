@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef, useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { ChevronsDown, ChevronsUp } from "react-feather";
 
 import { TaskCard, UpdateFunction } from "../../../reusable-ui/TaskCard";
