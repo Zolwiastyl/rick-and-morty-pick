@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Plus, Trello } from "react-feather";
 import { Link } from "react-router-dom";
 
-import { Button } from "../reusable-ui/Button";
+import { IconButton } from "../reusable-ui/IconButton";
 import { NavigationBar } from "../reusable-ui/NavigationBar";
 import { TaskCard, UpdateFunction } from "../reusable-ui/TaskCard";
 import { Task } from "../types";
@@ -20,7 +20,7 @@ export const DesignLook = () => {
 		<div className="flex flex-row w-screen">
 			<NavigationBar>
 				<Link
-					className="bg-gray-400 text-lg w-16 text-blue-600 rounded-full p-2 hover:text-blue-400 stroke-2 stroke-current mt-2"
+					className="bg-gray-400 text-lg w-16 text-primary-600 rounded-full p-2 hover:text-primary-400 stroke-2 stroke-current mt-2"
 					to="./app"
 				>
 					<svg
@@ -49,7 +49,7 @@ export const DesignLook = () => {
 							hideTaskCard={() => {}}
 						/>
 						<div className="flex flex-row justify-center p-4">
-							<Button icon={<Plus />} onClick={() => {}}></Button>{" "}
+							<IconButton icon={Plus} onClick={() => {}}></IconButton>{" "}
 						</div>
 					</div>
 				</div>

@@ -1,3 +1,5 @@
+import { Icon } from "react-feather";
+
 export type TaskId = string;
 
 export type Task = {
@@ -19,7 +21,7 @@ export type TasksStateProps = {
 
 export type Status = {
 	statusName: string;
-	icon: React.ComponentClass<{}, any> | React.FunctionComponent<{}>;
+	icon: Icon;
 };
 
 interface GroupTask extends Task {

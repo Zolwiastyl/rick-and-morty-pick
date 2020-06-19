@@ -14,7 +14,7 @@ import { useAuth0 } from "../../react-auth0-spa";
 import { UpdateFunction } from "../../reusable-ui/TaskCard";
 import { Status, Task } from "../../types";
 import { DeleteButton } from "./components/DeleteButton";
-import { TaskComponent } from "./components/TaskComponent";
+import { TaskLabel } from "./components/TaskComponent";
 import { handleDrop } from "./dragAndDrop";
 
 interface TaskButtonProps {
@@ -32,16 +32,14 @@ const TaskList: React.FC<TaskListProps> = ({
 }) => {
 	return (
 		<div
-			className="bg-gray-300 max-h-screen h-full flex flex-col hover:bg-gray-200 lg:w-1/5 rounded-lg m-1"
+			className="bg-gray-100 max-h-screen h-full flex flex-col hover:bg-gray-200 lg:w-1/5 rounded-lg p-1"
 			{...rest}
 		>
-			<header className="flex flex-row items-center justify-center bg-blue-200 w-full">
-				<svg viewBox="0 0 24 24" className=" h-12 p-2 max-h-sm">
-					<StatusIcon />
-				</svg>
-				<p className="self-center p-6">{statusName}</p>
+			<header className="flex flex-row items-center justify-center w-full">
+				<StatusIcon className="p-2 max-h-sm" size="2.5rem" />
+				<p className="self-center p-4">{statusName}</p>
 			</header>
-			<div className=" overflow-y-scroll max-h-full h-full w-full max-w-full flex flex-col">
+			<div className=" overflow-y-auto max-h-full h-full w-full max-w-full flex flex-col space-y-1">
 				{children}
 			</div>
 		</div>
@@ -72,7 +70,7 @@ export function TasksLists({
 	const { client } = useAuth0();
 
 	return (
-		<div className="flex flex-row mt-4 w-auto max-h-full h-full">
+		<div className="flex flex-row p-4 w-auto max-h-full h-full space-x-2">
 			{statuses.map((status) => (
 				<TaskList
 					// useDrop.ref
@@ -125,42 +123,30 @@ export function TasksLists({
 						.filter((task) => task.status === status.statusName)
 						.map((task) => {
 							return (
-								<TaskComponent
+								<TaskLabel
 									task={task}
 									updateDescription={updateDescription}
 									updateName={updateName}
+									id={task.frontEndId}
+									draggable="true"
+									onDragStart={(event) => {
+										event.dataTransfer.setData(
+											"text/plain",
+											task.frontEndId
+										);
+									}}
+									onDrop={(event) => {
+										handleDrop(
+											event,
+											{ tasks, setTasks },
+											client,
+											status
+										);
+									}}
 								>
-									<article
-										id={task.frontEndId}
-										className="flex flex-col bg-gray-100 m-2 max-h-full h-14 w-11/12 max-w-full min-w-full object-center"
-										draggable="true"
-										onDragStart={(event) => {
-											event.dataTransfer.setData(
-												"text/plain",
-												task.frontEndId
-											);
-										}}
-										onDrop={(event) => {
-											handleDrop(
-												event,
-												{ tasks, setTasks },
-												client,
-												status
-											);
-										}}
-									>
-										<div className="flex flex-row align-middle justify-between px-1">
-											<p className="w-40">{task.name}</p>
-											<div>
-												{DeleteButton(
-													task,
-													{ tasks, setTasks },
-													client
-												)}
-											</div>
-										</div>
-									</article>
-								</TaskComponent>
+									<p className="p-1 flex-1">{task.name}</p>
+									{DeleteButton(task, { tasks, setTasks }, client)}
+								</TaskLabel>
 							);
 						})}
 				</TaskList>

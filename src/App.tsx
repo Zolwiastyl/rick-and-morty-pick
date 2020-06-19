@@ -25,7 +25,7 @@ import { Auth0NavBar } from "./components/NavBar";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { Profile } from "./components/Profile";
 import { useAuth0 } from "./react-auth0-spa";
-import { Button } from "./reusable-ui/Button";
+import { IconButton } from "./reusable-ui/IconButton";
 import { NavigationBar } from "./reusable-ui/NavigationBar";
 import { Task, TaskId } from "./types";
 import history from "./utils/history";
@@ -213,25 +213,17 @@ export function App() {
 		<Fragment>
 			<div className="md:flex md:flex-row w-full max-w-screen flex flex-col lg:overflow-hidden h-screen max-h-screen">
 				<NavigationBar>
-					<div className="flex flex-col md:flex md:flex-row md:w-2/5 md:fixed opacity-75 md:z-10 z-10">
-						<div className="hidden md:block">
-							<Button
+					<div className="flex flex-col md:flex md:flex-row md:fixed opacity-75 md:z-10 z-10 relative ">
+						<div className="hidden md:block ">
+							<IconButton
 								onClick={() => toggleNewTaskForm(!showNewTaskForm)}
-								icon={
-									showNewTaskForm ? (
-										<ChevronsLeft />
-									) : (
-										<ChevronsRight />
-									)
-								}
+								icon={showNewTaskForm ? ChevronsLeft : ChevronsRight}
 							/>
 						</div>
 						<div className="block md:hidden">
-							<Button
+							<IconButton
 								onClick={() => toggleNewTaskForm(!showNewTaskForm)}
-								icon={
-									showNewTaskForm ? <ChevronsUp /> : <ChevronsDown />
-								}
+								icon={showNewTaskForm ? ChevronsUp : ChevronsDown}
 							/>
 						</div>
 						<div>
@@ -239,50 +231,36 @@ export function App() {
 						</div>
 					</div>
 					<div className="md:h-20 h-10"></div>
-					<Button
+					<IconButton
 						onClick={(evt) => {
 							callApiToFetchData(setTasks);
 						}}
-						icon={<RefreshCcw />}
+						icon={RefreshCcw}
 					/>
-					<Button
+					<IconButton
 						onClick={(evt) => {
 							toggleGraph(true);
 						}}
-						icon={<GitMerge />}
+						icon={GitMerge}
 					/>
-					<Button
+					<IconButton
 						onClick={(evt) => {
 							toggleGraph(false);
 						}}
-						icon={<List />}
+						icon={List}
 					/>
-					<Button
-						icon={<Trash2 />}
+					<IconButton
+						icon={Trash2}
 						onClick={(evt) => {
 							removeAllData();
 						}}
 					/>
 
-					<Router history={history}>
-						<PrivateRoute path="/profile" component={Profile} />
-						<Auth0NavBar />
-					</Router>
-
-					<Link
-						className="bg-gray-400 text-lg w-16 
-						text-blue-700 rounded-full 
-						p-2 hover:text-blue-400 stroke-2
-						stroke-current mt-2 mr-2"
-						to="./design"
-					>
-						<svg
-							className="h-12 w-12 bg-gray-400 p-2"
-							viewBox="0 0 24 24"
-						>
-							{<Image />}
-						</svg>
+					<Link className="nav-bar-btn" to="./design">
+						<Image className="h-12 w-12 p-2" viewBox="0 0 24 24" />
 					</Link>
+					<div className="flex-1" />
+					<Auth0NavBar />
 				</NavigationBar>
 				<div className="w-full mr-2">
 					<div className=" min-w-full max-w-full max-h-screen h-full">

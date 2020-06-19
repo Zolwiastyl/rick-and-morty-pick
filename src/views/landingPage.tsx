@@ -3,7 +3,7 @@ import React, { Fragment, useEffect } from "react";
 import { LogIn, LogOut } from "react-feather";
 
 import { useAuth0 } from "../react-auth0-spa";
-import { Button } from "../reusable-ui/Button";
+import { IconButton } from "../reusable-ui/IconButton";
 import { NavigationBar } from "../reusable-ui/NavigationBar";
 
 const redirectOption: RedirectLoginOptions = {
@@ -19,14 +19,14 @@ export const LandingPage = () => {
 		return (
 			<Fragment>
 				{!isAuthenticated && (
-					<Button
+					<IconButton
 						onClick={(evt) => client?.loginWithRedirect(redirectOption)}
-						icon={<LogIn />}
+						icon={LogIn}
 					/>
 				)}
 
 				{isAuthenticated && (
-					<Button onClick={(evt) => client?.logout()} icon={<LogOut />} />
+					<IconButton onClick={(evt) => client?.logout()} icon={LogOut} />
 				)}
 			</Fragment>
 		);

@@ -20,7 +20,22 @@ inline:focus {
 	@apply text-gray-400;
 }
 .on-task-btn:hover {
-	@apply text-blue-600;
+	@apply text-primary-500;
+}
+.on-task-btn:active {
+	@apply outline-none;
+}
+.on-task-btn:focus {
+	@apply outline-none;
+}
+.nav-bar-btn {
+	@apply bg-gray-800 text-lg w-16 text-primary-100 rounded-full p-2 stroke-current;
+}
+.nav-bar-btn:hover {
+	@apply text-primary-400 stroke-2;
+}
+.nav-bar-btn:focus {
+	@apply outline-none shadow-outline;
 }
 
 @tailwind utilities;
