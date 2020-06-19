@@ -22,8 +22,6 @@ import { callApi, fetchDataFromServer, removeAllData } from "./api/api";
 import { generateIdForTask } from "./api/generateIdForTask";
 import { curriedSendNewTask, sendNewTask } from "./api/sendNewTask";
 import { Auth0NavBar } from "./components/NavBar";
-import { PrivateRoute } from "./components/PrivateRoute";
-import { Profile } from "./components/Profile";
 import { useAuth0 } from "./react-auth0-spa";
 import { IconButton } from "./reusable-ui/IconButton";
 import { NavigationBar } from "./reusable-ui/NavigationBar";
