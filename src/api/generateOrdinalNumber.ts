@@ -66,9 +66,8 @@ export const putItBelow = curriedtakeOrdinalNumbers(TaskPlacement.Below);
 export function ensureThatOrdinalIsFloat(ordinals: Array<number>) {
 	ordinals.sort();
 	if (ordinals.reduce((acc, x) => (acc += x)) % 1 === 0) {
-		console.log(ordinals + " need to be changed");
 		ordinals[0] += 0.1;
-		console.log(ordinals + " here there are changed");
+
 		return ordinals;
 	} else {
 		return ordinals;

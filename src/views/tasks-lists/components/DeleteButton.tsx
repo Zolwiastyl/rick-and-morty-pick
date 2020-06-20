@@ -34,7 +34,6 @@ export const DeleteButton = (
 						).filter((t) => t.frontEndId !== task.frontEndId)
 					);
 				}
-				console.log(tasks.filter((t) => t.frontEndId !== task.frontEndId));
 			}}
 		>
 			<Trash2 />

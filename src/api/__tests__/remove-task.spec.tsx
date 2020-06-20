@@ -7,10 +7,6 @@ import {
 } from "../removeTask";
 
 const tasks: Task[] = require("./remove-task-mockup.json");
-const tasks2: Task[] = require("./mockup-remove-task-2.json");
-
-test("how much  is it", () =>
-	console.log(removeCrossDependencies("1120200852290200", tasks2)));
 
 test("expect new tasks to be equal to readyTasks", () => {
 	expect(removeCrossDependencies("Task5Id", tasks)).toStrictEqual(readyTasks);

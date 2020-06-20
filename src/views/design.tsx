@@ -11,7 +11,6 @@ export const DesignLook = () => {
 	const [task1, setTasks] = useState<Task>(task);
 
 	const updateLocal: UpdateFunction = (id: string, descr: string) => {
-		console.log("desc updated");
 		setTasks({ ...task1, description: descr });
 	};
 	useEffect(() => {}, []);

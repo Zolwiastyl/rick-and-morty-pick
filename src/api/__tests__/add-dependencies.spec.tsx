@@ -1,5 +1,5 @@
 import { Task } from "../../types";
-import { makeNewTasksWithDependencies } from "../../views/tasks-graph/GraphAPI";
+import { makeNewTasksWithDependencies } from "../addDependencies";
 
 const tasks: Task[] = require("./mockup-addDependencies.json");
 
@@ -15,8 +15,6 @@ test("expect it tasks to be equal to new mockup", () => {
 		])
 	).toStrictEqual([sourceTaskMockup, targetTaskMockup]);
 });
-
-console.log(makeNewTasksWithDependencies(tasks, ["Task1Id", "Task2Id"]));
 
 const sourceTaskMockup: Task = {
 	dependOnThisTask: ["Task2Id"],

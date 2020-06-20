@@ -1,4 +1,4 @@
-import { EdgeDefinition, ElementDefinition,NodeDefinition } from "cytoscape";
+import { EdgeDefinition, ElementDefinition, NodeDefinition } from "cytoscape";
 
 import { Task } from "../../types";
 
@@ -23,7 +23,7 @@ export function prepareElementsForGraph(tasks: Task[]) {
 		})
 		.flat(10);
 	const elements: ElementDefinition[] = nodes.concat(edges);
-	console.log(elements);
+
 	return elements;
 }
 

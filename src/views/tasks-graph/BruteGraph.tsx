@@ -1,13 +1,13 @@
 import { Auth0Client } from "@auth0/auth0-spa-js";
 import cytoscape, { Core, ElementDefinition, LayoutOptions } from "cytoscape";
 import cola from "cytoscape-cola";
+import dagre from "cytoscape-dagre";
 import React, { MutableRefObject, useEffect, useRef } from "react";
 
 import { useAuth0 } from "../../react-auth0-spa";
+import { IconButton } from "../../reusable-ui/IconButton";
 import { Task, TaskId } from "../../types";
 import { graphStyle, prepareElementsForGraph } from "./GraphAPI";
-
-cytoscape.use(cola);
 
 const breadthfirstLayout: LayoutOptions = {
 	name: "breadthfirst",
@@ -15,6 +15,18 @@ const breadthfirstLayout: LayoutOptions = {
 	padding: 5,
 	spacingFactor: 1.25,
 	animate: true,
+};
+
+const coseLayout: LayoutOptions = {
+	name: "cose",
+	gravity: 1,
+	padding: 5,
+	spacingFactor: 2,
+	animate: true,
+};
+
+const colaLayout: LayoutOptions = {
+	name: "cola",
 };
 
 interface ActionHandlers {
@@ -84,8 +96,24 @@ export function TasksGraph({ addEdge, removeEdge, tasks }: TasksGraphProps) {
 		client
 	);
 	useTaskNodes(cy, prepareElementsForGraph(tasks));
-
-	return <div ref={container} className="w-full h-screen"></div>;
+	//ref.current?.layout(breadthfirstLayout).run();
+	cytoscape.use(cola);
+	cytoscape.use(dagre);
+	return (
+		<div>
+			<div>
+				<IconButton
+					onClick={() => cy.current.layout(coseLayout).run()}
+					label={"1"}
+				/>
+				<IconButton
+					onClick={() => cy.current.layout(colaLayout).run()}
+					label={"2"}
+				/>
+			</div>
+			<div ref={container} className="w-full h-screen"></div>
+		</div>
+	);
 }
 
 function useCytoscape(
@@ -125,24 +153,24 @@ function useCytoscape(
 	useEffect(() => {
 		const cy = ref.current;
 
-		console.log("event handlers refreshed");
+		
 
 		cy.on("tap", (evt) => {
-			console.log("tapped");
+			
 			if (evt.target === cy) {
-				console.log("clearing firstNodeEdgeId");
+				
 				firstEdgeNodeId.current = undefined;
 			}
 		});
 
 		cy.on("tap", "node", (evt) => {
-			console.log("node clicked");
+			
 
 			if (!firstEdgeNodeId.current) {
-				console.log("setting firstNodeEdgeId", evt.target.id());
+				
 				firstEdgeNodeId.current = evt.target.id();
 			} else {
-				console.log("setting targetId");
+				
 				const targetId = evt.target.id();
 				if (firstEdgeNodeId.current !== targetId) {
 					addEdge(firstEdgeNodeId.current, targetId);
@@ -189,8 +217,8 @@ function useTaskNodes(
 		}
 
 		const currentElements = cy.current.elements().toArray();
-		console.log({ currentElements });
-		console.log({ newElements });
+		
+		
 
 		const currentIds = new Set(currentElements.map((x) => x.id()));
 		const newIds = new Set(newElements.map((x) => x.data.id!));
@@ -200,7 +228,7 @@ function useTaskNodes(
 		);
 		const removed = currentElements.filter((x) => !newIds.has(x.id()));
 
-		console.log({
+		
 			currentIds,
 			newIds,
 			added,

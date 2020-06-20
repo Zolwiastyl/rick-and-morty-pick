@@ -1,5 +1,5 @@
 import { Task } from "../../../types";
-import { removeCrossDependencies,saveTheDiff } from "../../removeTask";
+import { removeCrossDependencies, saveTheDiff } from "../../removeTask";
 import after from "./after.json";
 import before from "./before.json";
 
@@ -57,7 +57,6 @@ const newTasksAfter3 = before
 	)
 	.filter((t) => t.frontEndId !== before[2].frontEndId)
 	.concat(newTaskThreeInArray);
-console.log(newTasksAfter3);
 
 const newTaskAfter4 = saveTheDiff(before, newTaskThreeInArray).filter(
 	(t) => t.frontEndId !== before[2].frontEndId

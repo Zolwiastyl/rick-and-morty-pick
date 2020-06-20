@@ -1,5 +1,5 @@
 import { Task } from "../types";
-import { curry,HOST } from "./api";
+import { curry, HOST } from "./api";
 
 export const curriedSendMultipleTasks: Function = curry(sendMultipleTasks);
 const sendMultipleTasksURL = new Request(HOST + "/multiple-tasks");
@@ -29,7 +29,6 @@ export async function plainSendMultipleTasks(
 			}
 		})
 		.catch((error) => {
-			console.log("problem with fetching data:", error);
 			return false;
 		});
 }

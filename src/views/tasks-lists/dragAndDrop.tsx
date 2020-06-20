@@ -1,7 +1,7 @@
 import { callApi } from "../../api/api";
-import { putItAbove,putItBelow } from "../../api/generateOrdinalNumber";
+import { putItAbove, putItBelow } from "../../api/generateOrdinalNumber";
 import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
-import { Status,TasksStateProps } from "../../types";
+import { Status, TasksStateProps } from "../../types";
 
 /**
  *
@@ -24,7 +24,7 @@ export function handleDrop(
 		event.currentTarget.offsetHeight / 2
 	) {
 		const ordinals = putItBelow(taskId)(event.currentTarget.id)(tasks);
-		console.log(ordinals[0]);
+
 		const taskToSave = {
 			...tasks.filter((task) => task.frontEndId === taskId)[0],
 			ordinalNumber: (ordinals[0] + ordinals[1]) / 2,
@@ -37,7 +37,6 @@ export function handleDrop(
 		);
 	} else {
 		const ordinals = putItAbove(taskId)(event.currentTarget.id)(tasks);
-		console.log(ordinals[0]);
 
 		const newOrdinal = () => {
 			if (ordinals) {
@@ -54,7 +53,5 @@ export function handleDrop(
 				taskToSave
 			)
 		);
-		console.log(taskToSave);
 	}
-	console.log("dragged");
 }

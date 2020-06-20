@@ -125,7 +125,6 @@ export function App() {
 				sourceTaskToSave,
 				targetTaskToSave,
 			] = makeNewTasksRemovingDependencies(tasks, [from, to]);
-			console.log(sourceTaskToSave, targetTaskToSave);
 
 			const edgeRemovedFromDatabase = sendSourceAndTargetTasks(
 				client,
@@ -198,9 +197,7 @@ export function App() {
 		setTasks(ArrayWithTasksToSave);
 		if (!(await callApi(client, curriedSendNewTask(newTask)))) {
 			setTasks(tasks.filter((t) => t.frontEndId !== newTask.frontEndId));
-			console.log("couldn't send task");
 		} else {
-			console.log("sent task");
 		}
 	};
 	if (loading) {

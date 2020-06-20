@@ -82,7 +82,6 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 	return (
 		<TaskCardContainer
 			onBlur={(evt) => {
-				console.log("blured");
 				evt.preventDefault();
 				//updateName(task.frontEndId!, nameState);
 				//updateDescription(task.frontEndId!, descriptionState);
@@ -101,7 +100,6 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 							onChange={handleNameChange}
 							onKeyDown={(e) => handleKeyDown(e, "input")}
 							onBlur={() => {
-								console.log("blurred");
 								return task.name !== nameState
 									? updateName(task.frontEndId, nameState)
 									: undefined;

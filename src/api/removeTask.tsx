@@ -48,7 +48,7 @@ export function removeCrossDependencies(taskId: string, tasks: Task[]): Task[] {
 	)
 		.filter((t) => t.frontEndId !== taskId)
 		.sort((x, y) => y.ordinalNumber - x.ordinalNumber);
-	console.log(tasksToReturn);
+
 	return tasksToReturn;
 }
 
@@ -66,9 +66,8 @@ export function removeIdFromOtherTasks(
 	tasksDiff: Task[]
 ): Task[] {
 	if (arrayOfIds.length > 0) {
-		console.log(arrayOfIds);
 		const idToProcess = arrayOfIds.pop();
-		console.log(idToProcess);
+
 		const taskToOverwrite: Task = tasks.find(
 			(t) => t.frontEndId === idToProcess
 		)!;

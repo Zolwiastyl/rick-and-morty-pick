@@ -31,7 +31,7 @@ export const LandingPage = () => {
 			</Fragment>
 		);
 	};
-	console.log(window.location.origin);
+
 	return (
 		<div className="flex flex-col md:flex-row md:flex">
 			<NavigationBar>

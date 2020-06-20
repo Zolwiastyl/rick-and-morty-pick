@@ -1,4 +1,4 @@
-import { Task,TasksStateProps } from "../types";
+import { Task, TasksStateProps } from "../types";
 import { curry } from "./api";
 import { sendNewTask } from "./sendNewTask";
 
@@ -37,10 +37,7 @@ export function moveToAnotherGroup(
 		)
 	) {
 		// UPDATE LOCAL COPY
-		console.log("submitted");
 
-		console.log(task);
-		console.log(task.frontEndId);
 		state.setTasks(
 			state.tasks
 				.filter((t) => t.frontEndId !== task.frontEndId)

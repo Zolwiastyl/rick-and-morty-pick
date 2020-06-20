@@ -27,3 +27,7 @@ export type Status = {
 interface GroupTask extends Task {
 	Task: Task[];
 }
+
+export type Source = Task;
+export type Target = Task;
+export type Edge = [Source, Target];
