@@ -1,7 +1,6 @@
 import { Auth0Client } from "@auth0/auth0-spa-js";
 import cytoscape, { Core, ElementDefinition, LayoutOptions } from "cytoscape";
 import cola from "cytoscape-cola";
-import dagre from "cytoscape-dagre";
 import React, { MutableRefObject, useEffect, useRef } from "react";
 
 import { useAuth0 } from "../../react-auth0-spa";
@@ -98,7 +97,7 @@ export function TasksGraph({ addEdge, removeEdge, tasks }: TasksGraphProps) {
 	useTaskNodes(cy, prepareElementsForGraph(tasks));
 	//ref.current?.layout(breadthfirstLayout).run();
 	cytoscape.use(cola);
-	cytoscape.use(dagre);
+
 	return (
 		<div>
 			<div>
@@ -153,24 +152,16 @@ function useCytoscape(
 	useEffect(() => {
 		const cy = ref.current;
 
-		
-
 		cy.on("tap", (evt) => {
-			
 			if (evt.target === cy) {
-				
 				firstEdgeNodeId.current = undefined;
 			}
 		});
 
 		cy.on("tap", "node", (evt) => {
-			
-
 			if (!firstEdgeNodeId.current) {
-				
 				firstEdgeNodeId.current = evt.target.id();
 			} else {
-				
 				const targetId = evt.target.id();
 				if (firstEdgeNodeId.current !== targetId) {
 					addEdge(firstEdgeNodeId.current, targetId);
@@ -217,8 +208,6 @@ function useTaskNodes(
 		}
 
 		const currentElements = cy.current.elements().toArray();
-		
-		
 
 		const currentIds = new Set(currentElements.map((x) => x.id()));
 		const newIds = new Set(newElements.map((x) => x.data.id!));
@@ -228,12 +217,11 @@ function useTaskNodes(
 		);
 		const removed = currentElements.filter((x) => !newIds.has(x.id()));
 
-		
-			currentIds,
-			newIds,
-			added,
-			removed,
-		});
+		// 	currentIds,
+		// 	newIds,
+		// 	added,
+		// 	removed,
+		// });
 
 		cy.current.add(added);
 		removed.forEach((x) => cy.current.remove(x));

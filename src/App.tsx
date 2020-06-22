@@ -14,12 +14,12 @@ import {
 import { Link, Route, Router, Switch } from "react-router-dom";
 
 import {
-	makeNewTasksRemovingDependencies,
 	makeNewTasksWithDependencies,
 	sendSourceAndTargetTasks,
 } from "./api/addDependencies";
 import { callApi, fetchDataFromServer, removeAllData } from "./api/api";
 import { generateIdForTask } from "./api/generateIdForTask";
+import { makeNewTasksRemovingDependencies } from "./api/removeDependencies";
 import { curriedSendNewTask, sendNewTask } from "./api/sendNewTask";
 import { Auth0NavBar } from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";

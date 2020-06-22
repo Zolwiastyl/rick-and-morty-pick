@@ -20,13 +20,16 @@ export const LandingPage = () => {
 			<Fragment>
 				{!isAuthenticated && (
 					<IconButton
-						onClick={(evt) => client?.loginWithRedirect(redirectOption)}
+						onClick={() => {
+							client?.loginWithRedirect(redirectOption);
+							console.log("clicked");
+						}}
 						icon={LogIn}
 					/>
 				)}
 
 				{isAuthenticated && (
-					<IconButton onClick={(evt) => client?.logout()} icon={LogOut} />
+					<IconButton onClick={() => client?.logout()} icon={LogOut} />
 				)}
 			</Fragment>
 		);
