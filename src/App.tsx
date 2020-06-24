@@ -251,7 +251,7 @@ export function App() {
 						}}
 					/>
 
-					<Link className="nav-bar-btn" to="./design">
+					<Link className="nav-bar-btn" to="./design" id="design">
 						<Image className="h-12 w-12 p-2" viewBox="0 0 24 24" />
 					</Link>
 					<div className="flex-1" />
@@ -266,6 +266,7 @@ export function App() {
 									tasks={tasks}
 									updateDescription={updateDescription}
 									updateName={updateName}
+									client={client}
 								/>
 							)}
 							{showGraph && (

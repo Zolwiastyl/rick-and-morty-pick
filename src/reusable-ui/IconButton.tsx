@@ -18,7 +18,11 @@ export const IconButton: React.FC<IconButtonProps> = (
 		);
 	} else {
 		return (
-			<button className="nav-bar-btn" onClick={props.onClick}>
+			<button
+				className="nav-bar-btn"
+				onClick={props.onClick}
+				id={props.icon.displayName}
+			>
 				<props.icon className="h-12 w-12 p-2" size="24px" />
 
 				{props.label}

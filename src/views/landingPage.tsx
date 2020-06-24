@@ -10,7 +10,7 @@ const redirectOption: RedirectLoginOptions = {
 	redirect_uri: window.location.origin + "/app",
 };
 
-export const LandingPage = () => {
+export const LandingPage: React.FC = () => {
 	const LogInButton = ({ ...children }) => {
 		const { isAuthenticated, client } = useAuth0();
 		useEffect(() => {

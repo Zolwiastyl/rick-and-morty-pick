@@ -1,3 +1,4 @@
+import { Auth0Client } from "@auth0/auth0-spa-js";
 import React, { Dispatch, SetStateAction } from "react";
 import {
 	Activity,
@@ -10,7 +11,6 @@ import {
 import { callApi } from "../../api/api";
 import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
 import { curriedSendNewTask } from "../../api/sendNewTask";
-import { useAuth0 } from "../../react-auth0-spa";
 import { UpdateFunction } from "../../reusable-ui/TaskCard";
 import { Status, Task } from "../../types";
 import { DeleteButton } from "./components/DeleteButton";
@@ -51,6 +51,7 @@ type TasksListsProps = {
 	setTasks: Dispatch<SetStateAction<Task[]>>;
 	updateDescription: UpdateFunction;
 	updateName: UpdateFunction;
+	client: Auth0Client | undefined;
 };
 
 const statuses: Array<Status> = [
@@ -66,14 +67,14 @@ export function TasksLists({
 	setTasks,
 	updateDescription,
 	updateName,
+	client,
 }: TasksListsProps) {
-	const { client } = useAuth0();
-
 	return (
 		<div className="flex flex-row p-4 w-auto max-h-full h-full space-x-2">
 			{statuses.map((status) => (
 				<TaskList
 					// useDrop.ref
+					key={status.statusName + "-column"}
 					status={status}
 					onDragOver={(event) => {
 						event.preventDefault();
@@ -124,10 +125,12 @@ export function TasksLists({
 						.map((task) => {
 							return (
 								<TaskLabel
+									key={task.frontEndId}
 									task={task}
 									updateDescription={updateDescription}
 									updateName={updateName}
 									id={task.frontEndId}
+									data-testid={task.frontEndId}
 									draggable="true"
 									onDragStart={(event) => {
 										event.dataTransfer.setData(
