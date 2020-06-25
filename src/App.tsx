@@ -78,19 +78,6 @@ export function App() {
 		},
 	};
 
-	const callApiToSendTask = useCallback(
-		async (task: Task) => {
-			try {
-				const token = await client?.getTokenSilently();
-				const response = async () => await sendNewTask(task, token);
-				response();
-			} catch (error) {
-				console.error(error);
-			}
-		},
-		[client]
-	);
-
 	const addEdge = useCallback(
 		(from: TaskId, to: TaskId) => {
 			const [
@@ -99,7 +86,7 @@ export function App() {
 			] = makeNewTasksWithDependencies(tasks, [from, to]);
 
 			const edgeAddedToDatabase = sendSourceAndTargetTasks(
-				client,
+				darkClientAPI,
 				curriedSendNewTask,
 				[sourceTaskToSave, targetTaskToSave]
 			);
@@ -114,7 +101,7 @@ export function App() {
 				console.error("couldn't send tasks");
 			}
 		},
-		[tasks, client, setTasks]
+		[tasks, darkClientAPI]
 	);
 
 	const removeEdge = useCallback(
@@ -125,7 +112,7 @@ export function App() {
 			] = makeNewTasksRemovingDependencies(tasks, [from, to]);
 
 			const edgeRemovedFromDatabase = sendSourceAndTargetTasks(
-				client,
+				darkClientAPI,
 				curriedSendNewTask,
 				[sourceTaskToSave, targetTaskToSave]
 			);
@@ -142,7 +129,7 @@ export function App() {
 				);
 			}
 		},
-		[tasks, client]
+		[tasks, darkClientAPI]
 	);
 
 	const callApiToFetchData = useCallback(

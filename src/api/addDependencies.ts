@@ -1,7 +1,4 @@
-import { Auth0Client } from "@auth0/auth0-spa-js";
-
-import { Edge, Task } from "../types";
-import { callApi } from "./api";
+import { ClientAPI, Edge, Task } from "../types";
 
 type TaskId = string;
 
@@ -32,13 +29,13 @@ export function makeNewTasksWithDependencies(
 }
 
 export function sendSourceAndTargetTasks(
-	client: Auth0Client | undefined,
+	clientAPI: ClientAPI,
 	callback: Function,
 	callbackArguments: Task[]
 ) {
 	if (
-		callApi(client, callback(callbackArguments[0])) &&
-		callApi(client, callback(callbackArguments[1]))
+		clientAPI.callApi(callback(callbackArguments[0])) &&
+		clientAPI.callApi(callback(callbackArguments[1]))
 	) {
 		return true;
 	} else {
