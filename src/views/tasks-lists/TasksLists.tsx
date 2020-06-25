@@ -16,8 +16,8 @@ import {
 import { callApi } from "../../api/api";
 import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
 import { curriedSendNewTask } from "../../api/sendNewTask";
-import { UpdateFunction } from "../../reusable-ui/TaskCard";
-import { ClientAPI, Status, Task, TaskId } from "../../types";
+import { ClientContext } from "../../App";
+import { Status, Task, TaskId } from "../../types";
 import { DeleteButton } from "./components/DeleteButton";
 import { TaskLabel } from "./components/TaskComponent";
 import { handleDrop } from "./dragAndDrop";
@@ -56,7 +56,6 @@ type TasksListsProps = {
 	setTasks: Dispatch<SetStateAction<Task[]>>;
 
 	client: Auth0Client | undefined;
-	clientAPI: ClientAPI;
 };
 
 const statuses: Array<Status> = [
@@ -67,13 +66,8 @@ const statuses: Array<Status> = [
 	{ statusName: "done", icon: CheckCircle },
 ];
 
-export function TasksLists({
-	tasks,
-	setTasks,
-
-	client,
-	clientAPI,
-}: TasksListsProps) {
+export function TasksLists({ tasks, setTasks, client }: TasksListsProps) {
+	const clientAPI = useContext(ClientContext);
 	const updateDescription = useCallback(
 		(taskId: TaskId, description: string) => {
 			const taskToSave: Task = {

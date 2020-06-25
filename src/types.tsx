@@ -28,6 +28,9 @@ interface GroupTask extends Task {
 	Task: Task[];
 }
 export interface ClientAPI {
+	callApi: (
+		partialCallback: (token: string) => Promise<Response | boolean>
+	) => Promise<boolean | Response | undefined>;
 	sendTask: (task: Task) => Promise<void>;
 	fetchTasks: (
 		setTasks: React.Dispatch<React.SetStateAction<Task[]>>,

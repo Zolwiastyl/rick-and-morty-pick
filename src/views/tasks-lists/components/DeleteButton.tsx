@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Trash2 } from "react-feather";
 
 import { callApi } from "../../../api/api";
@@ -8,19 +8,20 @@ import {
 	saveTheDiff,
 } from "../../../api/removeTask";
 import { curriedSendMultipleTasks } from "../../../api/sendMultipleTasks";
+import { ClientContext } from "../../../App";
 import { Task, TasksStateProps } from "../../../types";
 export const DeleteButton = (
 	task: Task,
 	{ tasks, setTasks }: TasksStateProps,
 	client: any
 ) => {
+	const clientAPI = useContext(ClientContext);
 	return (
 		<button
 			className="on-task-btn"
 			onClick={() => {
 				if (
-					callApi(
-						client,
+					clientAPI?.callApi(
 						curriedSendMultipleTasks(
 							removeCrossDependencies(task.frontEndId, tasks)
 						)

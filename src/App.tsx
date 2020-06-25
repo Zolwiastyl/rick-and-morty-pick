@@ -32,6 +32,9 @@ import { TasksLists } from "./views/tasks-lists/TasksLists";
 
 const tasksArray: Array<Task> = [];
 
+export const ClientContext = React.createContext<ClientAPI | undefined>(
+	undefined
+);
 export function App() {
 	// secondary boring state
 	const { loading, client, user } = useAuth0();
@@ -44,31 +47,37 @@ export function App() {
 	const [showNewTaskForm, toggleNewTaskForm] = useState<boolean>(false);
 
 	const darkClientAPI: ClientAPI = {
-		sendTask: useCallback(
-			async (task: Task) => {
-				try {
-					const token = await client?.getTokenSilently();
-					const response = async () => await sendNewTask(task, token);
-					response();
-				} catch (error) {
-					console.error(error);
-				}
-			},
-			[client]
-		),
-		fetchTasks: useCallback(
-			async (setTasks: React.Dispatch<React.SetStateAction<Task[]>>) => {
-				if (!client) {
-					throw Error("no client from auth0");
-				}
-				const token = await client.getTokenSilently();
-				await fetchDataFromServer(setTasks, token);
-			},
-			[client]
-		),
+		callApi: async (
+			partialCallBack: (token: string) => Promise<Response | boolean>
+		) => {
+			try {
+				const token: string = await client?.getTokenSilently();
+				return await partialCallBack(token);
+			} catch (error) {
+				console.error(error);
+			}
+		},
+		sendTask: async (task: Task) => {
+			try {
+				const token = await client?.getTokenSilently();
+				const response = async () => await sendNewTask(task, token);
+				response();
+			} catch (error) {
+				console.error(error);
+			}
+		},
+
+		fetchTasks: async (
+			setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+		) => {
+			if (!client) {
+				throw Error("no client from auth0");
+			}
+			const token = await client.getTokenSilently();
+			await fetchDataFromServer(setTasks, token);
+		},
 	};
 
-	const ClientContext = React.createContext(darkClientAPI);
 	const callApiToSendTask = useCallback(
 		async (task: Task) => {
 			try {
@@ -251,34 +260,29 @@ export function App() {
 					</NavigationBar>
 					<div className="w-full mr-2">
 						<div className=" min-w-full max-w-full max-h-screen h-full">
-							<ClientContext.Consumer>
-								{(value) => (
-									<Router history={history}>
-										{!showGraph && (
-											<TasksLists
-												setTasks={setTasks}
-												tasks={tasks}
-												client={client}
-												clientAPI={value}
-											/>
-										)}
-										{showGraph && (
-											<Fragment>
-												{/* <BruteGraph setTasks={setTasks} tasks={tasks} /> */}
-												<TasksGraph
-													addEdge={addEdge}
-													removeEdge={removeEdge}
-													tasks={tasks}
-												/>
-											</Fragment>
-										)}
-
-										<Switch>
-											<Route path="/" exact />
-										</Switch>
-									</Router>
+							<Router history={history}>
+								{!showGraph && (
+									<TasksLists
+										setTasks={setTasks}
+										tasks={tasks}
+										client={client}
+									/>
 								)}
-							</ClientContext.Consumer>
+								{showGraph && (
+									<Fragment>
+										{/* <BruteGraph setTasks={setTasks} tasks={tasks} /> */}
+										<TasksGraph
+											addEdge={addEdge}
+											removeEdge={removeEdge}
+											tasks={tasks}
+										/>
+									</Fragment>
+								)}
+
+								<Switch>
+									<Route path="/" exact />
+								</Switch>
+							</Router>
 						</div>
 					</div>
 				</ClientContext.Provider>
