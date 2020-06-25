@@ -24,7 +24,7 @@ export function moveToAnotherGroup(
 	state: TasksStateProps,
 	status: string,
 	task: Task,
-	token: any
+	token: string
 ) {
 	if (
 		sendNewTask(

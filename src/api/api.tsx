@@ -8,10 +8,10 @@ const tasksRequest = new Request(HOST + "/tasks");
 
 export async function callApi(
 	client: Auth0Client | undefined,
-	partialCallBack: Function
+	partialCallBack: (token: string) => Promise<Response | boolean>
 ) {
 	try {
-		const token = await client?.getTokenSilently();
+		const token: string = await client?.getTokenSilently();
 		return await partialCallBack(token);
 	} catch (error) {
 		console.error(error);
@@ -32,9 +32,9 @@ export function curry(fn: Function): Function {
 
 export function fetchDataFromServer(
 	setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
-	token: any
+	token: string
 ) {
-	fetch(tasksRequest, {
+	return fetch(tasksRequest, {
 		method: "GET",
 		headers: {
 			authorization: `Bearer ${token}`,

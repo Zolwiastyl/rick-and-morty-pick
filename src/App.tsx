@@ -25,7 +25,7 @@ import { Auth0NavBar } from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
 import { IconButton } from "./reusable-ui/IconButton";
 import { NavigationBar } from "./reusable-ui/NavigationBar";
-import { Task, TaskId } from "./types";
+import { ClientAPI, Task, TaskId } from "./types";
 import history from "./utils/history";
 import { TasksGraph } from "./views/tasks-graph/BruteGraph";
 import { TasksLists } from "./views/tasks-lists/TasksLists";
@@ -43,6 +43,32 @@ export function App() {
 	const [tasks, setTasks] = useState<Task[]>(tasksArray);
 	const [showNewTaskForm, toggleNewTaskForm] = useState<boolean>(false);
 
+	const darkClientAPI: ClientAPI = {
+		sendTask: useCallback(
+			async (task: Task) => {
+				try {
+					const token = await client?.getTokenSilently();
+					const response = async () => await sendNewTask(task, token);
+					response();
+				} catch (error) {
+					console.error(error);
+				}
+			},
+			[client]
+		),
+		fetchTasks: useCallback(
+			async (setTasks: React.Dispatch<React.SetStateAction<Task[]>>) => {
+				if (!client) {
+					throw Error("no client from auth0");
+				}
+				const token = await client.getTokenSilently();
+				await fetchDataFromServer(setTasks, token);
+			},
+			[client]
+		),
+	};
+
+	const ClientContext = React.createContext(darkClientAPI);
 	const callApiToSendTask = useCallback(
 		async (task: Task) => {
 			try {
@@ -63,7 +89,7 @@ export function App() {
 				description: description,
 			};
 
-			const addTaskToDatabase = callApiToSendTask(taskToSave);
+			const addTaskToDatabase = darkClientAPI.sendTask(taskToSave);
 			if (addTaskToDatabase) {
 				setTasks(
 					tasks.filter((t) => t.frontEndId !== taskId).concat([taskToSave])
@@ -72,7 +98,7 @@ export function App() {
 				console.error("couldn't send task");
 			}
 		},
-		[tasks, callApiToSendTask]
+		[tasks, darkClientAPI]
 	);
 	const updateName = useCallback(
 		(taskId: TaskId, name: string) => {
@@ -81,7 +107,7 @@ export function App() {
 				name: name,
 			};
 
-			const addTaskToDatabase = callApiToSendTask(taskToSave);
+			const addTaskToDatabase = darkClientAPI.sendTask(taskToSave);
 			if (addTaskToDatabase) {
 				setTasks(
 					tasks.filter((t) => t.frontEndId !== taskId).concat([taskToSave])
@@ -90,7 +116,7 @@ export function App() {
 				console.error("couldn't send task");
 			}
 		},
-		[tasks, callApiToSendTask]
+		[tasks, darkClientAPI]
 	);
 
 	const addEdge = useCallback(
@@ -207,85 +233,94 @@ export function App() {
 	return (
 		<Fragment>
 			<div className="md:flex md:flex-row w-full max-w-screen flex flex-col lg:overflow-hidden h-screen max-h-screen">
-				<NavigationBar>
-					<div className="flex flex-col md:flex md:flex-row md:fixed opacity-75 md:z-10 z-10 relative ">
-						<div className="hidden md:block ">
-							<IconButton
-								onClick={() => toggleNewTaskForm(!showNewTaskForm)}
-								icon={showNewTaskForm ? ChevronsLeft : ChevronsRight}
-							/>
-						</div>
-						<div className="block md:hidden">
-							<IconButton
-								onClick={() => toggleNewTaskForm(!showNewTaskForm)}
-								icon={showNewTaskForm ? ChevronsUp : ChevronsDown}
-							/>
-						</div>
-						<div>
-							{showNewTaskForm ? <TaskForm onSubmit={onSubmit} /> : null}
-						</div>
-					</div>
-					<div className="md:h-20 h-10"></div>
-					<IconButton
-						onClick={(evt) => {
-							callApiToFetchData(setTasks);
-						}}
-						icon={RefreshCcw}
-					/>
-					<IconButton
-						onClick={(evt) => {
-							toggleGraph(true);
-						}}
-						icon={GitMerge}
-					/>
-					<IconButton
-						onClick={(evt) => {
-							toggleGraph(false);
-						}}
-						icon={List}
-					/>
-					<IconButton
-						icon={Trash2}
-						onClick={(evt) => {
-							removeAllData();
-						}}
-					/>
-
-					<Link className="nav-bar-btn" to="./design" id="design">
-						<Image className="h-12 w-12 p-2" viewBox="0 0 24 24" />
-					</Link>
-					<div className="flex-1" />
-					<Auth0NavBar />
-				</NavigationBar>
-				<div className="w-full mr-2">
-					<div className=" min-w-full max-w-full max-h-screen h-full">
-						<Router history={history}>
-							{!showGraph && (
-								<TasksLists
-									setTasks={setTasks}
-									tasks={tasks}
-									updateDescription={updateDescription}
-									updateName={updateName}
-									client={client}
+				<ClientContext.Provider value={darkClientAPI}>
+					<NavigationBar>
+						<div className="flex flex-col md:flex md:flex-row md:fixed opacity-75 md:z-10 z-10 relative ">
+							<div className="hidden md:block ">
+								<IconButton
+									onClick={() => toggleNewTaskForm(!showNewTaskForm)}
+									icon={showNewTaskForm ? ChevronsLeft : ChevronsRight}
 								/>
-							)}
-							{showGraph && (
-								<Fragment>
-									{/* <BruteGraph setTasks={setTasks} tasks={tasks} /> */}
-									<TasksGraph
-										addEdge={addEdge}
-										removeEdge={removeEdge}
-										tasks={tasks}
-									/>
-								</Fragment>
-							)}
+							</div>
+							<div className="block md:hidden">
+								<IconButton
+									onClick={() => toggleNewTaskForm(!showNewTaskForm)}
+									icon={showNewTaskForm ? ChevronsUp : ChevronsDown}
+								/>
+							</div>
+							<div>
+								{showNewTaskForm ? (
+									<TaskForm onSubmit={onSubmit} />
+								) : null}
+							</div>
+						</div>
+						<div className="md:h-20 h-10"></div>
+						<IconButton
+							onClick={(evt) => {
+								callApiToFetchData(setTasks);
+							}}
+							icon={RefreshCcw}
+						/>
+						<IconButton
+							onClick={(evt) => {
+								toggleGraph(true);
+							}}
+							icon={GitMerge}
+						/>
+						<IconButton
+							onClick={(evt) => {
+								toggleGraph(false);
+							}}
+							icon={List}
+						/>
+						<IconButton
+							icon={Trash2}
+							onClick={(evt) => {
+								removeAllData();
+							}}
+						/>
 
-							<Switch>
-								<Route path="/" exact />
-							</Switch>
-						</Router>
+						<Link className="nav-bar-btn" to="./design" id="design">
+							<Image className="h-12 w-12 p-2" viewBox="0 0 24 24" />
+						</Link>
+						<div className="flex-1" />
+						<Auth0NavBar />
+					</NavigationBar>
+					<div className="w-full mr-2">
+						<div className=" min-w-full max-w-full max-h-screen h-full">
+							<ClientContext.Consumer>
+								{(value) => (
+									<Router history={history}>
+										{!showGraph && (
+											<TasksLists
+												setTasks={setTasks}
+												tasks={tasks}
+												updateDescription={updateDescription}
+												updateName={updateName}
+												client={client}
+												clientAPI={value}
+											/>
+										)}
+										{showGraph && (
+											<Fragment>
+												{/* <BruteGraph setTasks={setTasks} tasks={tasks} /> */}
+												<TasksGraph
+													addEdge={addEdge}
+													removeEdge={removeEdge}
+													tasks={tasks}
+												/>
+											</Fragment>
+										)}
+
+										<Switch>
+											<Route path="/" exact />
+										</Switch>
+									</Router>
+								)}
+							</ClientContext.Consumer>
+						</div>
 					</div>
-				</div>
+				</ClientContext.Provider>
 			</div>
 		</Fragment>
 	);

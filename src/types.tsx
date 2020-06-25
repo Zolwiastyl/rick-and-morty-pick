@@ -27,6 +27,14 @@ export type Status = {
 interface GroupTask extends Task {
 	Task: Task[];
 }
+export interface ClientAPI {
+	sendTask: (task: Task) => Promise<void>;
+	fetchTasks: (
+		setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
+		token: string
+	) => Promise<void>;
+	//	updateDescription: (taskId: TaskId, description: string)=>void;
+}
 
 export type Source = Task;
 export type Target = Task;

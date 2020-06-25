@@ -1,5 +1,5 @@
 import { Auth0Client } from "@auth0/auth0-spa-js";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import {
 	Activity,
 	AlertTriangle,
@@ -12,7 +12,7 @@ import { callApi } from "../../api/api";
 import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
 import { curriedSendNewTask } from "../../api/sendNewTask";
 import { UpdateFunction } from "../../reusable-ui/TaskCard";
-import { Status, Task } from "../../types";
+import { ClientAPI, Status, Task } from "../../types";
 import { DeleteButton } from "./components/DeleteButton";
 import { TaskLabel } from "./components/TaskComponent";
 import { handleDrop } from "./dragAndDrop";
@@ -52,6 +52,7 @@ type TasksListsProps = {
 	updateDescription: UpdateFunction;
 	updateName: UpdateFunction;
 	client: Auth0Client | undefined;
+	clientAPI: ClientAPI;
 };
 
 const statuses: Array<Status> = [

@@ -3,7 +3,7 @@ import { curry, HOST } from "./api";
 
 const newTaskPostURL = new Request(HOST + "/tasks");
 
-export function sendNewTask(task: Partial<Task>, token: any) {
+export function sendNewTask(task: Partial<Task>, token: string) {
 	return plainSendNewTask(task, token, newTaskPostURL);
 }
 
