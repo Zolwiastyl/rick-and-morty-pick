@@ -82,43 +82,6 @@ export function App() {
 		[client]
 	);
 
-	const updateDescription = useCallback(
-		(taskId: TaskId, description: string) => {
-			const taskToSave: Task = {
-				...(tasks.find((t) => t.frontEndId === taskId) as Task),
-				description: description,
-			};
-
-			const addTaskToDatabase = darkClientAPI.sendTask(taskToSave);
-			if (addTaskToDatabase) {
-				setTasks(
-					tasks.filter((t) => t.frontEndId !== taskId).concat([taskToSave])
-				);
-			} else {
-				console.error("couldn't send task");
-			}
-		},
-		[tasks, darkClientAPI]
-	);
-	const updateName = useCallback(
-		(taskId: TaskId, name: string) => {
-			const taskToSave: Task = {
-				...(tasks.find((t) => t.frontEndId === taskId) as Task),
-				name: name,
-			};
-
-			const addTaskToDatabase = darkClientAPI.sendTask(taskToSave);
-			if (addTaskToDatabase) {
-				setTasks(
-					tasks.filter((t) => t.frontEndId !== taskId).concat([taskToSave])
-				);
-			} else {
-				console.error("couldn't send task");
-			}
-		},
-		[tasks, darkClientAPI]
-	);
-
 	const addEdge = useCallback(
 		(from: TaskId, to: TaskId) => {
 			const [
@@ -295,8 +258,6 @@ export function App() {
 											<TasksLists
 												setTasks={setTasks}
 												tasks={tasks}
-												updateDescription={updateDescription}
-												updateName={updateName}
 												client={client}
 												clientAPI={value}
 											/>

@@ -1,5 +1,10 @@
 import { Auth0Client } from "@auth0/auth0-spa-js";
-import React, { Dispatch, SetStateAction, useContext } from "react";
+import React, {
+	Dispatch,
+	SetStateAction,
+	useCallback,
+	useContext,
+} from "react";
 import {
 	Activity,
 	AlertTriangle,
@@ -12,7 +17,7 @@ import { callApi } from "../../api/api";
 import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
 import { curriedSendNewTask } from "../../api/sendNewTask";
 import { UpdateFunction } from "../../reusable-ui/TaskCard";
-import { ClientAPI, Status, Task } from "../../types";
+import { ClientAPI, Status, Task, TaskId } from "../../types";
 import { DeleteButton } from "./components/DeleteButton";
 import { TaskLabel } from "./components/TaskComponent";
 import { handleDrop } from "./dragAndDrop";
@@ -49,8 +54,7 @@ const TaskList: React.FC<TaskListProps> = ({
 type TasksListsProps = {
 	tasks: Task[];
 	setTasks: Dispatch<SetStateAction<Task[]>>;
-	updateDescription: UpdateFunction;
-	updateName: UpdateFunction;
+
 	client: Auth0Client | undefined;
 	clientAPI: ClientAPI;
 };
@@ -66,10 +70,46 @@ const statuses: Array<Status> = [
 export function TasksLists({
 	tasks,
 	setTasks,
-	updateDescription,
-	updateName,
+
 	client,
+	clientAPI,
 }: TasksListsProps) {
+	const updateDescription = useCallback(
+		(taskId: TaskId, description: string) => {
+			const taskToSave: Task = {
+				...(tasks.find((t) => t.frontEndId === taskId) as Task),
+				description: description,
+			};
+
+			const addTaskToDatabase = clientAPI?.sendTask(taskToSave);
+			if (addTaskToDatabase) {
+				setTasks(
+					tasks.filter((t) => t.frontEndId !== taskId).concat([taskToSave])
+				);
+			} else {
+				console.error("couldn't send task");
+			}
+		},
+		[tasks, clientAPI, setTasks]
+	);
+	const updateName = useCallback(
+		(taskId: TaskId, name: string) => {
+			const taskToSave: Task = {
+				...(tasks.find((t) => t.frontEndId === taskId) as Task),
+				name: name,
+			};
+
+			const addTaskToDatabase = clientAPI?.sendTask(taskToSave);
+			if (addTaskToDatabase) {
+				setTasks(
+					tasks.filter((t) => t.frontEndId !== taskId).concat([taskToSave])
+				);
+			} else {
+				console.error("couldn't send task");
+			}
+		},
+		[tasks, clientAPI, setTasks]
+	);
 	return (
 		<div className="flex flex-row p-4 w-auto max-h-full h-full space-x-2">
 			{statuses.map((status) => (
