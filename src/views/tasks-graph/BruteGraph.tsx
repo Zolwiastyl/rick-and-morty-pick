@@ -6,7 +6,7 @@ import React, { MutableRefObject, useEffect, useRef } from "react";
 import { useAuth0 } from "../../react-auth0-spa";
 import { IconButton } from "../../reusable-ui/IconButton";
 import { Task, TaskId } from "../../types";
-import { graphStyle, prepareElementsForGraph } from "./GraphAPI";
+import { graphStyle, prepareElementsForGraph } from "./graphAPI";
 
 const breadthfirstLayout: LayoutOptions = {
 	name: "breadthfirst",
@@ -58,31 +58,6 @@ function renderCytoscapeElement(
 	return cy;
 }
 
-// export function BruteGraph({ tasks, setTasks }: TasksStateProps) {
-// 	let cyStyle = {
-// 		height: "800px",
-// 		width: "1900px",
-// 		margin: "20px 0px",
-// 	};
-// 	const { client } = useAuth0();
-// 	const container = useRef(null);
-// 	useEffect(() => {
-// 		try {
-// 			renderCytoscapeElement(tasks, {  }, client, container);
-// 		} catch (error) {
-// 			console.error(error);
-// 		}
-// 	}, [tasks]);
-// 	return (
-// 		<div>
-// 			<button> layout </button>
-// 			<div style={cyStyle} ref={container} id="cy-placeholder">
-// 				something went wrong with generaing graph
-// 			</div>
-// 		</div>
-// 	);
-// }
-
 interface TasksGraphProps extends ActionHandlers {
 	tasks: Task[];
 }
@@ -95,7 +70,7 @@ export function TasksGraph({ addEdge, removeEdge, tasks }: TasksGraphProps) {
 		client
 	);
 	useTaskNodes(cy, prepareElementsForGraph(tasks));
-	//ref.current?.layout(breadthfirstLayout).run();
+
 	cytoscape.use(cola);
 
 	return (
@@ -216,12 +191,6 @@ function useTaskNodes(
 			(x) => x.data.id && !currentIds.has(x.data.id)
 		);
 		const removed = currentElements.filter((x) => !newIds.has(x.id()));
-
-		// 	currentIds,
-		// 	newIds,
-		// 	added,
-		// 	removed,
-		// });
 
 		cy.current.add(added);
 		removed.forEach((x) => cy.current.remove(x));

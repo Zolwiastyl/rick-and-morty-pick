@@ -21,6 +21,7 @@ import { callApi, fetchDataFromServer, removeAllData } from "./api/api";
 import { generateIdForTask } from "./api/generateIdForTask";
 import { makeNewTasksRemovingDependencies } from "./api/removeDependencies";
 import { curriedSendNewTask, sendNewTask } from "./api/sendNewTask";
+import { ClientContext } from "./components/ClientContext";
 import { Auth0NavBar } from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
 import { IconButton } from "./reusable-ui/IconButton";
@@ -32,9 +33,6 @@ import { TasksLists } from "./views/tasks-lists/TasksLists";
 
 const tasksArray: Array<Task> = [];
 
-export const ClientContext = React.createContext<ClientAPI | undefined>(
-	undefined
-);
 export function App() {
 	// secondary boring state
 	const { loading, client, user } = useAuth0();
@@ -249,11 +247,7 @@ export function App() {
 						<div className=" min-w-full max-w-full max-h-screen h-full">
 							<Router history={history}>
 								{!showGraph && (
-									<TasksLists
-										setTasks={setTasks}
-										tasks={tasks}
-										client={client}
-									/>
+									<TasksLists setTasks={setTasks} tasks={tasks} />
 								)}
 								{showGraph && (
 									<Fragment>

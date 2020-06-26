@@ -1,5 +1,5 @@
 import { Task, TaskId } from "../types";
-import { copyTaskById } from "../views/tasks-graph/GraphAPI";
+import { copyTaskById } from "../views/tasks-graph/graphAPI";
 
 type Source = Task;
 type Target = Task;

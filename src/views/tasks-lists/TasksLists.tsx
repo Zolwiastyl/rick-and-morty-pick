@@ -16,7 +16,7 @@ import {
 import { callApi } from "../../api/api";
 import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
 import { curriedSendNewTask } from "../../api/sendNewTask";
-import { ClientContext } from "../../App";
+import { ClientContext } from "../../components/ClientContext";
 import { Status, Task, TaskId } from "../../types";
 import { DeleteButton } from "./components/DeleteButton";
 import { TaskLabel } from "./components/TaskComponent";
@@ -54,8 +54,6 @@ const TaskList: React.FC<TaskListProps> = ({
 type TasksListsProps = {
 	tasks: Task[];
 	setTasks: Dispatch<SetStateAction<Task[]>>;
-
-	client: Auth0Client | undefined;
 };
 
 const statuses: Array<Status> = [
@@ -66,7 +64,7 @@ const statuses: Array<Status> = [
 	{ statusName: "done", icon: CheckCircle },
 ];
 
-export function TasksLists({ tasks, setTasks, client }: TasksListsProps) {
+export function TasksLists({ tasks, setTasks }: TasksListsProps) {
 	const clientAPI = useContext(ClientContext);
 	const updateDescription = useCallback(
 		(taskId: TaskId, description: string) => {
@@ -131,21 +129,14 @@ export function TasksLists({ tasks, setTasks, client }: TasksListsProps) {
 								status: status.statusName,
 								ordinalNumber: taskInStatus.ordinalNumber + 0.5,
 							};
-
-							callApi(
-								client,
-								curriedSendNewTask({
-									...taskToSave,
-								})
-							);
+							clientAPI.callApi(curriedSendNewTask({ ...taskToSave }));
 							setTasks(
 								tasks
 									.filter((t) => t.frontEndId !== taskId)
 									.concat([taskToSave])
 							);
 						} else {
-							return callApi(
-								client,
+							return clientAPI.callApi(
 								curriedMoveToAnotherGroup({ tasks, setTasks })(
 									status.statusName
 								)(tasks.find((t) => t.frontEndId === taskId))
@@ -177,13 +168,13 @@ export function TasksLists({ tasks, setTasks, client }: TasksListsProps) {
 										handleDrop(
 											event,
 											{ tasks, setTasks },
-											client,
+											clientAPI,
 											status
 										);
 									}}
 								>
 									<p className="p-1 flex-1">{task.name}</p>
-									{DeleteButton(task, { tasks, setTasks }, client)}
+									{DeleteButton(task, { tasks, setTasks })}
 								</TaskLabel>
 							);
 						})}

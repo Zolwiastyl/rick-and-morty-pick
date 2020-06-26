@@ -1,7 +1,10 @@
+import { useContext } from "react";
+
 import { callApi } from "../../api/api";
 import { putItAbove, putItBelow } from "../../api/generateOrdinalNumber";
 import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
-import { Status, TasksStateProps } from "../../types";
+import { ClientContext } from "../../components/ClientContext";
+import { ClientAPI, Status, TasksStateProps } from "../../types";
 
 /**
  *
@@ -14,11 +17,12 @@ import { Status, TasksStateProps } from "../../types";
 export function handleDrop(
 	event: React.DragEvent<HTMLElement>,
 	{ tasks, setTasks }: TasksStateProps,
-	client: any,
+	clientApi: ClientAPI,
 	status: Status
 ) {
 	event.preventDefault();
 	const taskId = event.dataTransfer.getData("text/plain");
+
 	if (
 		event.pageY - event.currentTarget.offsetTop >
 		event.currentTarget.offsetHeight / 2
@@ -29,8 +33,7 @@ export function handleDrop(
 			...tasks.filter((task) => task.frontEndId === taskId)[0],
 			ordinalNumber: (ordinals[0] + ordinals[1]) / 2,
 		};
-		callApi(
-			client,
+		clientApi.callApi(
 			curriedMoveToAnotherGroup({ tasks, setTasks })(status.statusName)(
 				taskToSave
 			)
@@ -47,8 +50,7 @@ export function handleDrop(
 			...tasks.filter((task) => task.frontEndId === taskId)[0],
 			ordinalNumber: newOrdinal(),
 		};
-		callApi(
-			client,
+		clientApi.callApi(
 			curriedMoveToAnotherGroup({ tasks, setTasks })(status.statusName)(
 				taskToSave
 			)

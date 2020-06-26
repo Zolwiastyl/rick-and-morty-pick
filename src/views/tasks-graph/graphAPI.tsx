@@ -41,7 +41,7 @@ export const graphStyle: cytoscape.Stylesheet[] = [
 			label: "data(label)",
 			"text-max-width": "15em",
 			"text-wrap": "wrap",
-			"text-halign": "left",
+
 			"text-valign": "top",
 			"text-outline-color": "white",
 			"text-outline-width": 3,

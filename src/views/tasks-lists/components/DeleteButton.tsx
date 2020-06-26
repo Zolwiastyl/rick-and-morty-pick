@@ -8,12 +8,12 @@ import {
 	saveTheDiff,
 } from "../../../api/removeTask";
 import { curriedSendMultipleTasks } from "../../../api/sendMultipleTasks";
-import { ClientContext } from "../../../App";
+import { ClientContext } from "../../../components/ClientContext";
 import { Task, TasksStateProps } from "../../../types";
+
 export const DeleteButton = (
 	task: Task,
-	{ tasks, setTasks }: TasksStateProps,
-	client: any
+	{ tasks, setTasks }: TasksStateProps
 ) => {
 	const clientAPI = useContext(ClientContext);
 	return (
@@ -26,7 +26,7 @@ export const DeleteButton = (
 							removeCrossDependencies(task.frontEndId, tasks)
 						)
 					) &&
-					callApi(client, curriedRemoveTask(task))
+					clientAPI.callApi(curriedRemoveTask(task))
 				) {
 					setTasks(
 						saveTheDiff(
