@@ -19,6 +19,7 @@ export const DeleteButton = (
 	return (
 		<button
 			className="on-task-btn"
+			data-testid={task.frontEndId + "-remove"}
 			onClick={() => {
 				if (
 					clientAPI?.callApi(

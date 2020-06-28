@@ -1,11 +1,11 @@
-import { Auth0Client } from "@auth0/auth0-spa-js";
 import {
 	fireEvent,
 	getByTestId,
 	getByText,
+	queryByText,
 	render,
 } from "@testing-library/react";
-import React, { useState } from "react";
+import React from "react";
 
 import { Task } from "../../types";
 import { TasksLists } from "./TasksLists";
@@ -26,35 +26,31 @@ const tasksArray: Task[] = [
 		dependencyId: [],
 		frontEndId: "Task6Id",
 		isReady: false,
-		name: "Nie pokonuj Thanosa",
+		name: "Don't defeat Thanos",
 		ordinalNumber: 0.0328125,
 		status: "todo",
 		userId: "github|45352717",
+		description: "just don't do it",
 	},
 ];
 
-const TestComponent = () => {
-	const [tasks, setTasks] = useState(tasksArray);
-	const clientMock: Auth0Client | undefined = undefined;
-	return (
-		<TasksLists
-			tasks={tasks}
-			setTasks={setTasks}
-			updateDescription={() => {}}
-			updateName={() => {}}
-			client={clientMock}
-		/>
-	);
-};
+const mockSetTasks: React.Dispatch<React.SetStateAction<Task[]>> = () => {};
 
 test("expect second task to be displayed", async () => {
-	const { container } = render(<TestComponent />);
-	getByText(container, "Defeat Thanos");
+	const { container } = render(
+		<TasksLists tasks={tasksArray} setTasks={mockSetTasks} />
+	);
+	expect(getByText(container, "Defeat Thanos")).toBeInTheDocument();
 });
-test("Task Card opens when chevron is clicked", () => {
-	const { container } = render(<TestComponent />);
+test("Task Card opens and closes when chevron is clicked", async () => {
+	const { container } = render(
+		<TasksLists tasks={tasksArray} setTasks={mockSetTasks} />
+	);
 	const secondTaskButton = getByTestId(container, "Task6Id-toggle-task-card");
 	fireEvent.click(secondTaskButton);
+	expect(getByText(container, "just don't do it")).toBeInTheDocument();
+	fireEvent.click(secondTaskButton);
+	expect(queryByText(container, "just don't do it")).not.toBeInTheDocument();
 });
 
 //samodzielny test - implementacja ma pokazywać asserta
