@@ -16,5 +16,11 @@
 		"jsx": "react",
 		"types": ["cypress"]
 	},
-	"include": ["src/**/*", "cypress/**/*.ts"]
+	"include": [
+		"src/**/*",
+		"cypress/**/*.ts",
+		"cypress/plugins/cy-ts-preprocessor.ts",
+		"cypress/plugins/index.js",
+		"cypress/support/index.ts"
+	]
 }

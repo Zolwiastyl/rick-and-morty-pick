@@ -21,7 +21,7 @@ export const IconButton: React.FC<IconButtonProps> = (
 			<button
 				className="nav-bar-btn"
 				onClick={props.onClick}
-				id={props.icon.displayName}
+				cy-dataid={props.icon.displayName}
 			>
 				<props.icon className="h-12 w-12 p-2" size="24px" />
 
