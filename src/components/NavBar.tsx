@@ -12,7 +12,7 @@ export const Auth0NavBar = () => {
 			{!isAuthenticated && (
 				<IconButton
 					onClick={(evt) => client?.loginWithRedirect({})}
-					icon={LogIn}
+					Icon={LogIn}
 				/>
 			)}
 
@@ -23,7 +23,7 @@ export const Auth0NavBar = () => {
 							returnTo: window.location.origin + "/",
 						})
 					}
-					icon={LogOut}
+					Icon={LogOut}
 				/>
 			)}
 			{isAuthenticated && (

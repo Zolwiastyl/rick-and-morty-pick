@@ -73,7 +73,8 @@ export const Auth0Provider = ({
 			setLoading(false);
 		};
 		initAuth0();
-	}, [options, onRedirectCallback]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const loginWithPopup = async (
 		params?: PopupLoginOptions,
@@ -93,10 +94,9 @@ export const Auth0Provider = ({
 	};
 
 	const handleRedirectCallback = async () => {
-		setLoading(true);
 		await auth0Client?.handleRedirectCallback();
 		const user = await auth0Client?.getUser();
-		setLoading(false);
+
 		setIsAuthenticated(true);
 		setUser(user);
 	};

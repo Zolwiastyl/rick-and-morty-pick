@@ -3,7 +3,14 @@
 declare namespace Cypress {
 	interface Chainable {
 		dataCy(value: string): Chainable<Element>;
-		login(): Chainable<Cypress.Response>;
+
 		loginAuth0(): Chainable<Element>;
+		removeTokenFromStorage(): Chainable<Element>;
+
+		login(
+			username: string,
+			password: string,
+			appState?: any
+		): Chainable<Subject>;
 	}
 }

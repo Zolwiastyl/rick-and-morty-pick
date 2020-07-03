@@ -144,6 +144,8 @@ export function App() {
 	useEffect(() => {
 		if (client) {
 			callApiToFetchData(setTasks);
+		} else {
+			console.error("no client");
 		}
 	}, [loading, user, client, callApiToFetchData]);
 
@@ -193,16 +195,22 @@ export function App() {
 				<ClientContext.Provider value={darkClientAPI}>
 					<NavigationBar>
 						<div className="flex flex-col md:flex md:flex-row md:fixed opacity-75 md:z-10 z-10 relative ">
-							<div className="hidden md:block ">
+							<div
+								className="hidden md:block "
+								data-testid="add-task-field"
+							>
 								<IconButton
 									onClick={() => toggleNewTaskForm(!showNewTaskForm)}
-									icon={showNewTaskForm ? ChevronsLeft : ChevronsRight}
+									Icon={showNewTaskForm ? ChevronsLeft : ChevronsRight}
 								/>
 							</div>
-							<div className="block md:hidden">
+							<div
+								className="block md:hidden"
+								data-testid="add-task-field"
+							>
 								<IconButton
 									onClick={() => toggleNewTaskForm(!showNewTaskForm)}
-									icon={showNewTaskForm ? ChevronsUp : ChevronsDown}
+									Icon={showNewTaskForm ? ChevronsUp : ChevronsDown}
 								/>
 							</div>
 							<div>
@@ -216,22 +224,22 @@ export function App() {
 							onClick={(evt) => {
 								callApiToFetchData(setTasks);
 							}}
-							icon={RefreshCcw}
+							Icon={RefreshCcw}
 						/>
 						<IconButton
 							onClick={(evt) => {
 								toggleGraph(true);
 							}}
-							icon={GitMerge}
+							Icon={GitMerge}
 						/>
 						<IconButton
 							onClick={(evt) => {
 								toggleGraph(false);
 							}}
-							icon={List}
+							Icon={List}
 						/>
 						<IconButton
-							icon={Trash2}
+							Icon={Trash2}
 							onClick={(evt) => {
 								removeAllData();
 							}}

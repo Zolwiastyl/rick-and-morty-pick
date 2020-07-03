@@ -24,12 +24,12 @@ export const LandingPage: React.FC = () => {
 							client?.loginWithRedirect(redirectOption);
 							console.log("clicked");
 						}}
-						icon={LogIn}
+						Icon={LogIn}
 					/>
 				)}
 
 				{isAuthenticated && (
-					<IconButton onClick={() => client?.logout()} icon={LogOut} />
+					<IconButton onClick={() => client?.logout()} Icon={LogOut} />
 				)}
 			</Fragment>
 		);

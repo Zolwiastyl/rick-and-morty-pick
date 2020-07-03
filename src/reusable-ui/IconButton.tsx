@@ -1,31 +1,38 @@
-import React from "react";
+import React, { ComponentProps } from "react";
 import { Icon } from "react-feather";
 
 export type IconButtonProps = {
 	label?: string;
-	icon?: Icon;
-	onClick: (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-};
+	Icon?: Icon;
+} & ComponentProps<"button">;
 
-export const IconButton: React.FC<IconButtonProps> = (
-	props: IconButtonProps
-) => {
-	if (!props.icon) {
+export const IconButton: React.FC<IconButtonProps> = ({
+	label,
+	Icon,
+	onClick,
+	...rest
+}: IconButtonProps) => {
+	if (!Icon) {
 		return (
-			<button className="nav-bar-btn" onClick={props.onClick}>
-				{props.label}
+			<button className="nav-bar-btn" onClick={onClick}>
+				{label}
 			</button>
 		);
 	} else {
 		return (
 			<button
 				className="nav-bar-btn"
-				onClick={props.onClick}
-				cy-dataid={props.icon.displayName}
+				onClick={onClick}
+				title={Icon.displayName}
+				data-testid={Icon.displayName}
 			>
-				<props.icon className="h-12 w-12 p-2" size="24px" />
+				<Icon
+					className="h-12 w-12 p-2"
+					size="24px"
+					aria-label={Icon.displayName}
+				/>
 
-				{props.label}
+				{label}
 			</button>
 		);
 	}

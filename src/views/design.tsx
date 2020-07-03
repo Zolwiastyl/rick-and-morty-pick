@@ -48,7 +48,7 @@ export const DesignLook = () => {
 							hideTaskCard={() => {}}
 						/>
 						<div className="flex flex-row justify-center p-4">
-							<IconButton icon={Plus} onClick={() => {}}></IconButton>{" "}
+							<IconButton Icon={Plus} onClick={() => {}}></IconButton>{" "}
 						</div>
 					</div>
 				</div>
