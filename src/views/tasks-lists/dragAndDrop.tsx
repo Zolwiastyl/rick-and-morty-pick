@@ -1,9 +1,5 @@
-import { useContext } from "react";
-
-import { callApi } from "../../api/api";
 import { putItAbove, putItBelow } from "../../api/generateOrdinalNumber";
 import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
-import { ClientContext } from "../../components/ClientContext";
 import { ClientAPI, Status, TasksStateProps } from "../../types";
 
 /**

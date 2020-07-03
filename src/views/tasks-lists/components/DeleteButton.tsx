@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Trash2 } from "react-feather";
 
-import { callApi } from "../../../api/api";
 import {
 	curriedRemoveTask,
 	removeCrossDependencies,

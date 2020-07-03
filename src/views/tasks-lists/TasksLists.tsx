@@ -1,4 +1,3 @@
-import { Auth0Client } from "@auth0/auth0-spa-js";
 import React, {
 	Dispatch,
 	SetStateAction,
@@ -13,7 +12,6 @@ import {
 	Layers,
 } from "react-feather";
 
-import { callApi } from "../../api/api";
 import { curriedMoveToAnotherGroup } from "../../api/moveToAnotherGroup";
 import { curriedSendNewTask } from "../../api/sendNewTask";
 import { ClientContext } from "../../components/ClientContext";

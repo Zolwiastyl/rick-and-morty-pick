@@ -1,8 +1,8 @@
 ///<reference path="../../support/index.d.ts"/>
 
-import "chai";
+import "@testing-library/cypress/add-commands";
 
-import { screen } from "@testing-library/dom";
+import { screen, waitFor } from "@testing-library/react";
 
 export const x = 0;
 
@@ -25,5 +25,14 @@ describe("basic user flow works", () => {
 
 		// cy.type("new task");
 		// cy.type("{ enter }"
+	});
+	it("get text with findBy", () => {
+		expect(screen.findByRole("button"));
+		expect(screen.findByText("todo"));
+		expect(screen.findByTitle("ChevronsRight").then((el) => el.click()));
+		cy.get("div").findAllByText("todo");
+
+		screen.findByTitle("ChevronsRight").then((element) => element.click());
+		waitFor(() => screen.getByTitle("ChevronsRight").click());
 	});
 });
