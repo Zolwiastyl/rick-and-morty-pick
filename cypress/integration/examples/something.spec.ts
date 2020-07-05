@@ -1,7 +1,5 @@
 ///<reference path="../../support/index.d.ts"/>
 
-import "@testing-library/cypress/add-commands";
-
 import { screen, waitFor } from "@testing-library/react";
 
 export const x = 0;
@@ -30,7 +28,10 @@ describe("basic user flow works", () => {
 		expect(screen.findByRole("button"));
 		expect(screen.findByText("todo"));
 		expect(screen.findByTitle("ChevronsRight").then((el) => el.click()));
-		cy.get("div").findAllByText("todo");
+		cy.get("button")
+			.then(($el) => $el.get(0))
+			.click();
+		cy.focused().type("new task").type(`{enter}`);
 
 		screen.findByTitle("ChevronsRight").then((element) => element.click());
 		waitFor(() => screen.getByTitle("ChevronsRight").click());
