@@ -64,6 +64,7 @@ Cypress.Commands.add(
 			});
 
 			const stateId = "test";
+
 			cy.setCookie(
 				`a0.spajs.txs.${stateId}`,
 				encodeURIComponent(
@@ -75,6 +76,7 @@ Cypress.Commands.add(
 					})
 				)
 			).then(() => {
+				cy.log("visiting code= state=");
 				cy.visit(`/?code=test-code&state=${stateId}`);
 			});
 		});

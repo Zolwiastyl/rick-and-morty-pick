@@ -7,10 +7,6 @@ declare namespace Cypress {
 		loginAuth0(): Chainable<Element>;
 		removeTokenFromStorage(): Chainable<Element>;
 
-		login(
-			username: string,
-			password: string,
-			appState?: any
-		): Chainable<Subject>;
+		login(username: string, password: string): Chainable<Subject>;
 	}
 }
