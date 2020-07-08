@@ -68,11 +68,18 @@ export function App() {
 		fetchTasks: async (
 			setTasks: React.Dispatch<React.SetStateAction<Task[]>>
 		) => {
-			if (!client) {
-				throw Error("no client from auth0");
+			try {
+				if (!client) {
+					throw Error("no client from auth0");
+				}
+
+				const token = await client.getTokenSilently();
+				await fetchDataFromServer(setTasks, token).catch((error) =>
+					console.error("it was an error " + error.text)
+				);
+			} catch (error) {
+				console.error(error);
 			}
-			const token = await client.getTokenSilently();
-			await fetchDataFromServer(setTasks, token);
 		},
 	};
 

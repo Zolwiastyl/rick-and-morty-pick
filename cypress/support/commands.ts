@@ -32,54 +32,58 @@ export const x = 0;
 Cypress.Commands.add(
 	"login",
 	(username, password, appState = { targetUrl: "/" }) => {
-		cy.log(`Logging in as ${username}`);
-		const options = {
-			method: "POST",
-			url: Cypress.env("auth_url"),
-			body: {
-				grant_type: "password",
-				username: username,
-				password: password,
-				audience: Cypress.env("auth_audience"),
-				scope: "openid profile email",
-				client_id: Cypress.env("auth_client_id"),
-				client_secret: Cypress.env("auth_client_secret"),
-			},
-		};
-		cy.request(options).then(({ body }) => {
-			const { access_token, expires_in, id_token } = body;
-
-			cy.server();
-
-			cy.route({
-				url: "oauth/token",
+		try {
+			cy.log(`Logging in as ${username}`);
+			const options = {
 				method: "POST",
-				response: {
-					access_token: access_token,
-					id_token: id_token,
+				url: Cypress.env("auth_url"),
+				body: {
+					grant_type: "password",
+					username: username,
+					password: password,
+					audience: Cypress.env("auth_audience"),
 					scope: "openid profile email",
-					expires_in: expires_in,
-					token_type: "Bearer",
+					client_id: Cypress.env("auth_client_id"),
+					client_secret: Cypress.env("auth_client_secret"),
 				},
-			});
+			};
+			cy.request(options).then(({ body }) => {
+				const { access_token, expires_in, id_token } = body;
 
-			const stateId = "test";
+				cy.server();
 
-			cy.setCookie(
-				`a0.spajs.txs.${stateId}`,
-				encodeURIComponent(
-					JSON.stringify({
-						appState: appState,
+				cy.route({
+					url: "oauth/token",
+					method: "POST",
+					response: {
+						access_token: access_token,
+						id_token: id_token,
 						scope: "openid profile email",
-						audience: "default",
-						redirect_uri: "http://localhost:3000",
-					})
-				)
-			).then(() => {
-				cy.log("visiting code= state=");
-				cy.visit(`/?code=test-code&state=${stateId}`);
+						expires_in: expires_in,
+						token_type: "Bearer",
+					},
+				});
+
+				const stateId = "test";
+
+				cy.setCookie(
+					`a0.spajs.txs.${stateId}`,
+					encodeURIComponent(
+						JSON.stringify({
+							appState: appState,
+							scope: "openid profile email",
+							audience: "default",
+							redirect_uri: "http://localhost:3000",
+						})
+					)
+				).then(() => {
+					cy.log("visiting code= state=");
+					cy.visit(`/?code=test-code&state=${stateId}`);
+				});
 			});
-		});
+		} catch (error) {
+			cy.log(error);
+		}
 	}
 );
 
