@@ -8,5 +8,6 @@ declare namespace Cypress {
 		removeTokenFromStorage(): Chainable<Element>;
 
 		login(username: string, password: string): Chainable<Subject>;
+		drag(value: string): Chainable<Element>;
 	}
 }

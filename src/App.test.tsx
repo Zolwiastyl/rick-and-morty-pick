@@ -35,21 +35,14 @@ const tasksArray: Task[] = [
 
 const TestComponent = () => {
 	const [tasks, setTasks] = useState(tasksArray);
-	const clientMock: Auth0Client | undefined = undefined;
-	return (
-		<TasksLists
-			tasks={tasks}
-			setTasks={setTasks}
-			updateDescription={() => {}}
-			updateName={() => {}}
-			client={clientMock}
-		/>
-	);
+
+	return <TasksLists tasks={tasks} setTasks={setTasks} />;
 };
 
 test("First task name on TaskLabel is correct", async () => {
 	const { container } = render(<TestComponent />);
 	const firstTaskName = getByTestId(container, "Task5Id");
+
 	expect(firstTaskName.textContent).toBe("Task 5");
 });
 

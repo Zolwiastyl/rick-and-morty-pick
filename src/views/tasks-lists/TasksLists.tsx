@@ -154,7 +154,7 @@ export function TasksLists({ tasks, setTasks }: TasksListsProps) {
 									updateDescription={updateDescription}
 									updateName={updateName}
 									id={task.frontEndId}
-									data-testid={task.frontEndId}
+									data-testid={task.name}
 									draggable="true"
 									onDragStart={(event) => {
 										event.dataTransfer.setData(
