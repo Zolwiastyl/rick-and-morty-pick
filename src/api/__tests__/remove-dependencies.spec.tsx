@@ -1,4 +1,4 @@
-import { makeNewTasksRemovingDependencies } from "../../views/tasks-graph/GraphAPI";
+import { makeNewTasksRemovingDependencies } from "../addDependencies";
 
 const tasks = require("./remove-dependencies.json");
 
