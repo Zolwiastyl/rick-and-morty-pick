@@ -1,8 +1,9 @@
+import { Task } from "../../types";
 import { makeNewTasksRemovingDependencies } from "../removeDependencies";
 
 const tasks = require("./remove-dependencies.json");
 
-const returnedTasks = [
+const returnedTasks: Task[] = [
 	{
 		dependOnThisTask: ["0620201435140200", "0620201435160200"],
 		dependencyId: [],

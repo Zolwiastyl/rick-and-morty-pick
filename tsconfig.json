@@ -16,11 +16,5 @@
 		"jsx": "react",
 		"types": ["jest", "node"]
 	},
-	"include": [
-		"src/**/*",
-		"cypress/**/*.ts",
-		"cypress/plugins/cy-ts-preprocessor.ts",
-		"cypress/plugins/index.js",
-		"cypress/support/index.ts"
-	]
+	"include": ["src/**/*", "src/jest.config.js"]
 }
