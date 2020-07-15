@@ -1,3 +1,6 @@
+import "isomorphic-fetch";
+import "@testing-library/jest-dom/extend-expect";
+
 import {
 	fireEvent,
 	getByTestId,
@@ -46,11 +49,11 @@ test("Task Card opens and closes when chevron is clicked", async () => {
 	const { container } = render(
 		<TasksLists tasks={tasksArray} setTasks={mockSetTasks} />
 	);
-	const secondTaskButton = getByTestId(container, "Task6Id-toggle-task-card");
+	const secondTaskButton = getByTestId(container, "Task6Id-toggle");
 	fireEvent.click(secondTaskButton);
-	expect(getByText(container, "just don't do it")).toBeInTheDocument();
+	expect(getByText(container, "just don't do it")).toBeInTheDOM();
 	fireEvent.click(secondTaskButton);
-	expect(queryByText(container, "just don't do it")).not.toBeInTheDocument();
+	expect(queryByText(container, "just don't do it")).not.toBeInTheDOM();
 });
 
 //samodzielny test - implementacja ma pokazywać asserta

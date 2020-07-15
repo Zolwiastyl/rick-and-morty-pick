@@ -1,3 +1,5 @@
+import "@testing-library/jest-dom/extend-expect";
+
 import {
 	fireEvent,
 	getByTestId,
@@ -40,7 +42,7 @@ const TestComponent = () => {
 
 test("First task name on TaskLabel is correct", async () => {
 	const { container } = render(<TestComponent />);
-	const firstTaskName = getByTestId(container, "Task5Id");
+	const firstTaskName = getByTestId(container, "Task 5");
 
 	expect(firstTaskName.textContent).toBe("Task 5");
 });
@@ -53,6 +55,6 @@ test("expect second task to be displayed", async () => {
 });
 test("Task Card opens when chevron is clicked", () => {
 	const { container } = render(<TestComponent />);
-	const secondTaskButton = getByTestId(container, "Task6Id-toggle-task-card");
+	const secondTaskButton = getByTestId(container, "Task6Id-toggle");
 	fireEvent.click(secondTaskButton);
 });

@@ -16,7 +16,7 @@ describe("It can", () => {
 			.visit("/app");
 		cy.get(":nth-child(1) > .overflow-y-auto")
 			.children()
-			.should("have.length", 2)
+			.should("have.length", 3)
 			.wait(5000);
 		cy.get('[data-testid="task to move"]').drag(
 			":nth-child(2) > .overflow-y-auto"
@@ -28,7 +28,7 @@ describe("It can", () => {
 
 		cy.get(":nth-child(1) > .overflow-y-auto")
 			.children()
-			.should("have.length", 1);
+			.should("have.length", 2);
 
 		cy.get('[data-testid="task to move"]').drag(
 			":nth-child(1) > .overflow-y-auto"
@@ -36,7 +36,7 @@ describe("It can", () => {
 		cy.get("[data-testid=RefreshCcw] > .h-12").click().wait(4000);
 		cy.get(":nth-child(1) > .overflow-y-auto")
 			.children()
-			.should("have.length", 2);
+			.should("have.length", 3);
 		cy.get(":nth-child(2) > .overflow-y-auto").children().should("not.exist");
 	});
 });

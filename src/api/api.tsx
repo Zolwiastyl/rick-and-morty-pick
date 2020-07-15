@@ -1,3 +1,5 @@
+import "isomorphic-fetch";
+
 import { Auth0Client } from "@auth0/auth0-spa-js";
 import React from "react";
 

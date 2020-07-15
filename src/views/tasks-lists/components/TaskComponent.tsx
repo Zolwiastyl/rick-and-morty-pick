@@ -28,7 +28,7 @@ export const TaskLabel: FunctionComponent<TaskLabelProps> = ({
 			<div className="flex flex-row content-around items-center">
 				{children}
 				<button
-					data-testid={task.name + " toggle"}
+					data-testid={task.frontEndId + "-toggle"}
 					className="on-task-btn"
 					onClick={() => toggleTaskCard(!showTaskCard)}
 				>
