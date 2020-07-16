@@ -36,10 +36,11 @@ export const LandingPage: React.FC = () => {
 	};
 
 	return (
-		<div className="flex flex-col md:flex-row md:flex">
-			<NavigationBar>
+		<div className="flex flex-col">
+			<div className="bg-gray-900 justify-end space-y-2 s	pace-x-2 p-2 flex ">
 				<LogInButton />
-			</NavigationBar>
+			</div>
+
 			<div> landing page and else</div>
 		</div>
 	);

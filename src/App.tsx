@@ -228,7 +228,7 @@ export function App() {
 						</div>
 						<div className="md:h-20 h-10"></div>
 						<IconButton
-							onClick={(evt) => {
+							onClick={() => {
 								callApiToFetchData(setTasks);
 							}}
 							Icon={RefreshCcw}
