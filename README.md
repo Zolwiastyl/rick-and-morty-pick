@@ -1,4 +1,4 @@
-## wireM
+## Phloem
 
 This is simple to-do-app, but with one special feature - graphs.
 You can see all your tasks as graph in which dependencies are clear and you can easly spot connections and route that you have to make to accomplish your goal or meet your Todo boss.

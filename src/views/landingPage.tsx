@@ -4,7 +4,6 @@ import { LogIn, LogOut } from "react-feather";
 
 import { useAuth0 } from "../react-auth0-spa";
 import { IconButton } from "../reusable-ui/IconButton";
-import { NavigationBar } from "../reusable-ui/NavigationBar";
 
 const redirectOption: RedirectLoginOptions = {
 	redirect_uri: window.location.origin + "/app",
