@@ -57,7 +57,6 @@ export const LandingPage: React.FC = () => {
 					using just a pen and paper drawing tasks as graph where they are
 					clearly leading one to another is natural.
 				</div>
-				<h2></h2>
 			</div>
 		</div>
 	);
