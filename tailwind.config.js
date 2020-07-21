@@ -42,6 +42,7 @@ module.exports = {
 				"800": "#276ac8",
 				"900": "#173f76",
 			},
+			white: "#ffffff",
 			success: "#2ce23b",
 			critical: "#fc4333",
 		},

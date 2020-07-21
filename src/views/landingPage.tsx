@@ -41,20 +41,26 @@ const SectionWithIcon: React.FC<SectionWithIconProps> = ({
 	text,
 	icon,
 }) => {
+	const colorOfHeaderBackground =
+		colorName === "dark" ? "bg-gray-100" : "bg-white";
 	return (
 		<section className={colorName}>
-			<div className="grid grid-cols-1 md:grid-cols-3">
-				<div className="flex flex-row justify-center">
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+				<div
+					className={
+						"flex flex-row justify-center md:relative sticky top-0 " +
+						colorOfHeaderBackground
+					}
+				>
 					<img
 						src={icon}
 						alt="app-logo"
-						className="md:h-64 h-20 object-center flex-shrink-0"
+						className="md:h-64 h-20 object-center flex-shrink-0 self-center sticky top-0"
 					></img>
-					<h1 className=" text-2xl text-center md:hidden block py-5 px-3">
+					<h1 className=" text-2xl text-center md:hidden block py-5 px-3 sticky top-0">
 						{headerText}{" "}
 					</h1>
 				</div>
-
 				<div>
 					<h1 className=" text-2xl text-center hidden md:block ">
 						{headerText}{" "}
@@ -105,7 +111,15 @@ export const LandingPage: React.FC = () => {
 
 			<main className="grid grid-cols-1 w-full  text-l text-gray-800 text-justify tracking-wide space-y-4 leading-loose">
 				{" "}
-				<section className="dark">
+				<SectionWithIcon
+					icon={appLogo}
+					paragraphText={
+						"This is my first todo app. I wanted to do it because it provides a user with possibility to visualize tasks and their dependencies with graphs."
+					}
+					headerText={"Phloem App"}
+					colorName="dark"
+				/>
+				{/* <section className="dark">
 					<div className="grid grid-cols-3">
 						<div className="flex flex-row justify-center">
 							<img
@@ -118,14 +132,12 @@ export const LandingPage: React.FC = () => {
 						<div>
 							<h1 className=" text-3xl text-center ">Phloem App </h1>
 							<div className=" justify-center text-xl max-w-4xl py-10">
-								This is my first todo app. I wanted to do it because it
-								provides a user with possibility to visualize tasks and
-								their dependencies with graphs.
+								
 							</div>
 						</div>
 						<div />
 					</div>
-				</section>
+				</section> */}
 				<SectionWithIcon
 					icon={whyIcon}
 					paragraphText={secondParagraphText}
