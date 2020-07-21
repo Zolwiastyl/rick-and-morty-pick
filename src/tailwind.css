@@ -16,6 +16,14 @@ inline:focus {
 	@apply outline-none border-gray-700;
 }
 
+.dark {
+	@apply bg-gray-100 p-10 relative flex justify-center;
+}
+
+.light {
+	@apply p-10 relative flex justify-center;
+}
+
 .on-task-btn {
 	@apply text-gray-400;
 }
