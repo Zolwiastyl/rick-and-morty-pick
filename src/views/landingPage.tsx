@@ -100,7 +100,7 @@ export const LandingPage: React.FC = () => {
 
 	return (
 		<div className="flex middle  flex-col">
-			<div className="bg-gray-900 justify-end space-y-2 s	pace-x-2 p-2 flex ">
+			<div className="bg-gray-900 justify-end space-y-2 space-x-2 p-2 flex ">
 				<LogInButton />
 			</div>
 			<div>

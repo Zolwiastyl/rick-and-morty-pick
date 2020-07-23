@@ -14,29 +14,31 @@ describe("It can", () => {
 			.route("/tasks")
 			.wait(4000)
 			.visit("/app");
-		cy.get(":nth-child(1) > .overflow-y-auto")
+		cy.get(".space-x-2 > :nth-child(1) > .w-full")
 			.children()
 			.should("have.length", 3)
 			.wait(5000);
 		cy.get('[data-testid="task to move"]').drag(
-			":nth-child(2) > .overflow-y-auto"
+			".min-w-full > .space-x-2 > :nth-child(2)"
 		);
 
-		cy.get(":nth-child(2) > .overflow-y-auto")
+		cy.get(".space-x-2 > :nth-child(2) > .w-full")
 			.children()
 			.should("have.length", 1);
 
-		cy.get(":nth-child(1) > .overflow-y-auto")
+		cy.get(".space-x-2 > :nth-child(1) > .w-full")
 			.children()
 			.should("have.length", 2);
 
 		cy.get('[data-testid="task to move"]').drag(
-			":nth-child(1) > .overflow-y-auto"
+			".min-w-full > .space-x-2 > :nth-child(1)"
 		);
 		cy.get("[data-testid=RefreshCcw] > .h-12").click().wait(4000);
-		cy.get(":nth-child(1) > .overflow-y-auto")
+		cy.get(".space-x-2 > :nth-child(1) > .w-full")
 			.children()
 			.should("have.length", 3);
-		cy.get(":nth-child(2) > .overflow-y-auto").children().should("not.exist");
+		cy.get(".space-x-2 > :nth-child(2) > .w-full")
+			.children()
+			.should("not.exist");
 	});
 });

@@ -198,10 +198,15 @@ export function App() {
 
 	return (
 		<Fragment>
-			<div className="md:flex md:flex-row w-full max-w-screen flex max-h-screen h-screen flex-col lg:overflow-hidden md:h-screen ">
+			<div
+				className="
+			md:flex md:flex-row w-full max-w-screen flex flex-col
+			md:h-screen h-screen max-h-screen
+			"
+			>
 				<ClientContext.Provider value={darkClientAPI}>
 					<NavigationBar>
-						<div className="flex flex-col md:flex md:flex-row md:fixed opacity-75 md:z-10 z-10 relative ">
+						<div className="flex flex-col md:flex md:flex-row  opacity-100 md:z-10 z-10 relative">
 							<div
 								className="hidden md:block "
 								data-testid="add-task-field"
@@ -226,7 +231,7 @@ export function App() {
 								) : null}
 							</div>
 						</div>
-						<div className="md:h-20 h-10"></div>
+						<div className="md:h-20 "></div>
 						<IconButton
 							onClick={() => {
 								callApiToFetchData(setTasks);
@@ -258,28 +263,27 @@ export function App() {
 						<div className="flex-1" />
 						<Auth0NavBar />
 					</NavigationBar>
-					<div className="w-full mr-2">
-						<div className=" min-w-full max-w-full max-h-full">
-							<Router history={history}>
-								{!showGraph && (
-									<TasksLists setTasks={setTasks} tasks={tasks} />
-								)}
-								{showGraph && (
-									<Fragment>
-										{/* <BruteGraph setTasks={setTasks} tasks={tasks} /> */}
-										<TasksGraph
-											addEdge={addEdge}
-											removeEdge={removeEdge}
-											tasks={tasks}
-										/>
-									</Fragment>
-								)}
 
-								<Switch>
-									<Route path="/" exact />
-								</Switch>
-							</Router>
-						</div>
+					<div className="w-full max-w-full">
+						<Router history={history}>
+							{!showGraph && (
+								<TasksLists setTasks={setTasks} tasks={tasks} />
+							)}
+							{showGraph && (
+								<Fragment>
+									{/* <BruteGraph setTasks={setTasks} tasks={tasks} /> */}
+									<TasksGraph
+										addEdge={addEdge}
+										removeEdge={removeEdge}
+										tasks={tasks}
+									/>
+								</Fragment>
+							)}
+
+							<Switch>
+								<Route path="/" exact />
+							</Switch>
+						</Router>
 					</div>
 				</ClientContext.Provider>
 			</div>

@@ -17,37 +17,14 @@ import { curriedSendNewTask } from "../../api/sendNewTask";
 import { ClientContext } from "../../components/ClientContext";
 import { Status, Task, TaskId } from "../../types";
 import { DeleteButton } from "./components/DeleteButton";
-import { TaskLabel } from "./components/TaskComponent";
+import { TaskLabel } from "./components/TaskLabel";
+import { TasksColumn } from "./components/TasksColumn";
 import { handleDrop } from "./dragAndDrop";
 
 interface TaskButtonProps {
 	onClick: () => void;
 	children: React.ReactNode;
 }
-
-interface TaskListProps extends React.ComponentProps<"div"> {
-	status: Status;
-}
-const TaskList: React.FC<TaskListProps> = ({
-	status: { statusName, icon: StatusIcon },
-	children,
-	...rest
-}) => {
-	return (
-		<div
-			className="bg-gray-100 h-auto flex flex-col hover:bg-gray-200 w-64 md:w-1/5 rounded-lg p-1"
-			{...rest}
-		>
-			<header className="flex w-64 flex-row items-center justify-center">
-				<StatusIcon className="p-2 max-h-sm" size="2.5rem" />
-				<p className="self-center p-4">{statusName}</p>
-			</header>
-			<div className=" overflow-y-scroll h-auto w-full max-w-full flex flex-col space-y-1">
-				{children}
-			</div>
-		</div>
-	);
-};
 
 type TasksListsProps = {
 	tasks: Task[];
@@ -101,9 +78,19 @@ export function TasksLists({ tasks, setTasks }: TasksListsProps) {
 		[tasks, clientAPI, setTasks]
 	);
 	return (
-		<div className="flex flex-row p-4 w-auto overflow-x-scroll h-auto space-x-2">
+		<div
+			className="
+			space-x-2
+			flex flex-row 
+			h-full
+			p-2
+			md:h-screen
+			 bg-white
+			overflow-x-auto 
+			"
+		>
 			{statuses.map((status) => (
-				<TaskList
+				<TasksColumn
 					// useDrop.ref
 					key={status.statusName + "-column"}
 					status={status}
@@ -176,7 +163,7 @@ export function TasksLists({ tasks, setTasks }: TasksListsProps) {
 								</TaskLabel>
 							);
 						})}
-				</TaskList>
+				</TasksColumn>
 			))}
 		</div>
 	);
