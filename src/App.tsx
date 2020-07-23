@@ -198,7 +198,7 @@ export function App() {
 
 	return (
 		<Fragment>
-			<div className="md:flex md:flex-row w-full max-w-screen flex flex-col lg:overflow-hidden h-screen max-h-screen">
+			<div className="md:flex md:flex-row w-full max-w-screen flex max-h-screen h-screen flex-col lg:overflow-hidden md:h-screen ">
 				<ClientContext.Provider value={darkClientAPI}>
 					<NavigationBar>
 						<div className="flex flex-col md:flex md:flex-row md:fixed opacity-75 md:z-10 z-10 relative ">
@@ -259,7 +259,7 @@ export function App() {
 						<Auth0NavBar />
 					</NavigationBar>
 					<div className="w-full mr-2">
-						<div className=" min-w-full max-w-full max-h-screen h-full">
+						<div className=" min-w-full max-w-full max-h-full">
 							<Router history={history}>
 								{!showGraph && (
 									<TasksLists setTasks={setTasks} tasks={tasks} />

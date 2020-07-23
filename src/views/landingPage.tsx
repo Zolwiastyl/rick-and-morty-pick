@@ -103,49 +103,50 @@ export const LandingPage: React.FC = () => {
 			<div className="bg-gray-900 justify-end space-y-2 s	pace-x-2 p-2 flex ">
 				<LogInButton />
 			</div>
-
-			<main className="grid grid-cols-1 w-full  text-l text-gray-800 text-justify tracking-wide leading-loose">
-				{" "}
-				<SectionWithIcon icon={appLogo} headerText={"Phloem App"}>
-					This is my first todo app. I wanted to do it because it provides
-					a user with possibility to visualize tasks and their dependencies
-					with graphs.
-				</SectionWithIcon>
-				<SectionWithIcon
-					icon={questionMark}
-					headerText={"Why next todo app?"}
-				>
-					When I was using any of already avaliable solutions I kept
-					bumping into place where I could not <b>plan</b> my tasks. I
-					didn't know why - I have divided them in groups and tables, gave
-					them colors and icons - however I didn't find them handy.
-				</SectionWithIcon>
-				<SectionWithIcon icon={exclamation} headerText="Found it">
-					One day I've realized that instead of wirtting my tasks to app I
-					was drawing them as graph with a pencil.
-				</SectionWithIcon>
-				<SectionWithIcon icon={lightbulb} headerText={"Solution"}>
-					Why not make app out of it that will make it easier!
-				</SectionWithIcon>
-				<SectionWithIcon icon={tree}>
-					Omnia Galia est divisa in partes tres quarum unam incolum Belgae,
-					aliam Aqutianiae tertiam qui incolunt lingua celtae nostra Galli
-					apellantur.
-					<button
-						onClick={() => {
-							client?.loginWithRedirect(redirectOption);
-						}}
-						className=" font-bold hover:scale-x-90 hover:transform hover:translate-x-4"
+			<div>
+				<main className="grid grid-cols-1 w-full  text-l text-gray-800 text-justify tracking-wide leading-loose">
+					{" "}
+					<SectionWithIcon icon={appLogo} headerText={"Phloem App"}>
+						This is my first todo app. I wanted to do it because it
+						provides a user with possibility to visualize tasks and their
+						dependencies with graphs.
+					</SectionWithIcon>
+					<SectionWithIcon
+						icon={questionMark}
+						headerText={"Why next todo app?"}
 					>
-						Try it
-					</button>
-				</SectionWithIcon>
-				<SectionWithIcon icon={lightining}>
-					Omnia Galia est divisa in partes tres quarum unam incolum Belgae,
-					aliam Aqutianiae tertiam qui incolunt lingua celtae nostra Galli
-					apellantur.
-				</SectionWithIcon>
-			</main>
+						When I was using any of already avaliable solutions I kept
+						bumping into place where I could not <b>plan</b> my tasks. I
+						didn't know why - I have divided them in groups and tables,
+						gave them colors and icons - however I didn't find them handy.
+					</SectionWithIcon>
+					<SectionWithIcon icon={exclamation} headerText="Found it">
+						One day I've realized that instead of wirtting my tasks to app
+						I was drawing them as graph with a pencil.
+					</SectionWithIcon>
+					<SectionWithIcon icon={lightbulb} headerText={"Solution"}>
+						Why not make app out of it that will make it easier!
+					</SectionWithIcon>
+					<SectionWithIcon icon={tree}>
+						Omnia Galia est divisa in partes tres quarum unam incolum
+						Belgae, aliam Aqutianiae tertiam qui incolunt lingua celtae
+						nostra Galli apellantur.
+						<button
+							onClick={() => {
+								client?.loginWithRedirect(redirectOption);
+							}}
+							className=" font-bold hover:scale-x-90 hover:transform hover:translate-x-4"
+						>
+							Try it
+						</button>
+					</SectionWithIcon>
+					<SectionWithIcon icon={lightining}>
+						Omnia Galia est divisa in partes tres quarum unam incolum
+						Belgae, aliam Aqutianiae tertiam qui incolunt lingua celtae
+						nostra Galli apellantur.
+					</SectionWithIcon>
+				</main>
+			</div>
 			<footer className="flex justify-center text-gray-200  bg-gray-800 tracking-widest p-5 px-10">
 				<div className="grid grid-cols-3 w-full md:w-1/2 lg:w-1/3 p-10">
 					<span className="lg:p-1"> Find me on: </span>

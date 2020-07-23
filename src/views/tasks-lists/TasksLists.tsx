@@ -35,14 +35,14 @@ const TaskList: React.FC<TaskListProps> = ({
 }) => {
 	return (
 		<div
-			className="bg-gray-100 max-h-screen h-full flex flex-col hover:bg-gray-200 lg:w-1/5 rounded-lg p-1"
+			className="bg-gray-100 h-auto flex flex-col hover:bg-gray-200 w-64 md:w-1/5 rounded-lg p-1"
 			{...rest}
 		>
-			<header className="flex flex-row items-center justify-center w-full">
+			<header className="flex w-64 flex-row items-center justify-center">
 				<StatusIcon className="p-2 max-h-sm" size="2.5rem" />
 				<p className="self-center p-4">{statusName}</p>
 			</header>
-			<div className=" overflow-y-auto max-h-full h-full w-full max-w-full flex flex-col space-y-1">
+			<div className=" overflow-y-scroll h-auto w-full max-w-full flex flex-col space-y-1">
 				{children}
 			</div>
 		</div>
@@ -101,7 +101,7 @@ export function TasksLists({ tasks, setTasks }: TasksListsProps) {
 		[tasks, clientAPI, setTasks]
 	);
 	return (
-		<div className="flex flex-row p-4 w-auto max-h-full h-full space-x-2">
+		<div className="flex flex-row p-4 w-auto overflow-x-scroll h-auto space-x-2">
 			{statuses.map((status) => (
 				<TaskList
 					// useDrop.ref
