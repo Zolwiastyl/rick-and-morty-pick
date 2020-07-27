@@ -13,7 +13,6 @@ export const NavigationBar: FunctionComponent<NavBarProps> = ({ children }) => {
 			overflow-x-auto
 			overflow-y-auto
 			md:static md:top-0
-			 
 			w-full
 			justify-start
 			space-y-3
@@ -23,7 +22,6 @@ export const NavigationBar: FunctionComponent<NavBarProps> = ({ children }) => {
 			md:flex md:flex-col
 			md:h-full md:min-h-screen  md:p-5 md:w-24
 			md:space-x-0
-			
 			md:rounded-r-lg md:justify-start  
 			"
 		>

@@ -87,7 +87,7 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 				//updateDescription(task.frontEndId!, descriptionState);
 			}}
 		>
-			<header className="flex flex-row mt-1 justify-center border-b border-gray-900 py-1">
+			<header className="flex flex-row mt-1  justify-around border-b border-gray-900 py-1">
 				<div className="text-xl h-full w-full">
 					{isEditing ? (
 						<input
@@ -111,23 +111,24 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 								setEditing(true);
 								setClicked(inputRef);
 							}}
-							className="text-gray-800 py-2 px-4 w-64 rounded inline-flex items-center 
+							className="text-gray-300 hover:text-gray-700 py-2 px-4 w-64 rounded inline-flex items-center 
 							min-w-full
 							border border-dashed hover:border-gray-700 focus:outline-none focus:border-gray-700"
 						>
-							<span className="overflow-hidden whitespace-no-wrap h-10">
+							<span className="overflow-y-auto text-gray-900 hover:text-gray-700 whitespace-no-wrap h-10">
 								{task.name}
 							</span>
 							<Edit2
-								className="text-gray-300 hover:text-gray-800"
-								viewBox="-10 -4 54 24"
+								className="stroke-current hover:text-gray-800 text-base"
+								size="12px"
+								viewBox="0 0 24 24"
 							/>
 						</button>
 					)}
 				</div>
 				<TaskReadyIndicator isReady={task.isReady} />
 			</header>
-			<div>
+			<div className=" h-40">
 				{isEditing ? (
 					<textarea
 						// eslint-disable-next-line jsx-a11y/no-autofocus
@@ -151,16 +152,18 @@ export const TaskCard: FunctionComponent<TaskCardProps> = ({
 								setClicked(textareaRef);
 							}}
 							className=" inline-flex hover:text-gray-700 p-3
+							text-gray-900
 							border border-dashed hover:border-gray-700 focus:outline-none focus:border-gray-700
-							 h-40 w-full "
+							h-32 w-full "
 						>
-							<span className="min-w-full w-54 h-full">
+							<span className="min-w-full w-54 h-full overflow-auto">
 								{" "}
 								{task.description}
 							</span>
 							<Edit2
-								className="text-gray-300 hover:text-gray-800"
-								viewBox="-10 -4 54 24"
+								className="stroke-current "
+								size="10px"
+								viewBox="0 0 24 24"
 							/>
 						</button>
 					</div>

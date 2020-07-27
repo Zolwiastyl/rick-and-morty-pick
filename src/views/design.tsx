@@ -16,21 +16,17 @@ export const DesignLook = () => {
 	useEffect(() => {}, []);
 
 	return (
-		<div className="flex flex-row w-screen">
+		<div className="flex md:flex-row flex-col w-screen">
 			<NavigationBar>
-				<Link
-					className="bg-gray-400 text-lg w-16 text-primary-600 rounded-full p-2 hover:text-primary-400 stroke-2 stroke-current mt-2"
-					to="./app"
-				>
-					<svg
-						className="h-12 w-12 bg-gray-400 rounded-full p-2"
-						viewBox="0 0 24 24"
-					>
-						{<Trello />}
-					</svg>
+				<Link className="nav-bar-btn" to="./app">
+					<Trello
+						className="h-12 w-12 p-2"
+						size="24px"
+						aria-label={Trello.displayName}
+					/>
 				</Link>
 			</NavigationBar>
-			<div className="flex justify-center w-screen">
+			<div className="flex justify-center w-full">
 				<div className="flex p-10 bg-gray-100 justify-center">
 					<div className="flex flex-col p-2">
 						<TaskCard
