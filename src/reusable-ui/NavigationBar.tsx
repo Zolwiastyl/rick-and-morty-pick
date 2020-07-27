@@ -16,7 +16,6 @@ export const NavigationBar: FunctionComponent<NavBarProps> = ({ children }) => {
 			 
 			w-full
 			justify-start
-			
 			space-y-3
 			flex-shrink-0
 			space-x-2 p-2 py-2

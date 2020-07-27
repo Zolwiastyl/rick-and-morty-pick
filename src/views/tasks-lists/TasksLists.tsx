@@ -82,10 +82,11 @@ export function TasksLists({ tasks, setTasks }: TasksListsProps) {
 			className="
 			space-x-2
 			flex flex-row 
+			box-border
 			h-full
 			p-2
 			md:h-screen
-			 bg-white
+			bg-white
 			overflow-x-auto 
 			"
 		>

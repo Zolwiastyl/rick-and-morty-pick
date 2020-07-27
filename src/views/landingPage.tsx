@@ -44,7 +44,7 @@ const SectionWithIcon: React.FC<SectionWithIconProps> = ({
 						<img
 							src={icon}
 							alt={headerText + " graphics"}
-							className="md:h-64 h-20 object-center flex-shrink-0 self-center sticky top-0"
+							className="md:h-40 h-20 object-center flex-shrink-0 self-center sticky top-0"
 						></img>
 					) : null}
 					{headerText ? (

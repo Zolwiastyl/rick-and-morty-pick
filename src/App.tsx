@@ -264,7 +264,7 @@ export function App() {
 						<Auth0NavBar />
 					</NavigationBar>
 
-					<div className="w-full max-w-full">
+					<div className="w-full max-w-full box-border overflow-hidden">
 						<Router history={history}>
 							{!showGraph && (
 								<TasksLists setTasks={setTasks} tasks={tasks} />
