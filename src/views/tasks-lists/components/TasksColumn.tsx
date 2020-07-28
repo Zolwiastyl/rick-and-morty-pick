@@ -17,7 +17,7 @@ export const TasksColumn: React.FC<TaskColumnProps> = ({
             rounded-lg p-1
             flex flex-col 
 			w-64 md:w-1/5
-			box-border
+			
             "
 			{...rest}
 		>
@@ -26,8 +26,8 @@ export const TasksColumn: React.FC<TaskColumnProps> = ({
 				<p className="self-center p-4">{statusName}</p>
 			</header>
 
-			<div className=" flex-grow overflow-y-auto scrolling-touch box-border max-h-full">
-				<div className="w-full max-w-full overflow-y-auto space-y-1 flex flex-col box-border">
+			<div className="overflow-y-auto scrolling-touch">
+				<div className="w-full max-w-full  space-y-1 flex flex-col box-border">
 					{children}
 				</div>
 			</div>
