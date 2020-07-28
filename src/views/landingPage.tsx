@@ -106,10 +106,23 @@ export const LandingPage: React.FC = () => {
 			<div>
 				<main className="grid grid-cols-1 w-full  text-l text-gray-800 text-justify tracking-wide leading-loose">
 					{" "}
-					<SectionWithIcon icon={appLogo} headerText={"Phloem App"}>
+					<SectionWithIcon
+						icon={appLogo}
+						headerText={"Phloem App"}
+						className="space-x-2"
+					>
 						This is my first todo app. I wanted to do it because it
 						provides a user with possibility to visualize tasks and their
 						dependencies with graphs.
+						<p></p>
+						<button
+							onClick={() => {
+								client?.loginWithRedirect(redirectOption);
+							}}
+							className="border border-dashed rounded-lg px-4 hover:border-gray-800 active:outline-non font-bold"
+						>
+							Try it
+						</button>
 					</SectionWithIcon>
 					<SectionWithIcon
 						icon={questionMark}
@@ -131,14 +144,6 @@ export const LandingPage: React.FC = () => {
 						Omnia Galia est divisa in partes tres quarum unam incolum
 						Belgae, aliam Aqutianiae tertiam qui incolunt lingua celtae
 						nostra Galli apellantur.
-						<button
-							onClick={() => {
-								client?.loginWithRedirect(redirectOption);
-							}}
-							className=" font-bold hover:scale-x-90 hover:transform hover:translate-x-4"
-						>
-							Try it
-						</button>
 					</SectionWithIcon>
 					<SectionWithIcon icon={lightining}>
 						Omnia Galia est divisa in partes tres quarum unam incolum
