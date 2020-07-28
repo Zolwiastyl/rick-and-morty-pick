@@ -100,8 +100,24 @@ export const LandingPage: React.FC = () => {
 
 	return (
 		<div className="flex middle  flex-col">
-			<div className="bg-gray-900 justify-end space-y-2 space-x-2 p-2 flex ">
-				<LogInButton />
+			<div className="bg-gray-900  flex flex-row p-2  w-screen  content-between ">
+				<div className="flex-1	" />
+				<button
+					onClick={() => {
+						if (!isAuthenticated) {
+							client?.loginWithRedirect(redirectOption);
+						} else {
+							// eslint-disable-next-line no-restricted-globals
+							location.href = window.location.origin + "/app";
+						}
+					}}
+					className="border  border-dashed rounded-lg w-64 uppercase hover:border-gray-500 active:outline-non font-bold  nav-bar-btn text-gray-100 self-center"
+				>
+					Try it
+				</button>
+				<div className="flex-1 flex flex-row justify-end px-5">
+					<LogInButton />
+				</div>
 			</div>
 			<div>
 				<main className="grid grid-cols-1 w-full  text-l text-gray-800 text-justify tracking-wide leading-loose">
@@ -115,14 +131,6 @@ export const LandingPage: React.FC = () => {
 						provides a user with possibility to visualize tasks and their
 						dependencies with graphs.
 						<p></p>
-						<button
-							onClick={() => {
-								client?.loginWithRedirect(redirectOption);
-							}}
-							className="border border-dashed rounded-lg px-4 hover:border-gray-800 active:outline-non font-bold"
-						>
-							Try it
-						</button>
 					</SectionWithIcon>
 					<SectionWithIcon
 						icon={questionMark}
@@ -140,10 +148,24 @@ export const LandingPage: React.FC = () => {
 					<SectionWithIcon icon={lightbulb} headerText={"Solution"}>
 						Why not make app out of it that will make it easier!
 					</SectionWithIcon>
-					<SectionWithIcon icon={tree}>
-						Omnia Galia est divisa in partes tres quarum unam incolum
-						Belgae, aliam Aqutianiae tertiam qui incolunt lingua celtae
-						nostra Galli apellantur.
+					<SectionWithIcon icon={tree} headerText="Name">
+						Phloem is the living tissue that transports the soluble
+						organic compounds.
+						<div className="flex flex-row justify-center p-2">
+							<button
+								onClick={() => {
+									if (!isAuthenticated) {
+										client?.loginWithRedirect(redirectOption);
+									} else {
+										// eslint-disable-next-line no-restricted-globals
+										location.href = window.location.origin + "/app";
+									}
+								}}
+								className="border allign-center justify-center border-dashed rounded-lg w-64 uppercase hover:border-gray-800 active:outline-non font-bold  nav-bar-btn text-gray-100 self-center"
+							>
+								Try it
+							</button>
+						</div>
 					</SectionWithIcon>
 					<SectionWithIcon icon={lightining}>
 						Omnia Galia est divisa in partes tres quarum unam incolum
