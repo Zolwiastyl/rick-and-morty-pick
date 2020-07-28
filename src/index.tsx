@@ -25,7 +25,7 @@ const onRedirectCallback = (appState: { targetUrl: string }) => {
 const auth0Options: Auth0ClientOptions = {
 	domain: config.domain,
 	client_id: config.clientId,
-	redirect_uri: window.location.origin,
+	redirect_uri: window.location.origin + "/app",
 	cacheLocation: "localstorage",
 };
 
@@ -49,6 +49,7 @@ ReactDOM.render(
 	>
 		<Router history={history}>
 			<Route path="/" exact component={LandingPage} />
+			<Route path="/app1" exact component={App} />
 			<Route path="/app" exact component={AppWithLogin} />
 			<Route path="/design" exact component={DesignLook} />
 		</Router>

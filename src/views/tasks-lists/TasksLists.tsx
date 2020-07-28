@@ -87,6 +87,7 @@ export function TasksLists({ tasks, setTasks }: TasksListsProps) {
 			md:h-screen
 			bg-white
 			overflow-x-auto 
+			
 			"
 		>
 			{statuses.map((status) => (
@@ -99,7 +100,7 @@ export function TasksLists({ tasks, setTasks }: TasksListsProps) {
 					}}
 					onDrop={(event) => {
 						event.preventDefault();
-
+						console.log("dropped");
 						const taskId = event.dataTransfer.getData("text/plain");
 						if (
 							tasks.filter((t) => t.status === status.statusName)
@@ -144,12 +145,14 @@ export function TasksLists({ tasks, setTasks }: TasksListsProps) {
 									data-testid={task.name}
 									draggable="true"
 									onDragStart={(event) => {
+										console.log("drag started");
 										event.dataTransfer.setData(
 											"text/plain",
 											task.frontEndId
 										);
 									}}
 									onDrop={(event) => {
+										console.log("drop");
 										handleDrop(
 											event,
 											{ tasks, setTasks },

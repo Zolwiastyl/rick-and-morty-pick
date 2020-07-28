@@ -28,7 +28,7 @@ import { IconButton } from "./reusable-ui/IconButton";
 import { NavigationBar } from "./reusable-ui/NavigationBar";
 import { ClientAPI, Task, TaskId } from "./types";
 import history from "./utils/history";
-import { TasksGraph } from "./views/tasks-graph/BruteGraph";
+import { TasksGraph } from "./views/tasks-graph/TasksGraph";
 import { TasksLists } from "./views/tasks-lists/TasksLists";
 
 const tasksArray: Array<Task> = [];
@@ -200,8 +200,8 @@ export function App() {
 		<Fragment>
 			<div
 				className="
-			md:flex md:flex-row w-full max-w-screen flex flex-col
-			md:h-screen h-screen max-h-screen
+			md:flex-row w-full max-w-screen flex flex-col
+			 h-screen max-h-screen
 			"
 			>
 				<ClientContext.Provider value={darkClientAPI}>
@@ -231,7 +231,7 @@ export function App() {
 								) : null}
 							</div>
 						</div>
-						<div className="md:h-20 "></div>
+
 						<IconButton
 							onClick={() => {
 								callApiToFetchData(setTasks);
@@ -260,11 +260,11 @@ export function App() {
 						<Link className="nav-bar-btn" to="./design" id="design">
 							<Image className="h-12 w-12 p-2" viewBox="0 0 24 24" />
 						</Link>
-						<div className="flex-1" />
+						<div className="flex-1 flex-grow" />
 						<Auth0NavBar />
 					</NavigationBar>
 
-					<div className="w-full max-w-full box-border overflow-hidden">
+					<div className="w-full max-w-full box-border overflow-hidden h-full">
 						<Router history={history}>
 							{!showGraph && (
 								<TasksLists setTasks={setTasks} tasks={tasks} />

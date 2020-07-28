@@ -15,7 +15,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
 	if (!Icon) {
 		return (
 			<button className="nav-bar-btn" onClick={onClick}>
-				{label}
+				<span className="h-12 w-12 p-2">{label}</span>
 			</button>
 		);
 	} else {
