@@ -6,7 +6,6 @@ import appLogo from "../assets/app-icon.svg";
 import exclamation from "../assets/exclamation.svg";
 import questionMark from "../assets/idea-icon.svg";
 import lightbulb from "../assets/lightbulb.svg";
-import lightining from "../assets/lightining.svg";
 import tree from "../assets/tree.svg";
 import { useAuth0 } from "../react-auth0-spa";
 import { IconButton } from "../reusable-ui/IconButton";
@@ -166,11 +165,6 @@ export const LandingPage: React.FC = () => {
 								Try it
 							</button>
 						</div>
-					</SectionWithIcon>
-					<SectionWithIcon icon={lightining}>
-						Omnia Galia est divisa in partes tres quarum unam incolum
-						Belgae, aliam Aqutianiae tertiam qui incolunt lingua celtae
-						nostra Galli apellantur.
 					</SectionWithIcon>
 				</main>
 			</div>
