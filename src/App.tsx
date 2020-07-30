@@ -9,7 +9,6 @@ import {
 	Image,
 	List,
 	RefreshCcw,
-	Trash2,
 } from "react-feather";
 import { Link, Route, Router, Switch } from "react-router-dom";
 
@@ -17,7 +16,7 @@ import {
 	makeNewTasksWithDependencies,
 	sendSourceAndTargetTasks,
 } from "./api/addDependencies";
-import { callApi, fetchDataFromServer, removeAllData } from "./api/api";
+import { callApi, fetchDataFromServer } from "./api/api";
 import { generateIdForTask } from "./api/generateIdForTask";
 import { makeNewTasksRemovingDependencies } from "./api/removeDependencies";
 import { curriedSendNewTask, sendNewTask } from "./api/sendNewTask";
@@ -249,12 +248,6 @@ export function App() {
 								toggleGraph(false);
 							}}
 							Icon={List}
-						/>
-						<IconButton
-							Icon={Trash2}
-							onClick={(evt) => {
-								removeAllData();
-							}}
 						/>
 
 						<Link className="nav-bar-btn" to="./design" id="design">
