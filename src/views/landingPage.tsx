@@ -98,8 +98,8 @@ export const LandingPage: React.FC = () => {
 	};
 
 	return (
-		<div className="flex middle  flex-col">
-			<div className="bg-gray-900  flex flex-row p-2  w-screen  content-between ">
+		<div className="flex flex-col w-full overflow-x-hidden">
+			<div className="bg-gray-900  flex flex-row p-2  content-between ">
 				<div className="flex-1	px-5" />
 				<button
 					onClick={() => {
