@@ -35,7 +35,7 @@
 		"eslint-plugin-jest": "^23.18.0",
 		"isomorphic-fetch": "^2.2.1",
 		"msw": "^0.19.4",
-		"postcss": "^7.0.31",
+		"postcss": "^8.2.10",
 		"postcss-preset-env": "^6.7.0",
 		"prop-types": "^15.7.2",
 		"purgecss": "^2.2.1",
